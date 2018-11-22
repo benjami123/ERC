@@ -14,12 +14,12 @@ con.connect(function(err){
     console.log("Connected to DB");
 });
 
-function getUser(login,pwd){
-
-    var Query = "SELECT * FROM user WHERE Login='"+login+"' and Password='"+pwd+"';";
-    con.query(Query,function(err,rows){
-        if(err) throw err;
-        return rows;
-    });
-
-}
+module.exports= {
+    getUser: function(login,pwd){
+        var Query = "SELECT * FROM user WHERE Login='"+login+"' and Password='"+pwd+"';";
+        con.query(Query,function(err,rows){
+            if(err) throw err;
+            return rows;
+        });
+    }
+};
