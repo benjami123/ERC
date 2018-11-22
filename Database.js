@@ -15,11 +15,11 @@ con.connect(function(err){
 });
 
 module.exports= {
-    getUser: function(login,pwd){
+    getUser: function(login, pwd, callback){
         var Query = "SELECT * FROM user WHERE Login='"+login+"' and Password='"+pwd+"';";
         con.query(Query,function(err,rows){
-            if(err) throw err;
-            return rows;
+            console.log("Executed query : " + Query);
+            callback(err, rows[0]);
         });
     }
 };
