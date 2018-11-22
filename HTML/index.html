@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/d3js/5.7.0/d3.min.js"></script>
+        <script>    
+            function SendUser(){
+                var json = {};
+                json.username = document.getElementById('username').value;
+                json.password = document.getElementById('password').value;
+                json = JSON.stringify(json);
+                console.log("sent in login to server : " + json)
+            }
+            $(document).ready(function () {
+                $("input").keyup(function(){
+                    var txt = $("username").val();
+                    $.post("", function(data, status){
+                        console.log("Data: " + data + "\nstatus: " + status);
+                    });
+                }); 
+            });
+            </script>
+    </head>
+    <body>
+        <form method ="POST">
+            <h1>Create a new user</h1>
+            <input type="text" name='username' id='username' placeholder="username">
+            <input type="password" name='password' id='password' placeholder="password">
+            <button onclick='SendUser()'>CreateUser</button>
+        </form>
+    </body>
+</html>
