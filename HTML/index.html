@@ -5,14 +5,15 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script>    
             function Login(login, password){
-                var json = {};
-                json.username = login;
-                json.password = password;
-                json = JSON.stringify(json);
-                console.log("sent in login to server : " + json)
+                var data = {};
+                data.username = login;
+                data.password = password;
+                data = JSON.stringify(data);
+                console.log("sent in login to server : " + data);
                 var xmlRequest = new XMLHttpRequest();
-                xmlRequest.open("POST", json, true);
-                xmlRequest.send();
+                xmlRequest.open("POST", "/Login", true);
+                xmlRequest.setRequestHeader('Content-type', 'application/json');
+                xmlRequest.send(data);
                 xmlRequest.onreadystatechange = function(){
                     if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
                         console.log("Got response : ");

@@ -58,12 +58,10 @@ app.get('/ERC_Maintenance/*', function(req, res){
   CheckRole(req, res, RoleArray[5]);
 });
 
-app.post('/*',function(req,res){
+app.post('/Login',function(req,res){
   var sess = req.session;
-
-  req = JSON.parse(req.params[0]);
-  console.log("Username : " + req.username + ", Password : " + req.password);
-  DB.getUser(req.username, req.password, function(err, user){
+  console.log("Username : " + req.body.username + ", Password : " + req.body.password);
+  DB.getUser(req.body.username, req.body.password, function(err, user){
     if(user != undefined){
       sess.user = user;
       switch(user.Role){
@@ -103,6 +101,29 @@ app.post('/*',function(req,res){
   });
 });
 
+app.post('/Plant_Operator/index', function(req, res){
+  console.log("User connected : " + JSON.stringify(req.session.user));
+  DB.getPlantsPart(req.session.user.IdPlant, function(err, PartImplementedArray){
+    console.log("Got PartImplemented : ");
+    console.log(PartImplementedArray);
+    for(var i=0; i<PartImplementedArray.length; i++){
+      var MyJson = {};
+      MyJson.PartLocation = PartImplementedArray[i].location;
+      DB.getPart(PartImplementedArray[i].IdPart, function(err, Part){
+        console.log(JSON.stringify(MyJson));
+        MyJson.PartName = Part.Name;
+        MyJson.PartDescription = Part.Description;
+        console.log(JSON.stringify(MyJson));
+        DB.getSupplier(Part.IdSupplier, function(err, Supplier){
+          console.log(JSON.stringify(MyJson));
+          MyJson.SupplierName = Supplier.Name;
+          console.log("Sending To client: " + JSON.stringify(MyJson));
+          res.end(JSON.stringify(MyJson));
+        })
+      });
+    }
+  })
+});
 
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!')
