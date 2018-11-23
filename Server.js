@@ -1,54 +1,100 @@
 //Loading modules
-var http = require('http');
-var fs = require('fs');
-var path = require('path');
 var DB = require('./Database.js');
-
+var session = require('express-session');
+var bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
-var bodyParser = require('body-parser');
+
+var RoleArray = [ {Role:1, Link:"/HTML/Plant_Admin/index.html"}, 
+                {Role:2, Link:"/HTML/ERC_Admin/index.html"},
+                {Role:3, Link:"/HTML/Plant_Operator/index.html"},
+                {Role:4, Link:"/HTML/ERC_Services/index.html"},
+                {Role:5, Link:"/HTML/ERC_Additives/index.html"},
+                {Role:6, Link:"/HTML/ERC_Maintenance/index.html"}
+              ];
+
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
-})); 
+}));
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true
+}));
+
+
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/HTML/index.html');
 });
-app.get('/HTML/Plant_Operator/*', function(req, res){
-  res.sendFile(__dirname + "/HTML/Plant_Operator/index.html")
-})
+
+function CheckRole(req, res, RoleArray){
+  var sess = req.session;
+  console.log("Session : ");
+  console.log(sess);
+  if(sess.user != null && sess.user.Role == RoleArray.Role){
+    res.sendFile(__dirname + RoleArray.Link);
+  }else{
+    res.redirect("/");
+  }
+}
+
+app.get('/Plant_Admin/*', function(req, res){
+  CheckRole(req, res, RoleArray[0]);
+});
+app.get('/ERC_Admin/*', function(req, res){
+  CheckRole(req, res, RoleArray[1]);
+});
+app.get('/Plant_Operator/*', function(req, res){
+  CheckRole(req, res, RoleArray[2]);
+});
+app.get('/ERC_Services/*', function(req, res){
+  CheckRole(req, res, RoleArray[3]);
+});
+app.get('/ERC_Additives/*', function(req, res){
+  CheckRole(req, res, RoleArray[4]);
+});
+app.get('/ERC_Maintenance/*', function(req, res){
+  CheckRole(req, res, RoleArray[5]);
+});
 
 app.post('/*',function(req,res){
-  console.log("got post method");
-  console.log(req.params[0]);
+  var sess = req.session;
+
   req = JSON.parse(req.params[0]);
   console.log("Username : " + req.username + ", Password : " + req.password);
-  DB.getUser(req.username, req.password, function(err, rows){
-    console.log(rows);
-    if(rows != undefined){
-      switch(rows.Role){
+  DB.getUser(req.username, req.password, function(err, user){
+    if(user != undefined){
+      sess.user = user;
+      switch(user.Role){
         case 1 : var json = {};
-          json.Redirection = __dirname + "/HTML/Plant_Operator/index.html"
+          json.Redirection ="/Plant_Admin/index.html"
           res.end(JSON.stringify(json));
           break;
 
         case 2 : var json = {};
-          json.Redirection = __dirname + "/HTML/ERC_Services/index.html"
+          json.Redirection ="/ERC_Admin/index.html"
           res.end(JSON.stringify(json));
           break;
 
         case 3 : var json = {};
-          json.Redirection = __dirname + "/HTML/ERC_Additives/index.html"
+          json.Redirection ="/Plant_Operator/index.html"
           res.end(JSON.stringify(json));
           break;
 
         case 4 : var json = {};
-          json.Redirection = __dirname + "/HTML/ERC_Maintenance/index.html"
+          json.Redirection = "/ERC_Services/index.html"
           res.end(JSON.stringify(json));
           break;
 
-        default:
-          res.end(JSON.stringify(rows));
+        case 5 : var json = {};
+          json.Redirection = "/ERC_Additives/index.html"
+          res.end(JSON.stringify(json));
+          break;
+
+        case 6 : var json = {};
+          json.Redirection = "/ERC_Maintenance/index.html"
+          res.end(JSON.stringify(json));
           break;
       }
     }else{
