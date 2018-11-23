@@ -1,9 +1,283 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <title>Plant Operator</title>
+    <style>
+        #PartTable {
+            float: left;
+            border: gray;
+            border-style: solid;
+            left: 0.5%;
+            bottom : 1%;
+            width: 70%;
+            height: 90%;
+            position: absolute;
+            overflow:auto;
+            top : 55px;
+        }
+        #Right{
+            float : right;
+            overflow:auto;
+            width: 29.3%;
+            height: 90%;
+            border: gray;
+            border-style: solid;
+            position: absolute;
+            right: 0.5%;
+            bottom : 1%;
+            offset-before: 10%;
+            top : 55px;
+        }
+        #myCanvas{
+            border:1px solid #000000;
+        }
+        #search{
+            margin-top: 1%;
+        }
+        #Button{
+            margin-top : 10%;
+        }
+        #BuyButton{
+            position: relative;
+            left: -5%;
+        }
+        #ContactButton{
+            position: relative;
+            left: 5%;
+        }
+        #navbar {
+            height: 10%;
+        }
+    </style>
 </head>
 <body>
-    <h1>plant_operator/index.html</h1>
+<header id="navbar">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <div class="navbar-brand">
+                    <p>Identifiant</p>
+                </div>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="index.html">Home</a></li>
+                <li><a href="#">History</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="#">Additional services</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><img width="41%" src="../Picture/ERC_Logo.png"></li>
+                <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+            </ul>
+
+        </div>
+    </nav>
+</header>
+<div id="PartTable" class="col-1">
+<table class="table table-striped border-0" >
+    <thead>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+    <tr>
+        <td id="PartName">PartName</td>
+        <td id="PartDescription">PartDescription</td>
+        <td id="PartLocation">PartLocation</td>
+        <td id="SupplierName">SupplierName</td>
+    </tr>
+
+    </tbody>
+</table>
+</div>
+<div id="Right">
+    <div id="SearchBar">
+            <input type="text" class="form-control" id="search" placeholder="Search" onkeyup="searchPart(this.value)">
+    </div>
+    <div id="ReductionAgent">
+        <center><h3 id="TitleRa">Reduction Agent</h3></center>
+        <canvas class="center-block" id="myCanvas" width="200" height="100"></canvas>
+        <center><div id="Button">
+            <a id="BuyButton" class="btn btn-primary" href="#" role="button">Buy</a>
+            <a id="ContactButton" class="btn btn-info" href="#" role="button">Contact</a>
+        </div></center>
+    </div>
+</div>
 </body>
+<script>function searchPart(value)
+{
+
+}
+
+var c =document.getElementById("myCanvas");
+var ctx = c.getContext("2d");
+var grd = ctx.createLinearGradient(0,0,200,0);
+grd.addColorStop(0,"red");
+grd.addColorStop(1,"blue");
+ctx.fillStyle = grd;
+function LevelRa(percentage)
+{
+    return percentage*$("#myCanvas").width()/100;
+}
+var RaLevel = LevelRa(74);
+ctx.fillRect(0,0,RaLevel,100);
+</script>
 </html>
