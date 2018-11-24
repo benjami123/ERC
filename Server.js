@@ -30,8 +30,8 @@ app.get('/', function(req, res){
 
 function CheckRole(req, res, RoleArray){
   var sess = req.session;
-  console.log("Session : ");
-  console.log(sess);
+  // console.log("Session : ");
+  // console.log(sess);
   if(sess.user != null && sess.user.Role == RoleArray.Role){
     res.sendFile(__dirname + RoleArray.Link);
   }else{
@@ -103,25 +103,10 @@ app.post('/Login',function(req,res){
 
 app.post('/Plant_Operator/index', function(req, res){
   console.log("User connected : " + JSON.stringify(req.session.user));
-  DB.getPlantsPart(req.session.user.IdPlant, function(err, PartImplementedArray){
-    console.log("Got PartImplemented : ");
-    console.log(PartImplementedArray);
-    for(var i=0; i<PartImplementedArray.length; i++){
-      var MyJson = {};
-      MyJson.PartLocation = PartImplementedArray[i].location;
-      DB.getPart(PartImplementedArray[i].IdPart, function(err, Part){
-        console.log(JSON.stringify(MyJson));
-        MyJson.PartName = Part.Name;
-        MyJson.PartDescription = Part.Description;
-        console.log(JSON.stringify(MyJson));
-        DB.getSupplier(Part.IdSupplier, function(err, Supplier){
-          console.log(JSON.stringify(MyJson));
-          MyJson.SupplierName = Supplier.Name;
-          console.log("Sending To client: " + JSON.stringify(MyJson));
-          res.end(JSON.stringify(MyJson));
-        })
-      });
-    }
+  DB.getPlantPartPreviewInfos(req.session.user.IdPlant, function(err, Result){
+    console.log("Got result : ");
+    console.log(Result);
+    res.end(JSON.stringify(Result));
   })
 });
 

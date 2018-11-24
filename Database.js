@@ -23,37 +23,11 @@ module.exports= {
         });
     },
 
-    getPlantsPart: function(IDPlant, callback){
-        var Query = "SELECT IdPart, location FROM partimplemented WHERE IdPlant='"+IDPlant+"';";
+    getPlantPartPreviewInfos: function(IDPlant, callback){
+        var Query = "SELECT part.IdPart, part.Name, part.Description, partimplemented.location, supplier.Name FROM part JOIN partimplemented ON part.IdPart=partimplemented.IdPart JOIN supplier ON part.IdSupplier=supplier.IdSupplier WHERE partimplemented.IdPlant='"+IDPlant+"';";
         con.query(Query,function(err,rows){
             // console.log("Executed query : " + Query);
             callback(err, rows);
-        }); 
-    },
-
-    getPart: function(IDPart, callback){
-        var Query = "SELECT * FROM part WHERE IdPart='"+IDPart+"';";
-        con.query(Query,function(err,rows){
-            // console.log("Executed query : " + Query);
-            callback(err, rows[0]);
         });
-    },
-    
-    getSupplierName: function(IDSupplier, callback){
-        var Query = "SELECT * FROM supplier WHERE IdSupplier='"+IDSupplier+"';";
-        con.query(Query,function(err,rows){
-            // console.log("Executed query : " + Query);
-            callback(err, rows[0]);
-        });
-    },
-
-    getSupplier: function(IDSupplier, callback){
-        var Query = "SELECT * FROM supplier WHERE IdSupplier='"+IDSupplier+"';";
-        con.query(Query,function(err,rows){
-            // console.log("Executed query : " + Query);
-            callback(err, rows[0]);
-        });
-    },
-
-
+    }
 };
