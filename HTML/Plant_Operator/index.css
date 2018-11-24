@@ -1,0 +1,45 @@
+#PartTable {
+    float: left;
+    border: gray;
+    border-style: solid;
+    left: 0.5%;
+    bottom : 1%;
+    width: 70%;
+    height: 90%;
+    position: absolute;
+    overflow:auto;
+    top : 55px;
+}
+#Right{
+    float : right;
+    overflow:auto;
+    width: 29.3%;
+    height: 90%;
+    border: gray;
+    border-style: solid;
+    position: absolute;
+    right: 0.5%;
+    bottom : 1%;
+    offset-before: 10%;
+    top : 55px;
+}
+#myCanvas{
+    border:1px solid #000000;
+}
+#search{
+    margin-top: 1%;
+}
+#Button{
+    margin-top : 10%;
+}
+#BuyButton{
+    position: relative;
+    left: -5%;
+}
+#ContactButton{
+    position: relative;
+    left: 5%;
+}
+#navbar {
+    height: 10%;
+}
