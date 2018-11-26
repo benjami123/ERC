@@ -18,6 +18,17 @@
                 if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
                     console.log("Got response : ");
                     console.log(xmlRequest.responseText);
+                    var jsonArray = xmlRequest.responseText;
+                    for(var i=0;i<jsonArray.length;i++)
+                    {
+                        var json = jsonArray[i];
+                        $("#tablePart").add("" +
+                            "<tr onclic='clic("+json.IdPartImplemented+")'>" +
+                            "<td>"+json.PartName+"</td>" +
+                            "<td>"+json.Location+"</td>" +
+                            "<td>"+json.PartDescription+"</td>" +
+                            "<td>"+json.SupplierName+"</td>");
+                    }
                 }
             }
         };
@@ -48,173 +59,16 @@
     </nav>
 </header>
 <div id="PartTable" class="col-1">
-<table class="table table-striped border-0" >
+<table class="table table-striped border-0">
     <thead>
     <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
+        <td id="PartName">Part Name</td>
+        <td id="PartDescription">Part Location</td>
+        <td id="PartLocation">Part Description</td>
+        <td id="SupplierName">Supplier Name</td>
     </tr>
     </thead>
-    <tbody>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-    <tr>
-        <td id="PartName">PartName</td>
-        <td id="PartDescription">PartDescription</td>
-        <td id="PartLocation">PartLocation</td>
-        <td id="SupplierName">SupplierName</td>
-    </tr>
-
+    <tbody id="tablePart">
     </tbody>
 </table>
 </div>
