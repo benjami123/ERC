@@ -19,12 +19,15 @@
                 if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
                     console.log("Got response : ");
                     console.log(xmlRequest.responseText);
-                    jsonArray = xmlRequest.responseText;
+                    jsonArray = JSON.parse(xmlRequest.responseText);
+                    // $("#tablePart").append("<div>bonjour</div>");
+                    // document.getElementById('tablePart').add('<div>bonjour</div>')
                     for(var i=0;i<jsonArray.length;i++)
                     {
                         var json = jsonArray[i];
-                        $("#tablePart").add("" +
-                            "<tr onclic='clic("+i+")'>" +
+                        console.log(json);
+                        $("#tablePart").append("" +
+                            "<tr onclick='clickPart("+i+")'>" +
                             "<td>"+json.PartName+"</td>" +
                             "<td>"+json.Location+"</td>" +
                             "<td>"+json.PartDescription+"</td>" +
@@ -72,12 +75,6 @@
     </tr>
     </thead>
     <tbody id="tablePart">
-    <tr onclick='clickPart(1)'>
-        <td>json.PartName</td>
-        <td>json.Location</td>
-        <td>json.PartDescription</td>
-        <td>json.SupplierName</td>
-    </tr>
     </tbody>
 </table>
 </div>
@@ -119,9 +116,8 @@ function clickPart(IdJson)
     xmlRequest.open("POST", "/Plant_Operator/PartDescription", true);
     xmlRequest.setRequestHeader('Content-type', 'application/json');
     xmlRequest.send(jsonArray[IdJson]);
-    sessionStorage.setItem("SelectedPart", jsonArray[IdJson]);
-    console.log(sessionStorage.getItem("SelectedPart"));
-    window.location("/Plant_Operator/PartDescription.html");
+    sessionStorage.setItem("SelectedPart", JSON.stringify(jsonArray[IdJson]));
+    window.location.replace("/Plant_Operator/PartDescription.html");
 }
 </script>
 </html>
