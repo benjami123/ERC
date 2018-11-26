@@ -20,12 +20,9 @@
                     console.log("Got response : ");
                     console.log(xmlRequest.responseText);
                     jsonArray = JSON.parse(xmlRequest.responseText);
-                    // $("#tablePart").append("<div>bonjour</div>");
-                    // document.getElementById('tablePart').add('<div>bonjour</div>')
                     for(var i=0;i<jsonArray.length;i++)
                     {
                         var json = jsonArray[i];
-                        console.log(json);
                         $("#tablePart").append("" +
                             "<tr onclick='clickPart("+i+")'>" +
                             "<td>"+json.PartName+"</td>" +
@@ -47,7 +44,7 @@
         <div class="container-fluid">
             <div class="navbar-header">
                 <div class="navbar-brand">
-                    <p>Identifiant</p>
+                    <p>Identifier</p>
                 </div>
             </div>
             <ul class="nav navbar-nav">
@@ -55,6 +52,7 @@
                 <li><a href="#">History</a></li>
                 <li><a href="#">Contact</a></li>
                 <li><a href="#">Additional services</a></li>
+                <li><a href="#">Offers</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><img width="41%" src="../Picture/ERC_Logo.png"></li>

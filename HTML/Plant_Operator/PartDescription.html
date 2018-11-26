@@ -2,9 +2,118 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="index.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+        var selectedPart = sessionStorage.getItem("SelectedPart");
+        window.onload = function(){
+            console.log("sending post to server");
+            var IdPartImplemented = JSON.parse(sessionStorage.getItem("SelectedPart")).IdPartImplemented;
+            xmlRequest = new XMLHttpRequest();
+            xmlRequest.open("POST", "/History", true);
+            xmlRequest.setRequestHeader('Content-type', 'application/json');
+            xmlRequest.send(IdPartImplemented);
+            xmlRequest.onreadystatechange = function(){
+                if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
+                    console.log("Got response : ");
+                    console.log(xmlRequest.responseText);
+                    jsonArray = JSON.parse(xmlRequest.responseText);
+                    for(var i=0;i<jsonArray.length;i++)
+                     {
+                         var json = jsonArray[i];
+                         if(json.DataType == "H")
+                         {
+                             $("#tablePart").append("" +
+                                 "<tr>" +
+                                 "<td>"+json.PartName+"</td>" +
+                                 "<td>"+json.Location+"</td>" +
+                                 "<td>"+json.PartDescription+"</td>" +
+                                 "<td>"+json.SupplierName+"</td>" +
+                                 "</tr>");
+                         }
+                         else
+                         {
+                             $("#tablePart").append("" +
+                                 "<tr>" +
+                                 "<td>"+json.PartName+"</td>" +
+                                 "<td>"+json.Location+"</td>" +
+                                 "<td>"+json.PartDescription+"</td>" +
+                                 "<td>"+json.SupplierName+"</td>" +
+                                 "</tr>");
+                         }
+
+
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        #History {
+            float: left;
+            border: gray;
+            border-style: solid;
+            left: 0.5%;
+            bottom : 1%;
+            width: 70%;
+            height: 90%;
+            position: absolute;
+            overflow:auto;
+            top : 55px;
+        }
+    </style>
     <title>PartDescription</title>
 </head>
 <body>
+<header id="navbar">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <div class="navbar-brand">
+                    <p>Identifier</p>
+                </div>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#">History</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="#">Additional services</a></li>
+                <li><a href="#">Offers</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><img width="41%" src="../Picture/ERC_Logo.png"></li>
+                <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+            </ul>
 
+        </div>
+    </nav>
+</header>
+<div id="Information" onload="information()"></div>
+<div id="History" class="col-1">
+    <table class="table table-striped border-0">
+        <thead>
+        <tr>
+            <td id="PartName">Part Name</td>
+            <td id="PartDescription">Part Location</td>
+            <td id="PartLocation">Part Description</td>
+            <td id="SupplierName">Supplier Name</td>
+        </tr>
+        </thead>
+        <tbody id="tablePart">
+        </tbody>
+</div>
 </body>
+<script>
+    function information()
+    {
+        alert("done");
+        $("#Information").append("<p>Name : "+ selectedPart.PartName+"</p>" +
+            "<p>Name : "+ selectedPart.Location+"</p>" +
+            "<p>Description : "+selectedPart.PartDescription+"</p>" +
+            "<p>Supplier name : "+selectedPart.SupplierName+"</p>");
+    }
+
+</script>
 </html>
