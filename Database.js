@@ -24,10 +24,26 @@ module.exports= {
     },
 
     getPlantPartPreviewInfos: function(IDPlant, callback){
-        var Query = "SELECT part.IdPart, part.Name, part.Description, partimplemented.location, supplier.Name FROM part JOIN partimplemented ON part.IdPart=partimplemented.IdPart JOIN supplier ON part.IdSupplier=supplier.IdSupplier WHERE partimplemented.IdPlant='"+IDPlant+"';";
+        var Query = "SELECT part.PartName, part.PartDescription, partimplemented.Location, partimplemented.IdPartImplemented, supplier.SupplierName FROM part JOIN partimplemented ON part.IdPart=partimplemented.IdPart JOIN supplier ON part.IdSupplier=supplier.IdSupplier WHERE partimplemented.IdPlant='"+IDPlant+"';";
         con.query(Query,function(err,rows){
             // console.log("Executed query : " + Query);
             callback(err, rows);
         });
-    }
+    }, 
+
+    getPartImplementedHistory: function(IDPartImplemented, callback){
+        var Query = "SELECT IdPartImplemented, Type, State, UserSeen, DateStart FROM part_offer WHERE IdPartImplemented = '"+IDPartImplemented+"';";
+        con.query(Query, function(err, rows){
+            //  console.log("Executed query : " + Query);
+            callback(err, rows);
+        })
+    },
+
+    getPartImplementedReviews: function(IDPartImplemented, callback){
+        var Query = "SELECT * FROM review WHERE IdPartImplemented = '"+IDPartImplemented+"';";
+        con.query(Query, function(err, rows){
+            //  console.log("Executed query : " + Query);
+            callback(err, rows);
+        })
+    },
 };

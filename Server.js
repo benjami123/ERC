@@ -5,12 +5,12 @@ var bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
 
-var RoleArray = [ {Role:1, Link:"/HTML/Plant_Admin/index.html"}, 
-                {Role:2, Link:"/HTML/ERC_Admin/index.html"},
-                {Role:3, Link:"/HTML/Plant_Operator/index.html"},
-                {Role:4, Link:"/HTML/ERC_Services/index.html"},
-                {Role:5, Link:"/HTML/ERC_Additives/index.html"},
-                {Role:6, Link:"/HTML/ERC_Maintenance/index.html"}
+var RoleArray = [ {Role:1, Link:"/Plant_Admin/"}, 
+                {Role:2, Link:"/ERC_Admin/"},
+                {Role:3, Link:"/Plant_Operator/"},
+                {Role:4, Link:"/ERC_Services/"},
+                {Role:5, Link:"/ERC_Additives/"},
+                {Role:6, Link:"/ERC_Maintenance/"}
               ];
 
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
@@ -29,11 +29,12 @@ app.get('/', function(req, res){
 });
 
 function CheckRole(req, res, RoleArray){
+  var URL = req.originalUrl;
+  URL = URL.replace(RoleArray.Link, '');
+  console.log("Request from : " + URL);
   var sess = req.session;
-  // console.log("Session : ");
-  // console.log(sess);
   if(sess.user != null && sess.user.Role == RoleArray.Role){
-    res.sendFile(__dirname + RoleArray.Link);
+    res.sendFile(__dirname + '/HTML'+RoleArray.Link + URL);
   }else{
     res.redirect("/");
   }
@@ -100,6 +101,21 @@ app.post('/Login',function(req,res){
     }
   });
 });
+
+app.post('/Plant_Operator/PartDescription', function(req, res){
+  console.log("Got session : ");
+  console.log(req.session.user);
+  DB.getPartImplementedHistory(1, function(err, Result){
+    console.log("Got Result : ");
+    console.log(Result);
+    DB.getPartImplementedReviews(1, function(err, Reviews){
+      console.log("Got Result : ");
+      console.log(Reviews);
+      Result.Reviews = Reviews;
+      res.end(JSON.stringify(Result));
+    });
+  })
+})
 
 app.post('/Plant_Operator/index', function(req, res){
   console.log("User connected : " + JSON.stringify(req.session.user));
