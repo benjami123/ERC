@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="PartDescription.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
@@ -27,20 +28,18 @@
                          {
                              $("#tablePart").append("" +
                                  "<tr>" +
-                                 "<td>"+json.PartName+"</td>" +
-                                 "<td>"+json.Location+"</td>" +
-                                 "<td>"+json.PartDescription+"</td>" +
-                                 "<td>"+json.SupplierName+"</td>" +
+                                 "<td>"+json.OfferDateStart+"</td>" +
+                                 "<td>"+json.OfferType+"</td>" +
+                                 "<td>"+json.OfferStatus+"</td>"+
                                  "</tr>");
                          }
                          else
                          {
                              $("#tablePart").append("" +
                                  "<tr>" +
-                                 "<td>"+json.PartName+"</td>" +
-                                 "<td>"+json.Location+"</td>" +
-                                 "<td>"+json.PartDescription+"</td>" +
-                                 "<td>"+json.SupplierName+"</td>" +
+                                 "<td>"+json.OfferDateStart+"</td>" +
+                                 "<td>"+json.OfferType+"</td>" +
+                                 "<td>Review</td>"+
                                  "</tr>");
                          }
 
@@ -50,20 +49,6 @@
             }
         };
     </script>
-    <style>
-        #History {
-            float: left;
-            border: gray;
-            border-style: solid;
-            left: 0.5%;
-            bottom : 1%;
-            width: 70%;
-            height: 90%;
-            position: absolute;
-            overflow:auto;
-            top : 55px;
-        }
-    </style>
     <title>PartDescription</title>
 </head>
 <body>
@@ -90,29 +75,79 @@
         </div>
     </nav>
 </header>
-<div id="Information" onload="information()"></div>
-<div id="History" class="col-1">
-    <table class="table table-striped border-0">
-        <thead>
+<div id="Information" onload="information()">
+    <ul class="list-group">
+        <li class="list-group-item list-group-item-success"><p>Name : "+ selectedPart.PartName+"</p></li>
+        <li class="list-group-item list-group-item-light"><p>Description : "+selectedPart.PartDescription+"</p></li>
+        <li class="list-group-item list-group-item-info"><p>Supplier name : "+selectedPart.SupplierName+"</p></li>
+    </ul>
+</div>
+<div id="tableHistory">
+    <table id="History" class="table table-striped border-0">
+        <caption id="TitleHistory"><center>History</center></caption>
+        <thead id="TitleDefault">
         <tr>
-            <td id="PartName">Part Name</td>
-            <td id="PartDescription">Part Location</td>
-            <td id="PartLocation">Part Description</td>
-            <td id="SupplierName">Supplier Name</td>
+            <td id="Date"><center>Date</center></td>
+            <td id="PartDescription"><center>Action</center></td>
+            <td id="PartLocation"><center>Status</center></td>
         </tr>
         </thead>
         <tbody id="tablePart">
+            <tr>
+            <td>12-01-2018</td>
+            <td>Replace without service</td>
+            <td>Waiting for order from customer</td>
+            </tr>
+            <tr>
+            <td>"+json.OfferDateStart+"</td>
+            <td>"+json.OfferType+"</td>
+            <td>Review</td>
+            </tr>
         </tbody>
+    </table>
+</div>
+<div id="RecommandedAction">
+    <p>Recommended Action : just cry </p>
+    <label class="form-check-label">Performed action :</label>
+    <input id="checkbox" class="form-check-input" type="checkbox" onchange="ownAction()">
+    <br><br>
+    <div id="Action">
+        <input class="btn btn-primary" role="button" value="Replace (whithout service)">
+        <input class="btn btn-primary" role="button" value="Replace (whith service)">
+        <input class="btn btn-primary" role="button" value="Check">
+        <input class="btn btn-primary" role="button" value="Repair">
+    </div>
 </div>
 </body>
 <script>
     function information()
     {
         alert("done");
-        $("#Information").append("<p>Name : "+ selectedPart.PartName+"</p>" +
-            "<p>Name : "+ selectedPart.Location+"</p>" +
-            "<p>Description : "+selectedPart.PartDescription+"</p>" +
-            "<p>Supplier name : "+selectedPart.SupplierName+"</p>");
+        $("#Information").append(
+            "<li class='list-group-item list-group-item-success'><p>Name : "+ selectedPart.PartName+"</p></li>"+
+            "<li class='list-group-item list-group-item-light'><p>Description : "+selectedPart.PartDescription+"</p></li>"+
+            "<li class='list-group-item list-group-item-info'><p>Supplier name : "+selectedPart.SupplierName+"</p></li>");
+    }
+
+    function ownAction(){
+        if($("#checkbox").prop('checked'))
+        {
+            document.getElementById("Action").innerHTML = "<select class=form-control>\n" +
+                "        <option value=\"1\">Replace</option>\n" +
+                "        <option value=\"2\">Check</option>\n" +
+                "        <option value=\"3\">Repair</option>\n" +
+                "        </select>\n" +
+                "        <br>\n" +
+                "        <input type=\"text\" class=\"form-control\" placeholder=\"Insert date\">\n" +
+                "        <br>\n" +
+                "        <input class=\"btn btn-primary\" role=\"button\" value=\"OK\">"
+        }else
+        {
+            document.getElementById("Action").innerHTML = " <input class=\"btn btn-primary\" role=\"button\" value=\"Replace (whithout service)\">\n" +
+                "        <input class=\"btn btn-primary\" role=\"button\" value=\"Replace (whith service)\">\n" +
+                "        <input class=\"btn btn-primary\" role=\"button\" value=\"Check\">\n" +
+                "        <input class=\"btn btn-primary\" role=\"button\" value=\"Repair\">"
+        }
     }
 
 </script>
