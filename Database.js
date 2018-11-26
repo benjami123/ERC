@@ -32,7 +32,7 @@ module.exports= {
     }, 
 
     getPartImplementedHistory: function(IDPartImplemented, callback){
-        var Query = "SELECT IdPartImplemented, Type, State, UserSeen, DateStart FROM part_offer WHERE IdPartImplemented = '"+IDPartImplemented+"';";
+        var Query = "SELECT OfferType, OfferState, OfferDateStart FROM part_offer WHERE IdPartImplemented = '"+IDPartImplemented+"' ORDER BY OfferDateStart DESC;";
         con.query(Query, function(err, rows){
             //  console.log("Executed query : " + Query);
             callback(err, rows);
@@ -40,7 +40,7 @@ module.exports= {
     },
 
     getPartImplementedReviews: function(IDPartImplemented, callback){
-        var Query = "SELECT * FROM review WHERE IdPartImplemented = '"+IDPartImplemented+"';";
+        var Query = "SELECT ReviewType, ReviewDate FROM review WHERE IdPartImplemented = '"+IDPartImplemented+"' ORDER BY ReviewDate DESC;";
         con.query(Query, function(err, rows){
             //  console.log("Executed query : " + Query);
             callback(err, rows);
