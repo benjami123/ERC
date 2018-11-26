@@ -7,6 +7,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
+        var jsonArray;
         window.onload = function(){
             console.log("sending post to server");
             var json={};
@@ -18,12 +19,12 @@
                 if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
                     console.log("Got response : ");
                     console.log(xmlRequest.responseText);
-                    var jsonArray = xmlRequest.responseText;
+                    jsonArray = xmlRequest.responseText;
                     for(var i=0;i<jsonArray.length;i++)
                     {
                         var json = jsonArray[i];
                         $("#tablePart").add("" +
-                            "<tr onclic='clic("+json+")'>" +
+                            "<tr onclic='clic("+i+")'>" +
                             "<td>"+json.PartName+"</td>" +
                             "<td>"+json.Location+"</td>" +
                             "<td>"+json.PartDescription+"</td>" +
@@ -33,13 +34,13 @@
             }
         };
 
-        function click(json)
+        function click(IdJson)
         {
             xmlRequest = new XMLHttpRequest();
             xmlRequest.open("POST", "/Plant_Operator/PartDescription", true);
             xmlRequest.setRequestHeader('Content-type', 'application/json');
-            xmlRequest.send(json);
-            sessionStorage.setItem("SelectedPart", json);
+        xmlRequest.send(jsonArray[IdJson]);
+            sessionStorage.setItem("SelectedPart", jsonArray[IdJson]);
             console.log(sessionStorage.getItem("SelectedPart"));
             window.location("/Plant_Operator/PartDescription.html");
         }
@@ -80,7 +81,7 @@
     </tr>
     </thead>
     <tbody id="tablePart">
-    <tr onclick='click(json)'>
+    <tr onclick='click(0)'>
         <td>json.PartName</td>
         <td>json.Location</td>
         <td>json.PartDescription</td>
