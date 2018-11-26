@@ -28,22 +28,13 @@
                             "<td>"+json.PartName+"</td>" +
                             "<td>"+json.Location+"</td>" +
                             "<td>"+json.PartDescription+"</td>" +
-                            "<td>"+json.SupplierName+"</td>");
+                            "<td>"+json.SupplierName+"</td>" +
+                            "</tr>");
                     }
                 }
             }
         };
 
-        function click(IdJson)
-        {
-            xmlRequest = new XMLHttpRequest();
-            xmlRequest.open("POST", "/Plant_Operator/PartDescription", true);
-            xmlRequest.setRequestHeader('Content-type', 'application/json');
-        xmlRequest.send(jsonArray[IdJson]);
-            sessionStorage.setItem("SelectedPart", jsonArray[IdJson]);
-            console.log(sessionStorage.getItem("SelectedPart"));
-            window.location("/Plant_Operator/PartDescription.html");
-        }
     </script>
     <title>Plant Operator</title>
 </head>
@@ -81,11 +72,12 @@
     </tr>
     </thead>
     <tbody id="tablePart">
-    <tr onclick='click(0)'>
+    <tr onclick='clickPart(1)'>
         <td>json.PartName</td>
         <td>json.Location</td>
         <td>json.PartDescription</td>
         <td>json.SupplierName</td>
+    </tr>
     </tbody>
 </table>
 </div>
@@ -120,5 +112,16 @@ function LevelRa(percentage)
 }
 var RaLevel = LevelRa(74);
 ctx.fillRect(0,0,RaLevel,100);
+
+function clickPart(IdJson)
+{
+    xmlRequest = new XMLHttpRequest();
+    xmlRequest.open("POST", "/Plant_Operator/PartDescription", true);
+    xmlRequest.setRequestHeader('Content-type', 'application/json');
+    xmlRequest.send(jsonArray[IdJson]);
+    sessionStorage.setItem("SelectedPart", jsonArray[IdJson]);
+    console.log(sessionStorage.getItem("SelectedPart"));
+    window.location("/Plant_Operator/PartDescription.html");
+}
 </script>
 </html>
