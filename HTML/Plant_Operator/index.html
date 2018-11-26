@@ -23,7 +23,7 @@
                     {
                         var json = jsonArray[i];
                         $("#tablePart").add("" +
-                            "<tr onclic='clic("+json.IdPartImplemented+")'>" +
+                            "<tr onclic='clic("+json+")'>" +
                             "<td>"+json.PartName+"</td>" +
                             "<td>"+json.Location+"</td>" +
                             "<td>"+json.PartDescription+"</td>" +
@@ -32,6 +32,17 @@
                 }
             }
         };
+
+        function click(json)
+        {
+            xmlRequest = new XMLHttpRequest();
+            xmlRequest.open("POST", "/Plant_Operator/PartDescription", true);
+            xmlRequest.setRequestHeader('Content-type', 'application/json');
+            xmlRequest.send(json);
+            sessionStorage.setItem("SelectedPart", json);
+            console.log(sessionStorage.getItem("SelectedPart"));
+            window.location("/Plant_Operator/PartDescription.html");
+        }
     </script>
     <title>Plant Operator</title>
 </head>
@@ -69,6 +80,11 @@
     </tr>
     </thead>
     <tbody id="tablePart">
+    <tr onclick='click(json)'>
+        <td>json.PartName</td>
+        <td>json.Location</td>
+        <td>json.PartDescription</td>
+        <td>json.SupplierName</td>
     </tbody>
 </table>
 </div>
