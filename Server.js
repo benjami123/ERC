@@ -51,6 +51,17 @@ app.get('/Picture/*', function(req, res){
     res.sendStatus(404);
     res.end('404 : This Page doesn\'t exist');
   }
+});
+app.get('/Orders/*', function(req, res){
+  var URL = __dirname + '/HTML' + req.originalUrl;
+  console.log("Requesting file : " + URL);
+  if(fs.existsSync(URL)){
+    res.sendFile(URL);
+  }else{
+    console.log("Error 404");
+    res.sendStatus(404);
+    res.end('404 : This Page doesn\'t exist');
+  }
 })
 
 

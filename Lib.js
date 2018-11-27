@@ -1,4 +1,7 @@
 var fs = require('fs');
+var OfferPath = "./../Orders/Offer/";
+var OrderFromERCPath = "./../Orders/OrderFromERC/";
+var OrderFromClientPath = "./../Orders/OrderFromClient/";
 
 var RoleArray = [ {Role:1, Link:"/Plant_Admin/"}, 
                 {Role:2, Link:"/ERC_Admin/"},
@@ -90,6 +93,15 @@ function TransformTypeAndStateToString(json){
   if(json.OfferType != null){
     json.DataType = "H";
     json.OfferDateStart = json.OfferDateStart.toString().substring(0, 15);
+    if(json.Offer != null){
+      json.Offer = OfferPath + json.Offer;
+    }
+    if(json.OrderFromClient != null){
+      json.OrderFromClient = OrderFromClientPath + json.OrderFromClient;
+    }
+    if(json.OrderFromERCPath != null){
+      json.OrderFromERC = OrderFromERCPath + json.OrderFromERC;
+    }
     json.OfferType = TypeToString[json.OfferType];
     json.OfferState = StateToString[json.OfferState];
   }else{
