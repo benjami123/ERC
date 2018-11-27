@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="History.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="Jquery.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <title>History</title>
     <script>
@@ -61,34 +61,34 @@
 </header>
 <div id="History" class="col-1">
     <table class="table table-striped border-0">
-        <caption id="TitleHistory"><center>History</center></caption>
-        <thead id="TitleDefault">
-            <tr>
-                <td id="PartName"><center>Part Name</center></td>
-                <td id="PartLocation"><center>Status</center></td>
-                <td id="PartDescription"><center>Action</center></td>
-                <td id="PartDate"><center>Date</center></td>
-                <td id="PartStatus"><center>Status</center></td>
-            </tr>
-        </thead>
+        <!--<caption id="TitleHistory"><center>History</center></caption>-->
+        <!--<thead id="TitleDefault">-->
+            <!--<tr>-->
+                <!--<td id="PartName"><center>Part Name</center></td>-->
+                <!--<td id="PartLocation"><center>Status</center></td>-->
+                <!--<td id="PartDescription"><center>Action</center></td>-->
+                <!--<td id="PartDate"><center>Date</center></td>-->
+                <!--<td id="PartStatus"><center>Status</center></td>-->
+            <!--</tr>-->
+        <!--</thead>-->
         <tbody id="tablePart">
-            <tr onclick="appear('#go')">
+            <tr id="1" onclick="show(2)">
                 <td><center>Part Name</center></td>
-                <td><center>Status</center></td>
+                <td><center>Location</center></td>
                 <td><center>Action</center></td>
                 <td><center>Date</center></td>
                 <td><center>Status</center></td>
             </tr>
-            <tr id="go" style="display:none">
-                <td><center>Part Name</center></td>
-                <td><center>Status</center></td>
-                <td><center>Action</center></td>
-                <td><center>Date</center></td>
-                <td><center>Status</center></td>
+            <tr id="2" style="display:none">
+                <td><center><img width="10%" height="10%" src="../Picture/File_Picture.png"><a href="../Picture/ERC_Logo.png" download="ERC">ERC Offer</a></center></td>
+                <td><center><img width="10%" height="10%" src="../Picture/File_Picture.png"><a href="../Picture/ERC_Logo.png" download="ERC">Client Order</a></center></td>
+                <td><center><img width="10%" height="10%" src="../Picture/File_Picture.png"><a href="../Picture/ERC_Logo.png" download="ERC">Confirmation order</a></center></td>
+                <td></td>
+                <td></td>
             </tr>
             <tr>
                 <td><center>Part Name</center></td>
-                <td><center>Status</center></td>
+                <td><center>Location</center></td>
                 <td><center>Action</center></td>
                 <td><center>Date</center></td>
                 <td><center>Status</center></td>
@@ -98,10 +98,24 @@
 </div>
 </body>
 <script>
+    function show(id)
+    {
+        if( $("#"+id).css('display') == 'none')
+        {
+            appear(id)
+        }
+        else
+        {
+            desappear(id);
+        }
+    }
     function appear(id)
     {
-        alert(id);
-        $("#"+id+"").css('dislay', "table-row");
+        $("#"+id).css("display","table-row");
+    }
+    function desappear(id)
+    {
+        $("#"+id).css("display","none");
     }
 </script>
 </html>
