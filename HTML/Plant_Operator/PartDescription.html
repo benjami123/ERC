@@ -102,10 +102,10 @@
     <input id="checkbox" class="form-check-input" type="checkbox" onchange="ownAction()">
     <br><br>
     <div id="Action">
-        <input class="btn btn-primary" role="button" value="Replace (whithout service)">
-        <input class="btn btn-primary" role="button" value="Replace (whith service)">
-        <input class="btn btn-primary" role="button" value="Check">
-        <input class="btn btn-primary" role="button" value="Repair">
+        <input class="btn btn-primary" role="button" value="Replace (whithout service)" onclick='createOffer(1)'>
+        <input class="btn btn-primary" role="button" value="Replace (whith service)" onclick='createOffer(2)'>
+        <input class="btn btn-primary" role="button" value="Check" onclick='createOffer(3)'>
+        <input class="btn btn-primary" role="button" value="Repair" onclick='createOffer(4)'>
     </div>
 </div>
 </body>
@@ -144,8 +144,9 @@
 
     function createOffer(numOffer)
     {
-        var offer = selectedPart.OfferState = numOffer;
-        xmlRequest = new XMLHttpRequest();
+        selectedPart.OfferState = numOffer;
+        var offer = selectedPart;
+            xmlRequest = new XMLHttpRequest();
         xmlRequest.open("POST", "/CreateOffer", true);
         xmlRequest.setRequestHeader('Content-type', 'application/json');
         xmlRequest.send(offer);
@@ -158,8 +159,14 @@
 
     function createReview()
     {
-        var offer = selectedPart.ReviewType = $("#ReviewType").val();
-        offer = offer.ReviewDate = $("#ReviewDate").val();
+        if($("#ReviewDate").val() == "")
+        {
+            document.getElementById("notif").innerHTML = "The date is required";
+            return;
+        }
+        selectedPart.ReviewType = document.getElementById("ReviewType").value;
+        selectedPart.ReviewDate = $("#ReviewDate").val();
+        var offer = selectedPart;
         alert(JSON.stringify(offer));
         xmlRequest = new XMLHttpRequest();
         xmlRequest.open("POST", "/CreateReview", true);
