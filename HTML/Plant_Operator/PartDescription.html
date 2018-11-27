@@ -147,7 +147,7 @@
         selectedPart.OfferState = numOffer;
         var offer = selectedPart;
             xmlRequest = new XMLHttpRequest();
-        xmlRequest.open("POST", "/CreateOffer", true);
+        xmlRequest.open("POST", "/Plant_Operator/CreateOffer", true);
         xmlRequest.setRequestHeader('Content-type', 'application/json');
         xmlRequest.send(offer);
         xmlRequest.onreadystatechange = function(){
@@ -169,7 +169,7 @@
         var offer = selectedPart;
         alert(JSON.stringify(offer));
         xmlRequest = new XMLHttpRequest();
-        xmlRequest.open("POST", "/CreateReview", true);
+        xmlRequest.open("POST", "/Plant_Operator/CreateReview", true);
         xmlRequest.setRequestHeader('Content-type', 'application/json');
         xmlRequest.send(offer);
         xmlRequest.onreadystatechange = function(){
