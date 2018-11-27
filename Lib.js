@@ -89,10 +89,12 @@ module.exports={
 function TransformTypeAndStateToString(json){
   if(json.OfferType != null){
     json.DataType = "H";
+    json.OfferDateStart = json.OfferDateStart.toString().substring(0, 15);
     json.OfferType = TypeToString[json.OfferType];
     json.OfferState = StateToString[json.OfferState];
   }else{
     json.DataType = "R";
+    json.ReviewDate = json.ReviewDate.toString().substring(0, 15);
     json.ReviewType = TypeToString[json.ReviewType];
   }
   return json;

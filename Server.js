@@ -123,7 +123,17 @@ app.post('/Plant_Operator/PartHistory', function(req, res){
 
 app.post('/Plant_Operator/History', function(req, res){
     console.log("Got post in history");
-    console.log(req.body);
+    DB.getPlantHistoryOfferWithFiles(req.session.user.IdPlant, function(err, Offers){
+      console.log("Got result : ");
+      console.log(Offers);
+      DB.getPlantHistoryReview(req.session.user.IdPlant, function(err, Review){
+        console.log("Got Reviews");
+        console.log(Review);
+        var Result = Lib.MergeAndOrderbyDate(Offers, Review);
+        res.end(JSON.stringify(Result));
+      });
+
+    });
 })
 
 app.post('/Plant_Operator/index', function(req, res){

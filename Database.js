@@ -32,7 +32,6 @@ module.exports= {
     }, 
 
     getPartImplementedHistory: function(IDPartImplemented, callback){
-        console.log("Selecting History for IDPartImplemented = " + IDPartImplemented);
         var Query = "SELECT OfferType, OfferState, OfferDateStart FROM part_offer WHERE IdPartImplemented = ? ORDER BY OfferDateStart DESC;";
         con.query(Query, [IDPartImplemented], function(err, rows){
             if (err) throw err;
@@ -43,6 +42,22 @@ module.exports= {
     getPartImplementedReviews: function(IDPartImplemented, callback){
         var Query = "SELECT ReviewType, ReviewDate FROM review WHERE IdPartImplemented = ? ORDER BY ReviewDate DESC;";
         con.query(Query, [IDPartImplemented],function(err, rows){
+            if (err) throw err;
+            callback(err, rows);
+        });
+    },
+
+    getPlantHistoryOfferWithFiles : function(IDPlant, callback){
+        var Query = "SELECT part.PartName, partimplemented.Location, partimplemented.IdPlant,part_offer.OfferType, part_offer.OfferState, part_offer.OfferDateStart, part_offer.Offer, part_offer.OrderFromClient, part_offer.OrderFromERC FROM part_offer JOIN partimplemented ON part_offer.IdPartImplemented = partimplemented.IdPartImplemented JOIN part ON part.IdPart=partimplemented.IdPart WHERE IdPlant = ? ORDER BY part_offer.OfferDateStart DESC;";
+        con.query(Query, [IDPlant],function(err, rows){
+            if (err) throw err;
+            callback(err, rows);
+        });
+    },
+
+    getPlantHistoryReview: function(IDPlant, callback){
+        var Query = "SELECT part.PartName, partimplemented.Location, partimplemented.IdPlant, review.ReviewType, review.ReviewDate FROM review JOIN partimplemented ON review.IdPartImplemented = partimplemented.IdPartImplemented JOIN part ON part.IdPart=partimplemented.IdPart WHERE IdPlant = '1' ORDER BY review.ReviewDate DESC;";
+        con.query(Query, [IDPlant],function(err, rows){
             if (err) throw err;
             callback(err, rows);
         });
@@ -59,6 +74,70 @@ module.exports= {
     createPartReview: function(IDPartImplemented, ReviewType, ReviewDate, callback){
         var Query = "INSERT INTO review(IdPartImplemented, ReviewType, ReviewDate) VALUES( ? , ? , ? );";
         con.query(Query, [IDPartImplemented, ReviewType, ReviewDate], function(err, rows){
+            if (err) throw err;
+            callback(err, rows) ;
+        });
+    },
+
+    createPartImplemented: function(Values, callback){
+        var Query = "INSERT INTO partimplemented (IdPlant, IdPart, isImplemented, Location) VALUES( ? , ? , 1 , ? );";
+        con.query(Query, [Values], function(err, rows){
+            if (err) throw err;
+            callback(err, rows) ;
+        });
+    },
+
+    createUser: function(IDPlant, Login, Password, Role, callback){
+        var Query = "INSERT INTO user(IdPlant, Login, Passowrd, Role) VALUES( ? , ? , ? , ? );";
+        con.query(Query, [IDPlant, Login, Password, Role], function(err, rows){
+            if (err) throw err;
+            callback(err, rows) ;
+        });
+    },
+
+    changePassword: function(IDUser, Password, callback){
+        var Query = "UPDATE user SET Password = ? WHERE IdUser = ? ;";
+        con.query(Query, [Password, IDUser], function(err, rows){
+            if (err) throw err;
+            callback(err, rows) ;
+        });
+    },
+
+    uploadOffer: function(IDPartImplemented, Offer, callback){
+        var Query = "UPDATE part_offer SET Offer = ? WHERE IdPartImplemented = ? ;";
+        con.query(Query, [Offer, IDPartImplemented], function(err, rows){
+            if (err) throw err;
+            callback(err, rows) ;
+        });  
+    },
+
+    uploadOrderFromERC: function(IDPartImplemented, Order, callback){
+        var Query = "UPDATE part_offer SET OrderFromERC = ? WHERE IdPartImplemented = ? ;";
+        con.query(Query, [Order, IDPartImplemented], function(err, rows){
+            if (err) throw err;
+            callback(err, rows) ;
+        });  
+    },
+
+    uploadOrderFromClient: function(IDPartImplemented, Order, callback){
+        var Query = "UPDATE part_offer SET OrderFromClient = ? WHERE IdPartImplemented = ? ;";
+        con.query(Query, [Order, IDPartImplemented], function(err, rows){
+            if (err) throw err;
+            callback(err, rows) ;
+        });  
+    },
+
+    removeUser: function(IDUser, callback){
+        var Query = "DELETE FROM TABLE user WHERE IdUser = ? ;";
+        con.query(Query, [IDUser], function(err, rows){
+            if (err) throw err;
+            callback(err, rows) ;
+        });
+    },
+
+    removePartImplemented: function(ArrayPartimplementedID, callback){
+        var Query = "UPDATE partimplemented SET isImplemented = 0 WHERE IdPartImplemented = ? ;";
+        con.query(Query, ArrayPartimplementedID, function(err, rows){
             if (err) throw err;
             callback(err, rows) ;
         });
