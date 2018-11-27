@@ -10,8 +10,8 @@
     <script>
         var selectedPart = sessionStorage.getItem("SelectedPart");
         window.onload = function(){
-            console.log("sending post to server");
-            var IdPartImplemented = JSON.parse(sessionStorage.getItem("SelectedPart")).IdPartImplemented;
+            var IdPartImplemented = sessionStorage.getItem("SelectedPart");
+            console.log("sending post to server " + IdPartImplemented);
             xmlRequest = new XMLHttpRequest();
             xmlRequest.open("POST", "/History", true);
             xmlRequest.setRequestHeader('Content-type', 'application/json');
@@ -30,15 +30,15 @@
                                  "<tr>" +
                                  "<td>"+json.OfferDateStart+"</td>" +
                                  "<td>"+json.OfferType+"</td>" +
-                                 "<td>"+json.OfferStatus+"</td>"+
+                                 "<td>"+json.OfferState+"</td>"+
                                  "</tr>");
                          }
                          else
                          {
                              $("#tablePart").append("" +
                                  "<tr>" +
-                                 "<td>"+json.OfferDateStart+"</td>" +
-                                 "<td>"+json.OfferType+"</td>" +
+                                 "<td>"+json.ReviewDate+"</td>" +
+                                 "<td>"+json.ReviewType+"</td>" +
                                  "<td>Review</td>"+
                                  "</tr>");
                          }
@@ -93,16 +93,6 @@
         </tr>
         </thead>
         <tbody id="tablePart">
-            <tr>
-            <td>12-01-2018</td>
-            <td>Replace without service</td>
-            <td>Waiting for order from customer</td>
-            </tr>
-            <tr>
-            <td>"+json.OfferDateStart+"</td>
-            <td>"+json.OfferType+"</td>
-            <td>Review</td>
-            </tr>
         </tbody>
     </table>
 </div>

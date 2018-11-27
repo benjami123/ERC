@@ -2,16 +2,11 @@
 var DB = require('./Database.js');
 var session = require('express-session');
 var bodyParser = require('body-parser');
+var fs = require('fs');
+var Lib = require('./Lib.js');
+RoleArray = Lib.getRoleArray();
 const express = require('express');
 const app = express();
-
-var RoleArray = [ {Role:1, Link:"/Plant_Admin/"}, 
-                {Role:2, Link:"/ERC_Admin/"},
-                {Role:3, Link:"/Plant_Operator/"},
-                {Role:4, Link:"/ERC_Services/"},
-                {Role:5, Link:"/ERC_Additives/"},
-                {Role:6, Link:"/ERC_Maintenance/"}
-              ];
 
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
@@ -34,7 +29,14 @@ function CheckRole(req, res, RoleArray){
   console.log("Request from : " + URL);
   var sess = req.session;
   if(sess.user != null && sess.user.Role == RoleArray.Role){
-    res.sendFile(__dirname + '/HTML'+RoleArray.Link + URL);
+    URL = __dirname + '/HTML'+RoleArray.Link + URL;
+    console.log("Requesting file : " + URL);
+    if(fs.existsSync(URL)){
+      res.sendFile(URL);
+    }else{
+      console.log("Error 404");
+      res.sendStatus(404);
+    }
   }else{
     res.redirect("/");
   }
@@ -102,17 +104,26 @@ app.post('/Login',function(req,res){
   });
 });
 
-app.post('/Plant_Operator/PartDescription', function(req, res){
+app.post('/History', function(req, res){
   console.log("Got session : ");
   console.log(req.session.user);
-  DB.getPartImplementedHistory(1, function(err, Result){
-    console.log("Got Result : ");
+  json = {};
+  DB.getPartImplementedHistory(2, function(err, Result){
+    console.log("Got History : ");
     console.log(Result);
-    DB.getPartImplementedReviews(1, function(err, Reviews){
-      console.log("Got Result : ");
+    DB.getPartImplementedReviews(2, function(err, Reviews){
+      console.log("Got Reviews : ");
       console.log(Reviews);
-      Result.Reviews = Reviews;
-      res.end(JSON.stringify(Result));
+      if(Result == null){
+        json = Reviews;
+      }else if(Reviews == null){
+        json = Result;
+      }else{
+        json = Lib.MergeAndOrderbyDate(Result, Reviews);
+      }
+      console.log("Sending to client : ");
+      console.log(json);
+      res.end(JSON.stringify(json));
     });
   })
 })
