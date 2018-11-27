@@ -1,3 +1,5 @@
+var fs = require('fs');
+
 var RoleArray = [ {Role:1, Link:"/Plant_Admin/"}, 
                 {Role:2, Link:"/ERC_Admin/"},
                 {Role:3, Link:"/Plant_Operator/"},
@@ -26,7 +28,6 @@ var TypeToString = [
 
 module.exports={
     MergeAndOrderbyDate: function (history, review){
-    console.log("From merg function");
     var Merged = [];
     var iIndexHistory = 0;
     var iIndexReview = 0;
@@ -58,19 +59,41 @@ module.exports={
     }
     return Merged;
   },
-  getRoleArray(){
+
+  CheckRole: function(req, res, RoleArray){
+    var URL = req.originalUrl;
+    URL = URL.replace(RoleArray.Link, '');
+    console.log("Request from : " + URL);
+    var sess = req.session;
+    if(sess.user != null && sess.user.Role == RoleArray.Role){
+      URL = __dirname + '/HTML'+RoleArray.Link + URL;
+      console.log("Requesting file : " + URL);
+      if(fs.existsSync(URL)){
+        res.sendFile(URL);
+      }else{
+        console.log("Error 404");
+        res.sendStatus(404);
+        res.end('404 : This Page doesn\'t exist');
+      }
+    }else{
+      res.redirect("/");
+    }
+  },
+
+  getRoleArray: function(){
       return RoleArray;
-  }
+  }, 
+  
 }
 
 function TransformTypeAndStateToString(json){
-    if(json.OfferType != null){
-      json.DataType = "H"
-      json.OfferType = TypeToString[json.OfferType];
-      json.OfferState = StateToString[json.OfferState];
-    }else{
-      json.DataType = "R";
-      json.ReviewType = TypeToString[json.ReviewType];
-    }
-    return json;
+  if(json.OfferType != null){
+    json.DataType = "H";
+    json.OfferType = TypeToString[json.OfferType];
+    json.OfferState = StateToString[json.OfferState];
+  }else{
+    json.DataType = "R";
+    json.ReviewType = TypeToString[json.ReviewType];
   }
+  return json;
+}

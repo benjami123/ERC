@@ -2,8 +2,8 @@
 var DB = require('./Database.js');
 var session = require('express-session');
 var bodyParser = require('body-parser');
-var fs = require('fs');
 var Lib = require('./Lib.js');
+var fs = require('fs');
 RoleArray = Lib.getRoleArray();
 const express = require('express');
 const app = express();
@@ -23,43 +23,36 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/HTML/index.html');
 });
 
-function CheckRole(req, res, RoleArray){
-  var URL = req.originalUrl;
-  URL = URL.replace(RoleArray.Link, '');
-  console.log("Request from : " + URL);
-  var sess = req.session;
-  if(sess.user != null && sess.user.Role == RoleArray.Role){
-    URL = __dirname + '/HTML'+RoleArray.Link + URL;
-    console.log("Requesting file : " + URL);
-    if(fs.existsSync(URL)){
-      res.sendFile(URL);
-    }else{
-      console.log("Error 404");
-      res.sendStatus(404);
-    }
-  }else{
-    res.redirect("/");
-  }
-}
-
 app.get('/Plant_Admin/*', function(req, res){
-  CheckRole(req, res, RoleArray[0]);
+  Lib.CheckRole(req, res, RoleArray[0]);
 });
 app.get('/ERC_Admin/*', function(req, res){
-  CheckRole(req, res, RoleArray[1]);
+  Lib.CheckRole(req, res, RoleArray[1]);
 });
 app.get('/Plant_Operator/*', function(req, res){
-  CheckRole(req, res, RoleArray[2]);
+  Lib.CheckRole(req, res, RoleArray[2]);
 });
 app.get('/ERC_Services/*', function(req, res){
-  CheckRole(req, res, RoleArray[3]);
+  Lib.CheckRole(req, res, RoleArray[3]);
 });
 app.get('/ERC_Additives/*', function(req, res){
-  CheckRole(req, res, RoleArray[4]);
+  Lib.CheckRole(req, res, RoleArray[4]);
 });
 app.get('/ERC_Maintenance/*', function(req, res){
-  CheckRole(req, res, RoleArray[5]);
+  Lib.CheckRole(req, res, RoleArray[5]);
 });
+app.get('/Picture/*', function(req, res){
+  var URL = __dirname + '/HTML' + req.originalUrl;
+  console.log("Requesting file : " + URL);
+  if(fs.existsSync(URL)){
+    res.sendFile(URL);
+  }else{
+    console.log("Error 404");
+    res.sendStatus(404);
+    res.end('404 : This Page doesn\'t exist');
+  }
+})
+
 
 app.post('/Login',function(req,res){
   var sess = req.session;
@@ -105,15 +98,11 @@ app.post('/Login',function(req,res){
 });
 
 app.post('/History', function(req, res){
-  console.log("Got session : ");
-  console.log(req.session.user);
+  // console.log("got post from history");
+  // console.log(req.body);
   json = {};
-  DB.getPartImplementedHistory(2, function(err, Result){
-    console.log("Got History : ");
-    console.log(Result);
-    DB.getPartImplementedReviews(2, function(err, Reviews){
-      console.log("Got Reviews : ");
-      console.log(Reviews);
+  DB.getPartImplementedHistory(req.body.IdPartImplemented, function(err, Result){
+    DB.getPartImplementedReviews(req.body.IdPartImplemented, function(err, Reviews){
       if(Result == null){
         json = Reviews;
       }else if(Reviews == null){
@@ -121,20 +110,40 @@ app.post('/History', function(req, res){
       }else{
         json = Lib.MergeAndOrderbyDate(Result, Reviews);
       }
-      console.log("Sending to client : ");
-      console.log(json);
+      // console.log("Sending to client : ");
+      // console.log(json);
       res.end(JSON.stringify(json));
     });
   })
 })
 
 app.post('/Plant_Operator/index', function(req, res){
-  console.log("User connected : " + JSON.stringify(req.session.user));
+  // console.log("User connected : " + JSON.stringify(req.session.user));
   DB.getPlantPartPreviewInfos(req.session.user.IdPlant, function(err, Result){
-    console.log("Got result : ");
-    console.log(Result);
+    // console.log("Got result : ");
+    // console.log(Result);
     res.end(JSON.stringify(Result));
   })
+});
+
+app.post('/Plant_Operator/CreateOffer', function(req, res){
+  console.log("got post from create offer");
+  console.log(req.body);
+  // DB.createPartOffer(, function(err, result){
+    // console.log("Got result : ");
+    // console.log(Result);
+    // res.end(JSON.stringify(Result));
+  // })S
+});
+
+app.post('Plant_Operator/CreateReview', function(req, res){
+  console.log("Got post from Create review");
+  console.log(req.body);
+  // DB.createPartReview(, function(err, result){
+    // console.log("got result : ");
+    // console.log(Result);
+// 
+  // })
 });
 
 app.listen(3000, function () {

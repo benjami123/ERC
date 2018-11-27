@@ -16,34 +16,51 @@ con.connect(function(err){
 
 module.exports= {
     getUser: function(login, pwd, callback){
-        var Query = "SELECT * FROM user WHERE Login='"+login+"' and Password='"+pwd+"';";
-        con.query(Query,function(err,rows){
-            // console.log("Executed query : " + Query);
+        var Query = "SELECT * FROM user WHERE Login = ? and Password = ? ;";
+        con.query(Query, [login, pwd], function(err,rows){
+            if (err) throw err;
             callback(err, rows[0]);
         });
     },
 
     getPlantPartPreviewInfos: function(IDPlant, callback){
-        var Query = "SELECT part.PartName, part.PartDescription, partimplemented.Location, partimplemented.IdPartImplemented, supplier.SupplierName FROM part JOIN partimplemented ON part.IdPart=partimplemented.IdPart JOIN supplier ON part.IdSupplier=supplier.IdSupplier WHERE partimplemented.IdPlant='"+IDPlant+"';";
-        con.query(Query,function(err,rows){
-            // console.log("Executed query : " + Query);
+        var Query = "SELECT part.PartName, part.PartDescription, partimplemented.Location, partimplemented.IdPartImplemented, supplier.SupplierName FROM part JOIN partimplemented ON part.IdPart=partimplemented.IdPart JOIN supplier ON part.IdSupplier=supplier.IdSupplier WHERE partimplemented.IdPlant = ? ;";
+        con.query(Query, [IDPlant], function(err,rows){
+            if (err) throw err;
             callback(err, rows);
         });
     }, 
 
     getPartImplementedHistory: function(IDPartImplemented, callback){
-        var Query = "SELECT OfferType, OfferState, OfferDateStart FROM part_offer WHERE IdPartImplemented = '"+IDPartImplemented+"' ORDER BY OfferDateStart DESC;";
-        con.query(Query, function(err, rows){
-            //  console.log("Executed query : " + Query);
+        console.log("Selecting History for IDPartImplemented = " + IDPartImplemented);
+        var Query = "SELECT OfferType, OfferState, OfferDateStart, Offer, OrderFromClient, OrderFromERC FROM part_offer WHERE IdPartImplemented = ? ORDER BY OfferDateStart DESC;";
+        con.query(Query, [IDPartImplemented], function(err, rows){
+            if (err) throw err;
             callback(err, rows);
-        })
+        });
     },
 
     getPartImplementedReviews: function(IDPartImplemented, callback){
-        var Query = "SELECT ReviewType, ReviewDate FROM review WHERE IdPartImplemented = '"+IDPartImplemented+"' ORDER BY ReviewDate DESC;";
-        con.query(Query, function(err, rows){
-            //  console.log("Executed query : " + Query);
+        var Query = "SELECT ReviewType, ReviewDate FROM review WHERE IdPartImplemented = ? ORDER BY ReviewDate DESC;";
+        con.query(Query, [IDPartImplemented],function(err, rows){
+            if (err) throw err;
             callback(err, rows);
-        })
+        });
     },
+
+    createPartOffer: function(IDPartImplemented, OfferDateStart, Price, OfferType, OfferState, callback){
+        var Query = "INSERT INTO part_offer(IdPartImplemented, OfferDateStart, Price, OfferType, OfferState, UserSeen) VALUES( ? , ? , ? , ? , ? , 0);";
+        con.query(Query, [IDPartImplemented, OfferDateStart, Price, OfferType, OfferState], function(err, rows){
+            if (err) throw err;
+            callback(err, rows);
+        });
+    },
+
+    createPartReview: function(IDPartImplemented, ReviewType, ReviewDate, callback){
+        var Query = "INSERT INTO review(IdPartImplemented, ReviewType, ReviewDate) VALUES( ? , ? , ? );";
+        con.query(Query, [IDPartImplemented, ReviewType, ReviewDate], function(err, rows){
+            if (err) throw err;
+            callback(err, rows);
+        });
+    }
 };
