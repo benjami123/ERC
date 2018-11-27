@@ -23,20 +23,35 @@
                     for(var i=0;i<jsonArray.length;i=i+2)
                     {
                         var json = jsonArray[i];
-                        $("#tablePart").append("" +
-                            "<tr onclick='show(i)'>" +
-                            "<td>"+json.PartName+"</td>" +
-                            "<td>"+json.Location+"</td>" +
-                            "<td>"+json.PartDescription+"</td>" +
-                            "<td>"+json.SupplierName+"</td>" +
-                            "</tr>" +
-                            "<tr id=\"2\" style=\"display:none\">\n" +
-                            "                <td><center><img width=\"10%\" height=\"10%\" src=\"../Picture/File_Picture.png\"><a href=\""+json.Offer+"\" download=\"ERC\">Offer</a></center></td>\n" +
-                            "                <td><center><img width=\"10%\" height=\"10%\" src=\"../Picture/File_Picture.png\"><a href=\""+json.OrderFromClient+"\" download=\"ERC\">Client Order</a></center></td>\n" +
-                            "                <td><center><img width=\"10%\" height=\"10%\" src=\"../Picture/File_Picture.png\"><a href=\""+json.OrderFromERC+"\" download=\"ERC\">ERC confirmation order</a></center></td>\n" +
-                            "                <td></td>\n" +
-                            "                <td></td>\n" +
-                            "            </tr>");
+                        if(json.DataType == "H")
+                        {
+                            $("#tablePart").append("" +
+                                "<tr onclick='show(i)'>" +
+                                "<td>"+json.PartName+"</td>" +
+                                "<td>"+json.Location+"</td>" +
+                                "<td>"+json.OfferType+"</td>" +
+                                "<td>"+json.OfferDateStart+"</td>" +
+                                "<td>"+json.OfferState+"</td>" +
+                                "</tr>" +
+                                "<tr id=\""+(i+1)+"\" style=\"display:none\">\n" +
+                                "                <td><center><img width=\"10%\" height=\"10%\" src=\"../Picture/File_Picture.png\"><a href=\""+json.Offer+"\" download=\"ERC\">Offer</a></center></td>\n" +
+                                "                <td><center><img width=\"10%\" height=\"10%\" src=\"../Picture/File_Picture.png\"><a href=\""+json.OrderFromClient+"\" download=\"ERC\">Client Order</a></center></td>\n" +
+                                "                <td><center><img width=\"10%\" height=\"10%\" src=\"../Picture/File_Picture.png\"><a href=\""+json.OrderFromERC+"\" download=\"ERC\">ERC confirmation order</a></center></td>\n" +
+                                "                <td></td>\n" +
+                                "                <td></td>\n" +
+                                "            </tr>");
+                        }
+                        else {
+                            $("#tablePart").append("" +
+                                "<tr>" +
+                                "<td>"+json.PartName+"</td>" +
+                                "<td>"+json.Location+"</td>" +
+                                "<td>" + json.ReviewType + "</td>" +
+                                "<td>" + json.ReviewDate + "</td>" +
+                                "<td>Review</td>" +
+                                "</tr>" +
+                                "");
+                        }
 
 
                     }
