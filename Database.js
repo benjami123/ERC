@@ -33,7 +33,7 @@ module.exports= {
 
     getPartImplementedHistory: function(IDPartImplemented, callback){
         console.log("Selecting History for IDPartImplemented = " + IDPartImplemented);
-        var Query = "SELECT OfferType, OfferState, OfferDateStart, Offer, OrderFromClient, OrderFromERC FROM part_offer WHERE IdPartImplemented = ? ORDER BY OfferDateStart DESC;";
+        var Query = "SELECT OfferType, OfferState, OfferDateStart FROM part_offer WHERE IdPartImplemented = ? ORDER BY OfferDateStart DESC;";
         con.query(Query, [IDPartImplemented], function(err, rows){
             if (err) throw err;
             callback(err, rows);
@@ -48,9 +48,9 @@ module.exports= {
         });
     },
 
-    createPartOffer: function(IDPartImplemented, OfferDateStart, Price, OfferType, OfferState, callback){
-        var Query = "INSERT INTO part_offer(IdPartImplemented, OfferDateStart, Price, OfferType, OfferState, UserSeen) VALUES( ? , ? , ? , ? , ? , 0);";
-        con.query(Query, [IDPartImplemented, OfferDateStart, Price, OfferType, OfferState], function(err, rows){
+    createPartOffer: function(IDPartImplemented, OfferType, callback){
+        var Query = "INSERT INTO part_offer(IdPartImplemented, OfferDateStart, OfferType, OfferState, UserSeen) VALUES( ? , NOW() , ? , 1 , 0);";
+        con.query(Query, [IDPartImplemented, OfferType], function(err, rows){
             if (err) throw err;
             callback(err, rows);
         });
@@ -60,7 +60,7 @@ module.exports= {
         var Query = "INSERT INTO review(IdPartImplemented, ReviewType, ReviewDate) VALUES( ? , ? , ? );";
         con.query(Query, [IDPartImplemented, ReviewType, ReviewDate], function(err, rows){
             if (err) throw err;
-            callback(err, rows);
+            callback(err, rows) ;
         });
     }
 };

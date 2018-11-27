@@ -12,7 +12,7 @@
             console.log("sending post to server");
             var json={};
             xmlRequest = new XMLHttpRequest();
-            xmlRequest.open("POST", "/Plant_Operator/index", true);
+            xmlRequest.open("POST", "/Plant_Operator/History", true);
             xmlRequest.setRequestHeader('Content-type', 'application/json');
             xmlRequest.send();
             xmlRequest.onreadystatechange = function(){

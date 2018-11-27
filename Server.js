@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true 
 }));
 
 
@@ -97,12 +97,16 @@ app.post('/Login',function(req,res){
   });
 });
 
-app.post('/History', function(req, res){
+app.post('/Plant_Operator/PartHistory', function(req, res){
   // console.log("got post from history");
   // console.log(req.body);
   json = {};
   DB.getPartImplementedHistory(req.body.IdPartImplemented, function(err, Result){
     DB.getPartImplementedReviews(req.body.IdPartImplemented, function(err, Reviews){
+        // console.log("Got Result : ");
+        // console.log(Result);
+        // console.log("got Reviews");
+        // console.log(Reviews);
       if(Result == null){
         json = Reviews;
       }else if(Reviews == null){
@@ -115,6 +119,11 @@ app.post('/History', function(req, res){
       res.end(JSON.stringify(json));
     });
   })
+});
+
+app.post('/Plant_Operator/History', function(req, res){
+    console.log("Got post in history");
+    console.log(req.body);
 })
 
 app.post('/Plant_Operator/index', function(req, res){
@@ -127,24 +136,26 @@ app.post('/Plant_Operator/index', function(req, res){
 });
 
 app.post('/Plant_Operator/CreateOffer', function(req, res){
-  console.log("got post from create offer");
-  console.log(req.body);
-  // DB.createPartOffer(, function(err, result){
-    // console.log("Got result : ");
-    // console.log(Result);
-    // res.end(JSON.stringify(Result));
-  // })S
-});
-
-app.post('Plant_Operator/CreateReview', function(req, res){
-  console.log("Got post from Create review");
-  console.log(req.body);
-  // DB.createPartReview(, function(err, result){
+//   console.log("got post from create offer");
+//   console.log(req.body);
+  DB.createPartOffer(req.body.IdPartImplemented, req.body.OfferType, function(err, Result){
     // console.log("got result : ");
     // console.log(Result);
-// 
-  // })
+    res.end(JSON.stringify(Result));
+  })
 });
+
+app.post('/Plant_Operator/CreateReview', function(req, res){
+//   console.log("Got post from Create review");
+//   console.log(req.body);
+  DB.createPartReview(req.body.IdPartImplemented, req.body.ReviewType, req.body.ReviewDate, function(err, Result){
+    // console.log("got result : ");
+    // console.log(Result);
+    res.end(JSON.stringify(Result));
+  })
+});
+
+app.post('/')
 
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!')

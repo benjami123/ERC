@@ -8,18 +8,18 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
-        var selectedPart = sessionStorage.getItem("SelectedPart");
+        var selectedPart = JSON.parse(sessionStorage.getItem("SelectedPart"));
         window.onload = function(){
             var IdPartImplemented = sessionStorage.getItem("SelectedPart");
-            console.log("sending post to server " + IdPartImplemented);
+            // console.log("sending post to server " + IdPartImplemented);
             xmlRequest = new XMLHttpRequest();
-            xmlRequest.open("POST", "/History", true);
+            xmlRequest.open("POST", "/Plant_Operator/PartHistory", true);
             xmlRequest.setRequestHeader('Content-type', 'application/json');
             xmlRequest.send(IdPartImplemented);
             xmlRequest.onreadystatechange = function(){
                 if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
-                    console.log("Got response : ");
-                    console.log(xmlRequest.responseText);
+                    // console.log("Got response : ");
+                    // console.log(xmlRequest.responseText);
                     jsonArray = JSON.parse(xmlRequest.responseText);
                     for(var i=0;i<jsonArray.length;i++)
                      {
@@ -144,14 +144,16 @@
 
     function createOffer(numOffer)
     {
-        selectedPart.OfferState = numOffer;
+        selectedPart.OfferType = numOffer;
         xmlRequest = new XMLHttpRequest();
         xmlRequest.open("POST", "/Plant_Operator/CreateOffer", true);
         xmlRequest.setRequestHeader('Content-type', 'application/json');
-        xmlRequest.send(selectedPart);
+        xmlRequest.send(JSON.stringify(selectedPart));
         xmlRequest.onreadystatechange = function(){
             if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)) {
-                document.getElementById("notif").innerHTML = xmlRequest.responseText;
+                console.log("Got answer : ");
+                console.log(xmlRequest.responseText);
+                document.getElementById("notif").innerHTML = JSON.parse(xmlRequest.responseText);
             }
             };
     }
@@ -165,13 +167,16 @@
         }
         selectedPart.ReviewType = document.getElementById("ReviewType").value;
         selectedPart.ReviewDate = $("#ReviewDate").val();
-        alert(JSON.stringify(offer));
         xmlRequest = new XMLHttpRequest();
         xmlRequest.open("POST", "/Plant_Operator/CreateReview", true);
         xmlRequest.setRequestHeader('Content-type', 'application/json');
-        xmlRequest.send(selectedPart);
+        console.log("Sending to server : ");
+        console.log(selectedPart);
+        xmlRequest.send(JSON.stringify(selectedPart));
         xmlRequest.onreadystatechange = function(){
             if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)) {
+                console.log("Got answer : ");
+                console.log(xmlRequest.responseText);
                 document.getElementById("notif").innerHTML = xmlRequest.responseText;
             }
         };
