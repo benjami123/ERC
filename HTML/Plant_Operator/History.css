@@ -1,0 +1,22 @@
+#tablePart{
+    font-size: 90%;
+    border: 1px solid gray;
+}
+#TitleDefault{
+    background-color: gray;
+}
+#TitleHistory{
+    background-color: darkgray;
+    color: white;
+}
+#History {
+    height: 90%;
+    border: gray;
+    border-style: solid;
+    position: absolute;
+    overflow: auto;
+    right: 0.5%;
+    left: 0.5%;
+    bottom: 1%;
+    top: 55px;
+}
