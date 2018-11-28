@@ -6,7 +6,7 @@ var OrderFromClientPath = "./../Orders/OrderFromClient/";
 var RoleArray = [ {Role:1, Link:"/Plant_Admin/"}, 
                 {Role:2, Link:"/ERC_Admin/"},
                 {Role:3, Link:"/Plant_Operator/"},
-                {Role:4, Link:"/ERC_Services/"},
+                {Role:4, Link:"/ERC_Service/"},
                 {Role:5, Link:"/ERC_Additives/"},
                 {Role:6, Link:"/ERC_Maintenance/"}
               ];

@@ -32,7 +32,7 @@ app.get('/ERC_Admin/*', function(req, res){
 app.get('/Plant_Operator/*', function(req, res){
   Lib.CheckRole(req, res, RoleArray[2]);
 });
-app.get('/ERC_Services/*', function(req, res){
+app.get('/ERC_Service/*', function(req, res){
   Lib.CheckRole(req, res, RoleArray[3]);
 });
 app.get('/ERC_Additives/*', function(req, res){
@@ -87,7 +87,7 @@ app.post('/Login',function(req,res){
           break;
 
         case 4 : var json = {};
-          json.Redirection = "/ERC_Services/index.html"
+          json.Redirection = "/ERC_Service/index.html"
           res.end(JSON.stringify(json));
           break;
 
@@ -194,10 +194,16 @@ app.post('/ERC_Service/*', function(req, res){
   console.log("got post in " + req.originalUrl);
   switch(url){
     case "/index":
+    var json = [];
       DB.getOffersRequest(function(err, Result){
-        console.log("got result : ");
+        console.log("Sending");
         console.log(Result);
-        res.end(JSON.stringify(Result));
+        Result.forEach(r => {
+          json.push(Lib.doTransformTypeAndStateToString(r));
+       });
+       console.log("Sending ");
+       console.log(json);
+       res.end(JSON.stringify(json));
       })
       break;
   }

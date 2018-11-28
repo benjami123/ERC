@@ -72,7 +72,7 @@ module.exports= {
     },
 
     getOffersRequest:function(callback){
-        var Query = "SELECT user.Login, user.Email, plant.Address, plant.PlantName, plant.IdPlant, partimplemented.Location, part.PartName, part_offer.OfferType ,part_offer.OfferDateStart, part_offer.IdPart_Offer FROM part_offer JOIN partimplemented ON part_offer.IdPartImplemented=partimplemented.IdPartImplemented JOIN part ON partimplemented.IdPart=part.IdPart JOIN plant ON partimplemented.IdPlant=plant.IdPlant JOIN user ON plant.IdPlant=user.IdPlant WHERE part_offer.OfferType=1 ORDER BY part_offer.OfferDateStart DESC;";
+        var Query = "SELECT user.Login, user.Email, plant.Address, plant.PlantName, plant.IdPlant, partimplemented.Location, part.PartName, part_offer.OfferType ,part_offer.OfferDateStart, part_offer.IdPart_Offer FROM part_offer JOIN partimplemented ON part_offer.IdPartImplemented=partimplemented.IdPartImplemented JOIN part ON partimplemented.IdPart=part.IdPart JOIN plant ON partimplemented.IdPlant=plant.IdPlant JOIN user ON plant.IdPlant=user.IdPlant WHERE part_offer.OfferState=1 ORDER BY part_offer.OfferDateStart DESC;";
         con.query(Query, function(err, rows){
             if (err) throw err;
             callback(err, rows);
