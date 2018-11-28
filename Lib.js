@@ -35,29 +35,40 @@ module.exports={
     var iIndexHistory = 0;
     var iIndexReview = 0;
     var SizeOfMergedArray = history.length + review.length;
-  
-    for(var i=0; i<SizeOfMergedArray; i++){
-      if(history[iIndexHistory].OfferDateStart > review[iIndexReview].ReviewDate){
-        Merged[i] = TransformTypeAndStateToString(history[iIndexHistory]);
-        iIndexHistory++;
-      }else{
-        Merged[i] = TransformTypeAndStateToString(review[iIndexReview]);
-        iIndexReview++;
+    if((history.length == 0) && (review.length == 0)){
+      Merged = null;
+    }else if(history.length == 0){
+      for(var i=0; i<review.length; i++){
+        Merged[i] = TransformTypeAndStateToString(review[i]);
       }
-      
-      if(iIndexHistory == history.length){
-        for(var j=iIndexReview; j<review.length; j++){
-          i++;
-          Merged[i] = TransformTypeAndStateToString(review[j]);
-        }
-        break;
+    }else if(review.length == 0){
+      for(var i=0; i<history.length; i++){
+        Merged[i] = TransformTypeAndStateToString(history[i]);
       }
-      if(iIndexReview == review.length){
-        for(var j=iIndexHistory; j<history.length; j++){
-          i++;
-          Merged[i] = TransformTypeAndStateToString(history[j]);
+    }else{
+      for(var i=0; i<SizeOfMergedArray; i++){
+        if(history[iIndexHistory].OfferDateStart > review[iIndexReview].ReviewDate){
+          Merged[i] = TransformTypeAndStateToString(history[iIndexHistory]);
+          iIndexHistory++;
+        }else{
+          Merged[i] = TransformTypeAndStateToString(review[iIndexReview]);
+          iIndexReview++;
         }
-        break;
+        
+        if(iIndexHistory == history.length){
+          for(var j=iIndexReview; j<review.length; j++){
+            i++;
+            Merged[i] = TransformTypeAndStateToString(review[j]);
+          }
+          break;
+        }
+        if(iIndexReview == review.length){
+          for(var j=iIndexHistory; j<history.length; j++){
+            i++;
+            Merged[i] = TransformTypeAndStateToString(history[j]);
+          }
+          break;
+        }
       }
     }
     return Merged;
@@ -87,6 +98,9 @@ module.exports={
       return RoleArray;
   }, 
   
+  doTransformTypeAndStateToString: function(json){
+    return TransformTypeAndStateToString(json);
+  }
 }
 
 function TransformTypeAndStateToString(json){

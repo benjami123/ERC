@@ -47,6 +47,14 @@ module.exports= {
         });
     },
 
+    getPlantOffer: function(IDPlant, callback){
+        var Query = "SELECT part_offer.IdPart_Offer, part_offer.OfferType, part_offer.OfferDateStart, part_offer.Offer, part.PartName, partimplemented.Location FROM part_offer JOIN partimplemented ON part_offer.IdPartImplemented=partimplemented.IdPartImplemented JOIN part ON partimplemented.IdPart=part.IdPart WHERE part_offer.OfferState=2 AND partimplemented.IdPlant= ? ;"
+        con.query(Query, [IDPlant],function(err, rows){
+            if (err) throw err;
+            callback(err, rows);
+        });
+    },
+
     getPlantHistoryOfferWithFiles : function(IDPlant, callback){
         var Query = "SELECT part.PartName, partimplemented.Location, partimplemented.IdPlant,part_offer.OfferType, part_offer.OfferState, part_offer.OfferDateStart, part_offer.Offer, part_offer.OrderFromClient, part_offer.OrderFromERC FROM part_offer JOIN partimplemented ON part_offer.IdPartImplemented = partimplemented.IdPartImplemented JOIN part ON part.IdPart=partimplemented.IdPart WHERE IdPlant = ? ORDER BY part_offer.OfferDateStart DESC;";
         con.query(Query, [IDPlant],function(err, rows){
@@ -58,6 +66,14 @@ module.exports= {
     getPlantHistoryReview: function(IDPlant, callback){
         var Query = "SELECT part.PartName, partimplemented.Location, partimplemented.IdPlant, review.ReviewType, review.ReviewDate FROM review JOIN partimplemented ON review.IdPartImplemented = partimplemented.IdPartImplemented JOIN part ON part.IdPart=partimplemented.IdPart WHERE IdPlant = '1' ORDER BY review.ReviewDate DESC;";
         con.query(Query, [IDPlant],function(err, rows){
+            if (err) throw err;
+            callback(err, rows);
+        });
+    },
+
+    getOffersRequest:function(callback){
+        var Query = "SELECT user.Login, user.Email, plant.Address, plant.PlantName, plant.IdPlant, partimplemented.Location, part.PartName, part_offer.OfferType ,part_offer.OfferDateStart, part_offer.IdPart_Offer FROM part_offer JOIN partimplemented ON part_offer.IdPartImplemented=partimplemented.IdPartImplemented JOIN part ON partimplemented.IdPart=part.IdPart JOIN plant ON partimplemented.IdPlant=plant.IdPlant JOIN user ON plant.IdPlant=user.IdPlant WHERE part_offer.OfferType=1 ORDER BY part_offer.OfferDateStart DESC;";
+        con.query(Query, function(err, rows){
             if (err) throw err;
             callback(err, rows);
         });

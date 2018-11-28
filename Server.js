@@ -64,7 +64,6 @@ app.get('/Orders/*', function(req, res){
   }
 })
 
-
 app.post('/Login',function(req,res){
   var sess = req.session;
   console.log("Username : " + req.body.username + ", Password : " + req.body.password);
@@ -108,75 +107,126 @@ app.post('/Login',function(req,res){
   });
 });
 
-app.post('/Plant_Operator/PartHistory', function(req, res){
-  // console.log("got post from history");
+app.post('/Plant_Operator/*', function(req, res){
+  var url = req.originalUrl.replace('/Plant_Operator', '');
+  console.log("got post in " + req.originalUrl);
   // console.log(req.body);
-  json = {};
-  DB.getPartImplementedHistory(req.body.IdPartImplemented, function(err, Result){
-    DB.getPartImplementedReviews(req.body.IdPartImplemented, function(err, Reviews){
-        // console.log("Got Result : ");
+  switch(url){
+    case "/index":
+      DB.getPlantPartPreviewInfos(req.session.user.IdPlant, function(err, Result){
+        // console.log("Got result : ");
         // console.log(Result);
-        // console.log("got Reviews");
-        // console.log(Reviews);
-      if(Result == null){
-        json = Reviews;
-      }else if(Reviews == null){
-        json = Result;
-      }else{
-        json = Lib.MergeAndOrderbyDate(Result, Reviews);
-      }
-      // console.log("Sending to client : ");
-      // console.log(json);
-      res.end(JSON.stringify(json));
-    });
-  })
-});
-
-app.post('/Plant_Operator/History', function(req, res){
-    console.log("Got post in history");
-    DB.getPlantHistoryOfferWithFiles(req.session.user.IdPlant, function(err, Offers){
-      console.log("Got result : ");
-      console.log(Offers);
-      DB.getPlantHistoryReview(req.session.user.IdPlant, function(err, Review){
-        console.log("Got Reviews");
-        console.log(Review);
-        var Result = Lib.MergeAndOrderbyDate(Offers, Review);
         res.end(JSON.stringify(Result));
       });
+      break;
 
-    });
-})
+    case "/PartHistory":
+      console.log("Requesting PartImplementedHistory for id : " + req.body.IdPartImplemented);
+      DB.getPartImplementedHistory(req.body.IdPartImplemented, function(err, Result){
+        DB.getPartImplementedReviews(req.body.IdPartImplemented, function(err, Reviews){
+          // console.log("Got Result : ");
+          // console.log(Result);
+          // console.log("got Reviews");
+          // console.log(Reviews);
+          var json = Lib.MergeAndOrderbyDate(Result, Reviews);
+          // console.log("Sending to client : ");
+          // console.log(json);
+          res.end(JSON.stringify(json));
+        });
+      })
+      break;
 
-app.post('/Plant_Operator/index', function(req, res){
-  // console.log("User connected : " + JSON.stringify(req.session.user));
-  DB.getPlantPartPreviewInfos(req.session.user.IdPlant, function(err, Result){
-    // console.log("Got result : ");
-    // console.log(Result);
-    res.end(JSON.stringify(Result));
-  })
+    case "/History":
+      DB.getPlantHistoryOfferWithFiles(req.session.user.IdPlant, function(err, Result){
+        DB.getPlantHistoryReview(req.session.user.IdPlant, function(err, Reviews){
+          // console.log("Got Result : ");
+          // console.log(Result);
+          // console.log("got Reviews");
+          // console.log(Reviews);
+          var json = Lib.MergeAndOrderbyDate(Result, Reviews);
+          // console.log("Sending to client : ");
+          // console.log(json);
+          res.end(JSON.stringify(json));
+        });
+      
+      });
+      break;
+      case "/GetOffers":
+        DB.getPlantOffer(req.session.user.IdPlant, function(err, Result){
+          var json = [];
+          Result.forEach(r => {
+             json.push(Lib.doTransformTypeAndStateToString(r));
+          });
+          console.log("Sending ");
+          console.log(json);
+          res.end(JSON.stringify(json));
+        });
+        break;
+
+      case "/CreateOffer":
+        DB.createPartOffer(req.body.IdPartImplemented, req.body.OfferType, function(err, Result){
+          // console.log("got result : ");
+          // console.log(Result);
+          res.end(JSON.stringify(Result));
+        });
+        break;
+      
+      case "/CreateReview":
+        DB.createPartReview(req.body.IdPartImplemented, req.body.ReviewType, req.body.ReviewDate, function(err, Result){
+        // console.log("got result : ");
+        // console.log(Result);
+        res.end(JSON.stringify(Result));
+        });
+        break;
+  }
 });
 
-app.post('/Plant_Operator/CreateOffer', function(req, res){
-//   console.log("got post from create offer");
-//   console.log(req.body);
-  DB.createPartOffer(req.body.IdPartImplemented, req.body.OfferType, function(err, Result){
-    // console.log("got result : ");
-    // console.log(Result);
-    res.end(JSON.stringify(Result));
-  })
+app.post('/Plant_Admin/*', function(req, res){
+  var url = req.originalUrl.replace('/Plant_Admin', '');
+  console.log("got post in " + req.originalUrl);
+  switch(url){
+
+  }
 });
 
-app.post('/Plant_Operator/CreateReview', function(req, res){
-//   console.log("Got post from Create review");
-//   console.log(req.body);
-  DB.createPartReview(req.body.IdPartImplemented, req.body.ReviewType, req.body.ReviewDate, function(err, Result){
-    // console.log("got result : ");
-    // console.log(Result);
-    res.end(JSON.stringify(Result));
-  })
+app.post('/ERC_Service/*', function(req, res){
+  var url = req.originalUrl.replace('/ERC_Service', '');
+  console.log("got post in " + req.originalUrl);
+  switch(url){
+    case "/index":
+      DB.getOffersRequest(function(err, Result){
+        console.log("got result : ");
+        console.log(Result);
+        res.end(JSON.stringify(Result));
+      })
+      break;
+  }
 });
 
-app.post('/')
+app.post('/ERC_Maintenance/*', function(req, res){
+  var url = req.originalUrl.replace('/ERC_Maintenance', '');
+  console.log("got post in " + req.originalUrl);
+  switch(url){
+
+  }
+});
+
+app.post('/ERC_Additiives/*', function(req, res){
+  var url = req.originalUrl.replace('/ERC_Additiives', '');
+  console.log("got post in " + req.originalUrl);
+  switch(url){
+
+  }
+});
+
+app.post('/ERC_Admin/*', function(req, res){
+  var url = req.originalUrl.replace('/ERC_Admin', '');
+  console.log("got post in " + req.originalUrl);
+  switch(url){
+
+  }
+});
+
 
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!')

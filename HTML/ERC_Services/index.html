@@ -2,6 +2,26 @@
 <html lang="en">
 <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <script>
+            var jsonArray;
+            window.onload = function(){
+                console.log("sending post to server");
+                var json={};
+                xmlRequest = new XMLHttpRequest();
+                xmlRequest.open("POST", "/ERC_Services/index", true);
+                xmlRequest.setRequestHeader('Content-type', 'application/json');
+                xmlRequest.send();
+                xmlRequest.onreadystatechange = function(){
+                    if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
+                        console.log("Got response : ");
+                        jsonArray = JSON.parse(xmlRequest.responseText);
+                        console.log(jsonArray);
+                        
+                    }
+                }
+            };
+    
+        </script>
 </head>
 <body>
     <h1>ERC_Services/index.html</h1>
