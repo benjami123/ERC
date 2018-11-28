@@ -1,19 +1,29 @@
-
-#History {
-    float: right;
-    width: 50%;
-    height: 40%;
-    border: gray;
-    border-style: solid;
-    position: absolute;
-    overflow: auto;
+#table{
+    width: 60%;
+    height: 50%;
     right: 0.5%;
+    position: absolute;
+    right:0.5%;
     bottom: 1%;
     top: 55px;
+
 }
-#TitleHistory{
+#titleHistory{
     background-color: darkgray;
     color: white;
+}
+#title
+{
+    width: 60%;
+    position: fixed;
+}
+#body{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top:72px;
+    overflow: auto;
+    border: gray solid;
 }
 #TitleDefault{
     background-color: gray;
