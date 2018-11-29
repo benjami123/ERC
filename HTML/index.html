@@ -26,7 +26,9 @@
 			background-color: white;
 			
 		}
-		
+		#warn{
+			color:red;
+		}	
 			
 		</style>
 		<script>
@@ -44,13 +46,20 @@
                     if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
                         console.log("Got response : ");
                         console.log(xmlRequest.responseText);
-                        var json = JSON,parse(xmlRequest.responseText);
+						var json = {};
+						try
+						{
+							json = JSON.parse(xmlRequest.responseText);
+						}
+                        catch(e){
+						
+						}
 						
                         if(json.Redirection != null){
                             console.log("Redirecting to : " + json.Redirection);
                             window.location.replace(json.Redirection);
                         }else{
-                            document.getElementById("warn").innerHTML = json;
+                            document.getElementById("warn").innerHTML = xmlRequest.responseText;
                         }
                     }
                 }
