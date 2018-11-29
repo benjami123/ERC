@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style>
+		html{
+			background-color:lightblue;
+		}
+		#ERCTitle{
+			
+			color:black;
+			font-family: "Verdana", Arial, sans-serif;
+			
+		}
+		#Logo{
+			
+			margin-left:100px;
+			
+		}
+		#LoginWindow{
+			
+			width: 300px;
+			border: 15px solid rgb(0, 102, 255);
+			padding: 25px;
+			margin: 150px;
+			background-color: white;
+			
+		}
+		
+			
+		</style>
+		<script>
+		            function Login(login, password){
+                var data = {};
+                data.username = login;
+                data.password = password;
+                data = JSON.stringify(data);
+                console.log("sent in login to server : " + data);
+                var xmlRequest = new XMLHttpRequest();
+                xmlRequest.open("POST", "/Login", true);
+                xmlRequest.setRequestHeader('Content-type', 'application/json');
+                xmlRequest.send(data);
+                xmlRequest.onreadystatechange = function(){
+                    if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
+                        console.log("Got response : ");
+                        console.log(xmlRequest.responseText);
+                        var json = JSON,parse(xmlRequest.responseText);
+						
+                        if(json.Redirection != null){
+                            console.log("Redirecting to : " + json.Redirection);
+                            window.location.replace(json.Redirection);
+                        }else{
+                            document.getElementById("warn").innerHTML = json;
+                        }
+                    }
+                }
+            }
+		</script>
+    </head>
+    <body>
+		<img id="Logo" src="Logo & Butterfly.png" ></img>
+		<center><h1 id="ERCTitle" >SNCR 4.0 -  Service & Maintenance </h1></center>
+		<center><div id="LoginWindow">
+			<h1>Login</h1>
+			<input type="text" name='username' id='username' placeholder="username">
+			<br>
+			<input type="password" name='password' id='password' placeholder="password">
+			<br>
+			<button onclick='Login(document.getElementById("username").value, document.getElementById("password").value)'>Login</button>
+			<p id="warn"></p>
+		</div></center>
+    </body>
+</html>
