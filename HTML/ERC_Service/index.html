@@ -7,7 +7,7 @@
             window.onload = function(){
                 console.log("sending post to server");
                 var json={};
-                xmlRequest = new XMLHttpRequest();
+                var xmlRequest = new XMLHttpRequest();
                 xmlRequest.open("POST", "/ERC_Service/index", true);
                 xmlRequest.setRequestHeader('Content-type', 'application/json');
                 xmlRequest.send();
@@ -20,10 +20,30 @@
                     }
                 }
             };
-    
+            function SendOffer(OfferFile){
+                console.log("test");
+                var xmlRequest = new XMLHttpRequest();
+                var formData = new FormData();
+                formData.append("Offer", OfferFile);
+                xmlRequest.open("POST", "/ERC_Service/Offer", true);
+                // xmlRequest.setRequestHeader('Content-type', 'application/json');
+                xmlRequest.send(formData);
+                xmlRequest.onreadystatechange = function(){
+                    if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
+                        console.log("Got response : ");
+                        jsonArray = JSON.parse(xmlRequest.responseText);
+                        console.log(jsonArray);
+                        
+                    }
+                }
+            }
+            
         </script>
 </head>
 <body>
     <h1>ERC_Service/index.html</h1>
+    <br>
+    <input type="file" name="filetoupload" id="filetoupload"><br>
+    <button onclick='SendOffer(document.getElementById("filetoupload").files[0]);'>Send</button>
 </body>
 </html>

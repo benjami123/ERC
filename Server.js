@@ -2,11 +2,12 @@
 var DB = require('./Database.js');
 var session = require('express-session');
 var bodyParser = require('body-parser');
+var formidable = require('formidable'); 
+const express = require('express');
+const app = express();
 var Lib = require('./Lib.js');
 var fs = require('fs');
 RoleArray = Lib.getRoleArray();
-const express = require('express');
-const app = express();
 
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
@@ -144,8 +145,8 @@ app.post('/Plant_Operator/*', function(req, res){
           // console.log("got Reviews");
           // console.log(Reviews);
           var json = Lib.MergeAndOrderbyDate(Result, Reviews);
-          // console.log("Sending to client : ");
-          // console.log(json);
+          console.log("Sending to client : ");
+          console.log(json);
           res.end(JSON.stringify(json));
         });
       
@@ -204,8 +205,39 @@ app.post('/ERC_Service/*', function(req, res){
        console.log("Sending ");
        console.log(json);
        res.end(JSON.stringify(json));
-      })
+      });
       break;
+
+    case "/Offer":
+      console.log(req.body);
+      var form = new formidable.IncomingForm();
+      form.parse(req, function (err, fields, files) {
+        var IDpart_offer = 16;
+        var PartName = 'PN';
+        var PlantName = 'PLN';
+        var PartLocation = 'Loc';
+        console.log("Got file : ");
+        console.log(files);
+        console.log("Got fields");
+        console.log(fields);
+        var OfferFolderPath = __dirname + '/HTML/Orders/' + IDpart_offer + '/';
+        var FileName = Lib.generateFileName( "Offer", IDpart_offer, PlantName, PartName, PartLocation, files.Offer.name) ;
+        var newpath = OfferFolderPath + FileName;
+        console.log("Creating folder : " + OfferFolderPath);
+        Lib.mkdirSync(OfferFolderPath);
+        console.log("Moving file to : " + newpath);
+        fs.rename(files.Offer.path, newpath, function (err) {
+          if (err) throw err;
+          DB.uploadOffer(IDpart_offer, FileName, function(){
+            res.write('File uploaded and moved!');
+            res.end();
+          });
+        });
+      });
+
+
+      break;
+
   }
 });
 

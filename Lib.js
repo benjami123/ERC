@@ -1,7 +1,5 @@
 var fs = require('fs');
-var OfferPath = "./../Orders/Offer/";
-var OrderFromERCPath = "./../Orders/OrderFromERC/";
-var OrderFromClientPath = "./../Orders/OrderFromClient/";
+var OfferPath = "./../Orders/";
 
 var RoleArray = [ {Role:1, Link:"/Plant_Admin/"}, 
                 {Role:2, Link:"/ERC_Admin/"},
@@ -94,6 +92,19 @@ module.exports={
     }
   },
 
+  mkdirSync: function(dirPath) {
+    try {
+      fs.mkdirSync(dirPath)
+    } catch (err) {
+      if (err.code !== 'EEXIST') throw err
+    }
+  },
+
+  generateFileName : function(sFileType, IDPart_Offer, PlantName, PartName, PartLocation, OriginalFileName){
+    var DotIndex = OriginalFileName.lastIndexOf(".");
+    return '' + IDPart_Offer + '_' + PlantName + '_' + PartName + '_' + PartLocation +  '_' + sFileType + OriginalFileName.substring(DotIndex);
+  },
+
   getRoleArray: function(){
       return RoleArray;
   }, 
@@ -108,13 +119,13 @@ function TransformTypeAndStateToString(json){
     json.DataType = "H";
     json.OfferDateStart = json.OfferDateStart.toString().substring(0, 15);
     if(json.Offer != null){
-      json.Offer = OfferPath + json.Offer;
+      json.Offer = OfferPath + json.IdPart_Offer + '/' + json.Offer;
     }
     if(json.OrderFromClient != null){
-      json.OrderFromClient = OrderFromClientPath + json.OrderFromClient;
+      json.OrderFromClient = OfferPath + json.IdPart_Offer + '/' + json.OrderFromClient;
     }
     if(json.OrderFromERCPath != null){
-      json.OrderFromERC = OrderFromERCPath + json.OrderFromERC;
+      json.OrderFromERC = OfferPath + json.IdPart_Offer + '/' + json.OrderFromERC;
     }
     json.OfferType = TypeToString[json.OfferType];
     json.OfferState = StateToString[json.OfferState];
