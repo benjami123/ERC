@@ -39,7 +39,7 @@
                             "            </button></a></td>\n" +
                             "            <td class=\"td-actions\">\n" +
                             "                <span class=\"btn btn-success btn-just-icon btn-sm btn-file\" rel=\"tooltip\">\n" +
-                            "                    <i class=\"material-icons\">check</i><input type=\"file\" oninput=\"accept(this.file,jsonArray["+i+"],"+i+")\">\n" +
+                            "                    <i class=\"material-icons\">check</i><input type=\"file\" oninput=\"accepted(this.file,jsonArray["+i+"],"+i+")\">\n" +
                             "                </span>\n" +
                             "                <button type=\"button\" rel=\"tooltip\" class=\"btn btn-danger btn-just-icon btn-sm\" data-original-title=\"\" title=\"\" onclick=\"refuse(jsonArray["+i+"],"+i+");\">\n" +
                             "                    <i class=\"material-icons\">close</i>\n" +
@@ -102,7 +102,7 @@
 </div>
 </body>
 <script>
-    function accept(file, info,num)
+    function accepted(file,info,num)
     {
         xmlRequest = new XMLHttpRequest();
         var formData = new FormData();
