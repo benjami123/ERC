@@ -39,7 +39,7 @@
                             "            </button></a></td>\n" +
                             "            <td class=\"td-actions\">\n" +
                             "                <span class=\"btn btn-success btn-just-icon btn-sm btn-file\" rel=\"tooltip\">\n" +
-                            "                    <i class=\"material-icons\">check</i><input type=\"file\" oninput=\"accepted(this.file,jsonArray["+i+"],"+i+")\">\n" +
+                            "                    <i class=\"material-icons\">check</i><input type=\"file\" oninput=\"accepted(this.files[0],jsonArray["+i+"],"+i+")\">\n" +
                             "                </span>\n" +
                             "                <button type=\"button\" rel=\"tooltip\" class=\"btn btn-danger btn-just-icon btn-sm\" data-original-title=\"\" title=\"\" onclick=\"refuse(jsonArray["+i+"],"+i+");\">\n" +
                             "                    <i class=\"material-icons\">close</i>\n" +
@@ -107,9 +107,9 @@
         xmlRequest = new XMLHttpRequest();
         var formData = new FormData();
         formData.append('OrderFromClient', file);
-        formData.append('Data',info);
+        formData.append('Data', JSON.stringify(info));
         xmlRequest.open("POST", "/Plant_Operator/Order", true);
-        //xmlRequest.setRequestHeader('Content-type', 'application/');
+        // xmlRequest.setRequestHeader('Content-type', 'application/json');
         xmlRequest.send(formData);
         xmlRequest.onreadystatechange = function(){
             if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){

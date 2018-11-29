@@ -103,6 +103,7 @@ app.post('/Login',function(req,res){
           break;
       }
     }else{
+      console.log("Wrong password/username")
       res.end("Wrong password/Username");
     }
   });
@@ -152,6 +153,7 @@ app.post('/Plant_Operator/*', function(req, res){
       
       });
       break;
+
       case "/GetOffers":
         DB.getPlantOffer(req.session.user.IdPlant, function(err, Result){
           var json = [];
@@ -174,9 +176,41 @@ app.post('/Plant_Operator/*', function(req, res){
       
       case "/CreateReview":
         DB.createPartReview(req.body.IdPartImplemented, req.body.ReviewType, req.body.ReviewDate, function(err, Result){
-        // console.log("got result : ");
-        // console.log(Result);
-        res.end(JSON.stringify(Result));
+          // console.log("got result : ");
+          // console.log(Result);
+          res.end(JSON.stringify(Result));
+        });
+        break;
+
+      case "/Order":
+        console.log(req.body);
+        var form = new formidable.IncomingForm();
+        form.parse(req, function (err, fields, files) {
+          
+          console.log("Got file : ");
+          console.log(files);
+          console.log("Got fields : ");
+          console.log(fields.Data);
+          var json = JSON.parse(fields.Data);
+          var OfferFolderPath = __dirname + '/HTML/Orders/' + json.IdPart_Offer + '/';
+          var FileName = Lib.generateFileName( "OrderFromClient", json.IdPart_Offer, req.session.user.Plant.PlantName, json.PartName, json.Location, files.OrderFromClient.name) ;
+          var newpath = OfferFolderPath + FileName;
+          console.log("Creating folder : " + OfferFolderPath);
+          Lib.mkdirSync(OfferFolderPath);
+          console.log("Moving file to : " + newpath);
+          fs.rename(files.OrderFromClient.path, newpath, function (err) {
+            if (err) throw err;
+            DB.uploadOrderFromClient(json.IdPart_Offer, FileName, function(){
+              res.write('File uploaded and moved!');
+              res.end();
+            });
+          });
+        });
+        break;
+      
+      case "/CancelOffer":
+        DB.changePartOfferStateToRefused(req.body.Data.IdPart_Offer ,function(err, Results){
+          res.end();
         });
         break;
   }
@@ -197,8 +231,6 @@ app.post('/ERC_Service/*', function(req, res){
     case "/index":
     var json = [];
       DB.getOffersRequest(function(err, Result){
-        console.log("Sending");
-        console.log(Result);
         Result.forEach(r => {
           json.push(Lib.doTransformTypeAndStateToString(r));
        });
@@ -212,16 +244,11 @@ app.post('/ERC_Service/*', function(req, res){
       console.log(req.body);
       var form = new formidable.IncomingForm();
       form.parse(req, function (err, fields, files) {
-        var IDpart_offer = 16;
-        var PartName = 'PN';
-        var PlantName = 'PLN';
-        var PartLocation = 'Loc';
+        
         console.log("Got file : ");
         console.log(files);
-        console.log("Got fields");
-        console.log(fields);
         var OfferFolderPath = __dirname + '/HTML/Orders/' + IDpart_offer + '/';
-        var FileName = Lib.generateFileName( "Offer", IDpart_offer, PlantName, PartName, PartLocation, files.Offer.name) ;
+        var FileName = Lib.generateFileName( "Offer", req.body.IdPart_Offer, req.body.PlantName, req.body.PartName, req.body.Location, files.Offer.name) ;
         var newpath = OfferFolderPath + FileName;
         console.log("Creating folder : " + OfferFolderPath);
         Lib.mkdirSync(OfferFolderPath);
@@ -234,10 +261,36 @@ app.post('/ERC_Service/*', function(req, res){
           });
         });
       });
-
-
       break;
 
+    case "/Order":
+      console.log(req.body);
+      var form = new formidable.IncomingForm();
+      form.parse(req, function (err, fields, files) {
+        
+        console.log("Got file : ");
+        console.log(files);
+        var OfferFolderPath = __dirname + '/HTML/Orders/' + IDpart_offer + '/';
+        var FileName = Lib.generateFileName( "OrderFromERC", req.body.IdPart_Offer, req.body.PlantName, req.body.PartName, req.body.Location, files.Offer.name) ;
+        var newpath = OfferFolderPath + FileName;
+        console.log("Creating folder : " + OfferFolderPath);
+        Lib.mkdirSync(OfferFolderPath);
+        console.log("Moving file to : " + newpath);
+        fs.rename(files.Offer.path, newpath, function (err) {
+          if (err) throw err;
+          DB.uploadOffer(IDpart_offer, FileName, function(){
+            res.write('File uploaded and moved!');
+            res.end();
+          });
+        });
+      });
+      break;
+
+      case "/CancelOffer":
+      DB.changePartOfferStateToRefused(req.body.IdPart_Offer ,function(err, Results){
+        res.end();
+      })
+      break;
   }
 });
 
@@ -253,7 +306,13 @@ app.post('/ERC_Additiives/*', function(req, res){
   var url = req.originalUrl.replace('/ERC_Additiives', '');
   console.log("got post in " + req.originalUrl);
   switch(url){
-
+    case "/index":
+      DB.getRAOffersRequest(function(err, Result){
+        console.log("Sending ");
+        console.log(Result);
+        res.end(JSON.stringify(Result));
+      })
+      break;
   }
 });
 
