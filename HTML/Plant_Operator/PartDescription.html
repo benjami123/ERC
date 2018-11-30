@@ -22,7 +22,7 @@
                 if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
                     // console.log("Got response : ");
                     // console.log(xmlRequest.responseText);
-                    jsonArray = JSON.parse(xmlRequest.responseText);
+                    var jsonArray = JSON.parse(xmlRequest.responseText);
                     for(var i=0;i<jsonArray.length;i++)
                      {
                          var json = jsonArray[i];
