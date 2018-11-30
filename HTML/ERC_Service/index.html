@@ -26,7 +26,7 @@
                 var formData = new FormData();
                 formData.append("Offer", OfferFile);
                 xmlRequest.open("POST", "/ERC_Service/Offer", true);
-                // xmlRequest.setRequestHeader('Content-type', 'application/json');
+                xmlRequest.setRequestHeader('Content-type', 'application/json');
                 xmlRequest.send(formData);
                 xmlRequest.onreadystatechange = function(){
                     if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){

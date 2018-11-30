@@ -23,7 +23,6 @@ app.use(session({
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/HTML/index.html');
 });
-
 app.get('/Plant_Admin/*', function(req, res){
   Lib.CheckRole(req, res, RoleArray[0]);
 });
@@ -192,17 +191,21 @@ app.post('/Plant_Operator/*', function(req, res){
           console.log("Got fields : ");
           console.log(fields.Data);
           var json = JSON.parse(fields.Data);
-          var OfferFolderPath = __dirname + '/HTML/Orders/' + json.IdPart_Offer + '/';
-          var FileName = Lib.generateFileName( "OrderFromClient", json.IdPart_Offer, req.session.user.Plant.PlantName, json.PartName, json.Location, files.OrderFromClient.name) ;
-          var newpath = OfferFolderPath + FileName;
-          console.log("Creating folder : " + OfferFolderPath);
-          Lib.mkdirSync(OfferFolderPath);
-          console.log("Moving file to : " + newpath);
-          fs.rename(files.OrderFromClient.path, newpath, function (err) {
-            if (err) throw err;
-            DB.uploadOrderFromClient(json.IdPart_Offer, FileName, function(){
-              res.write('File uploaded and moved!');
-              res.end();
+          DB.getPlantName(req.session.user.IdPlant, function(err ,Result){
+            console.log("Got results : ");
+            console.log(Result);
+            var OfferFolderPath = __dirname + '/HTML/Orders/' + json.IdPart_Offer + '/';
+            var FileName = Lib.generateFileName( "OrderFromClient", json.IdPart_Offer, Result.PlantName, json.PartName, json.Location, files.OrderFromClient.name) ;
+            var newpath = OfferFolderPath + FileName;
+            console.log("Creating folder : " + OfferFolderPath);
+            Lib.mkdirSync(OfferFolderPath);
+            console.log("Moving file to : " + newpath);
+            fs.rename(files.OrderFromClient.path, newpath, function (err) {
+              if (err) throw err;
+              DB.uploadOrderFromClient(json.IdPart_Offer, FileName, function(){
+                res.write('File uploaded and moved!');
+                res.end();
+              });
             });
           });
         });
@@ -247,15 +250,18 @@ app.post('/ERC_Service/*', function(req, res){
         
         console.log("Got file : ");
         console.log(files);
+        console.log("Got fields : ");
+        console.log(fields);
+        var json = JSON.parse(fields);
         var OfferFolderPath = __dirname + '/HTML/Orders/' + IDpart_offer + '/';
-        var FileName = Lib.generateFileName( "Offer", req.body.IdPart_Offer, req.body.PlantName, req.body.PartName, req.body.Location, files.Offer.name) ;
+        var FileName = Lib.generateFileName( "Offer", json.Data.IdPart_Offer, json.Data.PlantName, json.Data.PartName, json.Data.Location, files.Offer.name) ;
         var newpath = OfferFolderPath + FileName;
         console.log("Creating folder : " + OfferFolderPath);
         Lib.mkdirSync(OfferFolderPath);
         console.log("Moving file to : " + newpath);
         fs.rename(files.Offer.path, newpath, function (err) {
           if (err) throw err;
-          DB.uploadOffer(IDpart_offer, FileName, function(){
+          DB.uploadOffer(json.Data.IdPart_Offer, FileName, function(){
             res.write('File uploaded and moved!');
             res.end();
           });

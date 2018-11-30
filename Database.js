@@ -206,11 +206,11 @@ module.exports= {
         });
     },
 
-    getPlant: function(IDPlant, callback){
-        var Query = "UPDATE partimplemented SET isImplemented = 0 WHERE IdPartImplemented = ? ;";
-        con.query(Query, ArrayPartimplementedID, function(err, rows){
+    getPlantName: function(IDPlant, callback){
+        var Query = "SELECT PlantName FROM plant WHERE IdPlant = ?;";
+        con.query(Query, [IDPlant], function(err, rows){
             if (err) throw err;
-            callback(err, rows) ;
+            callback(err, rows[0]) ;
         });
     }
 };
