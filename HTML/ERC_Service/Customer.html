@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="Customer.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>Customers</title>
+</head>
+<body>
+<header id="navbar">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <div class="navbar-brand">
+                    <p>Identifier</p>
+                </div>
+            </div>
+            <ul class="nav navbar-nav">
+                <li ><a href="index.html">Home</a></li>
+                <li><a href="Customer.html">Customers</a></li>
+                <li class="active"><a href="Order.html">Orders</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><img width="41%" src="../Picture/ERC_Logo.png"></li>
+                <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+            </ul>
+
+        </div>
+    </nav>
+</header>
+<div class="form-row align-items-center">
+    <div class="col-auto my-1">
+    <label class="mr-sm-2" for="inlineFormCustomSelect"></label>
+    <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+        <option selected>Choose...</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+    </select>
+    </div>
+    <div class="col-auto my-2">
+    <input type="text" width="20%" class="form-control" id="search" placeholder="Search" onkeyup="searchPart(this.value)">
+    </div>
+
+</div>
+
+<div id="PartTable" class="col-1">
+    <table class="table table-striped border-0">
+        <thead>
+        <tr>
+            <td id="PartName">Part Name</td>
+            <td id="PartDescription">Part Location</td>
+            <td id="PartLocation">Part Description</td>
+            <td id="SupplierName">Supplier Name</td>
+        </tr>
+        </thead>
+        <tbody id="tablePart">
+        </tbody>
+    </table>
+</div>
+<div id="Right">
+</div>
+</body>
+</html>
