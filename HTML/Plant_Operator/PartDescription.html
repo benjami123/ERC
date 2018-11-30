@@ -9,6 +9,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
         var selectedPart = JSON.parse(sessionStorage.getItem("SelectedPart"));
+
+
         window.onload = function(){
             var IdPartImplemented = sessionStorage.getItem("SelectedPart");
             // console.log("sending post to server " + IdPartImplemented);
@@ -28,18 +30,18 @@
                          {
                              $("#tablePart").append("" +
                                  "<tr>" +
-                                 "<td>"+json.OfferDateStart+"</td>" +
-                                 "<td>"+json.OfferType+"</td>" +
-                                 "<td>"+json.OfferState+"</td>"+
+                                 "<td class='text-center'>"+json.OfferDateStart+"</td>" +
+                                 "<td class='text-center'>"+json.OfferType+"</td>" +
+                                 "<td class='text-center'>"+json.OfferState+"</td>"+
                                  "</tr>");
                          }
                          else if(json.DataType == "R")
                          {
                              $("#tablePart").append("" +
                                  "<tr>" +
-                                 "<td>"+json.ReviewDate+"</td>" +
-                                 "<td>"+json.ReviewType+"</td>" +
-                                 "<td>Review</td>"+
+                                 "<tdclass='text-center'>"+json.ReviewDate+"</td>" +
+                                 "<tdclass='text-center'>"+json.ReviewType+"</td>" +
+                                 "<tdclass='text-center'>Review</td>"+
                                  "</tr>");
                          }
 
@@ -62,7 +64,7 @@
             </div>
             <ul class="nav navbar-nav">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="#">History</a></li>
+                <li><a href="History.html">History</a></li>
                 <li><a href="Contact.html">Contact</a></li>
                 <li><a href="Offer.html">Offers</a></li>
             </ul>
@@ -74,12 +76,7 @@
         </div>
     </nav>
 </header>
-<div id="Information" onload="information()">
-    <ul class="list-group">
-        <li class="list-group-item list-group-item-success"><p>Name : "+ selectedPart.PartName+"</p></li>
-        <li class="list-group-item list-group-item-light"><p>Description : "+selectedPart.PartDescription+"</p></li>
-        <li class="list-group-item list-group-item-info"><p>Supplier name : "+selectedPart.SupplierName+"</p></li>
-    </ul>
+<div id="Information">
 </div>
 <div id="table" class="col">
     <div id="title">
@@ -107,8 +104,8 @@
     <input id="checkbox" class="form-check-input" type="checkbox" onchange="ownAction()">
     <br><br>
     <div id="Action">
-        <input class="btn btn-primary" role="button" value="Replace (whithout service)" onclick='createOffer(1)'>
-        <input class="btn btn-primary" role="button" value="Replace (whith service)" onclick='createOffer(2)'>
+        <input class="btn btn-primary" role="button" value="Replace (without service)" onclick='createOffer(1)'>
+        <input class="btn btn-primary" role="button" value="Replace (with service)" onclick='createOffer(2)'>
         <input class="btn btn-primary" role="button" value="Check" onclick='createOffer(3)'>
         <input class="btn btn-primary" role="button" value="Repair" onclick='createOffer(4)'>
     </div>
@@ -117,14 +114,15 @@
 <script>
     function information()
     {
-        alert("done");
         $("#Information").append(
+            "<ul class=\"list-group\">" +
             "<li class='list-group-item list-group-item-success'><p>Name : "+ selectedPart.PartName+"</p></li>"+
             "<li class='list-group-item list-group-item-light'><p>Description : "+selectedPart.PartDescription+"</p></li>"+
-            "<li class='list-group-item list-group-item-info'><p>Supplier name : "+selectedPart.SupplierName+"</p></li>");
+            "<li class='list-group-item list-group-item-info'><p>Supplier name : "+selectedPart.SupplierName+"</p></li>" +
+            "</ul>");
     }
-
     function ownAction(){
+        alert("done2");
         if($("#checkbox").prop('checked'))
         {
             document.getElementById("Action").innerHTML = "<select id='ReviewType' class=form-control>\n" +
@@ -139,8 +137,8 @@
                 "        <p id='notif'></p>";
         }else
         {
-            document.getElementById("Action").innerHTML = " <input class=\"btn btn-primary\" role=\"button\" value=\"Replace (whithout service)\" onclick='createOffer(1)'>\n" +
-                "        <input class=\"btn btn-primary\" role=\"button\" value=\"Replace (whith service)\" onclick='createOffer(2)'>\n" +
+            document.getElementById("Action").innerHTML = " <input class=\"btn btn-primary\" role=\"button\" value=\"Replace (without service)\" onclick='createOffer(1)'>\n" +
+                "        <input class=\"btn btn-primary\" role=\"button\" value=\"Replace (with service)\" onclick='createOffer(2)'>\n" +
                 "        <input class=\"btn btn-primary\" role=\"button\" value=\"Check\" onclick='createOffer(3)'>\n" +
                 "        <input class=\"btn btn-primary\" role=\"button\" value=\"Repair\" onclick='createOffer(4)'>" +
                 "        <p id='notif'></p>";
@@ -158,7 +156,7 @@
             if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)) {
                 console.log("Got answer : ");
                 console.log(xmlRequest.responseText);
-                document.getElementById("notif").innerHTML = JSON.parse(xmlRequest.responseText);
+                document.getElementById("notif").innerHTML = xmlRequest.responseText;
             }
             };
     }
@@ -186,5 +184,8 @@
             }
         };
     }
+    ownAction();
+    information();
+
 </script>
 </html>
