@@ -2,6 +2,12 @@
 <html lang="en">
 <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="index.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <script>
             var jsonArray;
             window.onload = function(){
@@ -16,10 +22,31 @@
                         console.log("Got response : ");
                         jsonArray = JSON.parse(xmlRequest.responseText);
                         console.log(jsonArray);
+                        for(var i=0;i<jsonArray.length;i++)
+                        {
+                            $("tbody").append("<tr id=\""+i+"\">\n" +
+                                "                                        <td class=\"text-center num\">"+(i+1)+"</td>\n" +
+                                "                                        <td>"+json.UserName+"</td>\n" +
+                                "                                        <td>"+json.PlantName+"</td>\n" +
+                                "                                        <td>"+json.PartName+"</td>\n" +
+                                "                                        <td>"+json.Location+"</td>\n" +
+                                "                                        <td>"+json.OfferType+"</td>\n" +
+                                "                                        <td>"+json.OfferDateStart+"</td>\n" +
+                                "                                        <td class=\"td-actions\">\n" +
+                                "                                                        <span class=\"btn btn-success btn-just-icon btn-sm btn-file\" rel=\"tooltip\">\n" +
+                                "                                                                <i class=\"material-icons\">check</i><input type=\"file\" oninput=\"sendOffer(this.files,jsonArray["+i+"],"+i+")\">\n" +
+                                "                                                        </span>\n" +
+                                "                                                <button type=\"button\" rel=\"tooltip\" class=\"btn btn-danger btn-just-icon btn-sm\" data-original-title=\"\" title=\"\" onclick=\"refuse(jsonArray["+i+"],"+i+")\">\n" +
+                                "                                                        <i class=\"material-icons\">close</i>\n" +
+                                "                                                        </button>\n" +
+                                "                                        </td>\n" +
+                                "                                </tr>")
+                        }
                         
                     }
                 }
             };
+<<<<<<< HEAD
             function SendOffer(OfferFile){
                 console.log("test");
                 var xmlRequest = new XMLHttpRequest();
@@ -38,12 +65,108 @@
                 }
             }
             
+=======
+>>>>>>> 7f43180f616c709f3d08b54d2f108d486754a4de
         </script>
 </head>
 <body>
-    <h1>ERC_Service/index.html</h1>
-    <br>
-    <input type="file" name="filetoupload" id="filetoupload"><br>
-    <button onclick='SendOffer(document.getElementById("filetoupload").files[0]);'>Send</button>
+<header id="navbar">
+        <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                        <div class="navbar-header">
+                                <div class="navbar-brand">
+                                        <p>Identifier</p>
+                                </div>
+                        </div>
+                        <ul class="nav navbar-nav">
+                                <li class="active"><a href="index.html">Home</a></li>
+                                <li><a href="Customer.html">Customers</a></li>
+                                <li><a href="Order.html">Orders</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                                <li><img width="41%" src="../Picture/ERC_Logo.png"></li>
+                                <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+                        </ul>
+
+                </div>
+        </nav>
+</header>
+<div class="container">
+        <div id="tables" class="col">
+                <div id="title">
+                        <table class="table">
+                                <thead>
+                                <tr>
+                                        <th class="text-center num">#</th>
+                                        <th>UserName</th>
+                                        <th>PlantName</th>
+                                        <th>Part Name</th>
+                                        <th>Location</th>
+                                        <th>Offer Type</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                </tr>
+                                </thead>
+                        </table>
+                </div>
+                <div id="body" class="col">
+                        <table id="table" class="table">
+                                <tbody>
+                                <tr id="0">
+                                        <td class="text-center num">"+(i+1)+"</td>
+                                        <td>"+json.UserName+"</td>
+                                        <td>"+json.PlantName+"</td>
+                                        <td>"+json.PartName+"</td>
+                                        <td>"+json.Location+"</td>
+                                        <td>"+json.OfferType+"</td>
+                                        <td>"+json.OfferDateStart+"</td>
+                                        <td class="td-actions">
+                                                        <span class="btn btn-success btn-just-icon btn-sm btn-file" rel="tooltip">
+                                                                <i class="material-icons">check</i><input type="file" oninput="SendOffer(this.files,'azerty',0)">
+                                                        </span>
+                                                <button type="button" rel="tooltip" class="btn btn-danger btn-just-icon btn-sm" data-original-title="" title="" onclick="refuse()">
+                                                        <i class="material-icons">close</i>
+                                                        </button>
+                                        </td>
+                                </tr>
+                                </tbody>
+                        </table>
+                </div>
+        </div>
+</div>
 </body>
+<script>
+    function SendOffer(file,info,num){
+        xmlRequest = new XMLHttpRequest();
+        var formData = new FormData();
+        formData.append('OrderFromClient', file);
+        formData.append('Data', JSON.stringify(info));
+        xmlRequest.open("POST", "/Plant_Operator/Order", true);
+        // xmlRequest.setRequestHeader('Content-type', 'application/json');
+        xmlRequest.send(formData);
+        xmlRequest.onreadystatechange = function(){
+            if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
+                if(xmlRequest.responseText)
+                {
+                    $("#"+num).remove();
+                }
+            }
+        }
+    }
+    function refuse(info,num)
+    {
+
+        xmlRequest = new XMLHttpRequest();
+        var json = {Data: info};
+        xmlRequest.open("POST", "/Plant_Operator/CancelOffer", true);
+        xmlRequest.setRequestHeader('Content-type', 'application/json');
+        xmlRequest.send(json);
+        if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
+            if(xmlRequest.responseText)
+            {
+                $("#"+num).remove();
+            }
+        }
+    }
+</script>
 </html>
