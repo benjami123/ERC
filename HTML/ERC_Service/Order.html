@@ -94,26 +94,6 @@
         <div id="body" class="col">
             <table id="table" class="table">
                 <tbody>
-                <tr id="i">
-                    <td class="text-center num">"1"</td>
-                    <td>User Name</td>
-                    <td>Plant Name</td>
-                    <td>PartName</td>
-                    <td>OfferType</td>
-                    <td>OfferDateStart</td>
-                    <td><a href="+json.Offer+" download="Offer"><button type="button" rel="tooltip" class="btn btn-info btn-just-icon btn-sm" data-toggle="tooltip" data-placement="bottom" title="Offer" data-original-title="" title="">
-                        <i class="material-icons">file_download</i><br>
-                    </button></a>
-                    <a href="+json.Offer+" download="Offer"><button type="button" rel="tooltip" class="btn btn-info btn-just-icon btn-sm" data-toggle="tooltip" data-placement="bottom" title="Order" data-original-title="" title="">
-                        <i class="material-icons">file_download</i>
-                    </button></a></td>
-                    <td class="td-actions">
-            <span class="btn btn-success btn-just-icon btn-sm btn-file" rel="tooltip">
-                <i class="material-icons">check</i><input type="file" oninput="accepted(this.files[0])">
-            </span>
-                        </button>
-                    </td>
-                </tr>
                 </tbody>
             </table>
         </div>
@@ -129,7 +109,7 @@
     {
         xmlRequest = new XMLHttpRequest();
         var formData = new FormData();
-        formData.append('OrderFromClient', file);
+        formData.append('OrderFromERC', file);
         formData.append('Data', JSON.stringify(info));
         xmlRequest.open("POST", "/ERC_Service/Order", true);
         // xmlRequest.setRequestHeader('Content-type', 'application/json');

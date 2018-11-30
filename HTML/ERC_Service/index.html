@@ -24,9 +24,10 @@
                         console.log(jsonArray);
                         for(var i=0;i<jsonArray.length;i++)
                         {
+                                json = jsonArray[i];
                             $("tbody").append("<tr id=\""+i+"\">\n" +
                                 "                                        <td class=\"text-center num\">"+(i+1)+"</td>\n" +
-                                "                                        <td>"+json.UserName+"</td>\n" +
+                                "                                        <td>"+json.Login+"</td>\n" +
                                 "                                        <td>"+json.PlantName+"</td>\n" +
                                 "                                        <td>"+json.PartName+"</td>\n" +
                                 "                                        <td>"+json.Location+"</td>\n" +
@@ -34,7 +35,7 @@
                                 "                                        <td>"+json.OfferDateStart+"</td>\n" +
                                 "                                        <td class=\"td-actions\">\n" +
                                 "                                                        <span class=\"btn btn-success btn-just-icon btn-sm btn-file\" rel=\"tooltip\">\n" +
-                                "                                                                <i class=\"material-icons\">check</i><input type=\"file\" oninput=\"sendOffer(this.files,jsonArray["+i+"],"+i+")\">\n" +
+                                "                                                                <i class=\"material-icons\">check</i><input type=\"file\" oninput=\"SendOffer(this.files[0],jsonArray["+i+"],"+i+")\">\n" +
                                 "                                                        </span>\n" +
                                 "                                                <button type=\"button\" rel=\"tooltip\" class=\"btn btn-danger btn-just-icon btn-sm\" data-original-title=\"\" title=\"\" onclick=\"refuse(jsonArray["+i+"],"+i+")\">\n" +
                                 "                                                        <i class=\"material-icons\">close</i>\n" +
@@ -101,9 +102,9 @@
     function SendOffer(file,info,num){
         xmlRequest = new XMLHttpRequest();
         var formData = new FormData();
-        formData.append('OrderFromClient', file);
+        formData.append('OrderFromERC', file);
         formData.append('Data', JSON.stringify(info));
-        xmlRequest.open("POST", "/Plant_Operator/Order", true);
+        xmlRequest.open("POST", "/ERC_Service/Order", true);
         // xmlRequest.setRequestHeader('Content-type', 'application/json');
         xmlRequest.send(formData);
         xmlRequest.onreadystatechange = function(){
@@ -120,7 +121,7 @@
 
         xmlRequest = new XMLHttpRequest();
         var json = {Data: info};
-        xmlRequest.open("POST", "/Plant_Operator/CancelOffer", true);
+        xmlRequest.open("POST", "/ERC_Service/CancelOffer", true);
         xmlRequest.setRequestHeader('Content-type', 'application/json');
         xmlRequest.send(json);
         if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){

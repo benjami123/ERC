@@ -53,15 +53,19 @@ app.get('/Picture/*', function(req, res){
   }
 });
 app.get('/Orders/*', function(req, res){
-  var URL = __dirname + '/HTML' + req.originalUrl;
-  console.log("Requesting file : " + URL);
-  if(fs.existsSync(URL)){
-    res.sendFile(URL);
-  }else{
-    console.log("Error 404");
-    res.sendStatus(404);
-    res.end('404 : This Page doesn\'t exist');
-  }
+  if(req.session.user.Role != null){
+    var URL = __dirname + '/HTML' + req.originalUrl;
+    console.log("Requesting file : " + URL);
+    if(fs.existsSync(URL)){
+      res.sendFile(URL);
+    }else{
+      console.log("Error 404");
+      res.sendStatus(404);
+      res.end('404 : This Page doesn\'t exist');
+    }
+}else{
+  res.end('404');
+}
 })
 
 app.post('/Login',function(req,res){
@@ -122,35 +126,11 @@ app.post('/Plant_Operator/*', function(req, res){
       break;
 
     case "/PartHistory":
-      console.log("Requesting PartImplementedHistory for id : " + req.body.IdPartImplemented);
-      DB.getPartImplementedHistory(req.body.IdPartImplemented, function(err, Result){
-        DB.getPartImplementedReviews(req.body.IdPartImplemented, function(err, Reviews){
-          // console.log("Got Result : ");
-          // console.log(Result);
-          // console.log("got Reviews");
-          // console.log(Reviews);
-          var json = Lib.MergeAndOrderbyDate(Result, Reviews);
-          // console.log("Sending to client : ");
-          // console.log(json);
-          res.end(JSON.stringify(json));
-        });
-      })
+      Lib.SendPartHistory(res, req.body.IdPartImplemented, DB);
       break;
 
     case "/History":
-      DB.getPlantHistoryOfferWithFiles(req.session.user.IdPlant, function(err, Result){
-        DB.getPlantHistoryReview(req.session.user.IdPlant, function(err, Reviews){
-          // console.log("Got Result : ");
-          // console.log(Result);
-          // console.log("got Reviews");
-          // console.log(Reviews);
-          var json = Lib.MergeAndOrderbyDate(Result, Reviews);
-          console.log("Sending to client : ");
-          console.log(json);
-          res.end(JSON.stringify(json));
-        });
-      
-      });
+      Lib.SendPlantHistory(res, req.session.user.IdPlant, DB);
       break;
 
       case "/GetOffers":
@@ -169,7 +149,7 @@ app.post('/Plant_Operator/*', function(req, res){
         DB.createPartOffer(req.body.IdPartImplemented, req.body.OfferType, function(err, Result){
           // console.log("got result : ");
           // console.log(Result);
-          res.end(JSON.stringify(Result));
+          res.end("Request sent");
         });
         break;
       
@@ -177,37 +157,16 @@ app.post('/Plant_Operator/*', function(req, res){
         DB.createPartReview(req.body.IdPartImplemented, req.body.ReviewType, req.body.ReviewDate, function(err, Result){
           // console.log("got result : ");
           // console.log(Result);
-          res.end(JSON.stringify(Result));
+          res.end("Request sent");
         });
         break;
 
       case "/Order":
-        console.log(req.body);
         var form = new formidable.IncomingForm();
-        form.parse(req, function (err, fields, files) {
-          
-          console.log("Got file : ");
-          console.log(files);
-          console.log("Got fields : ");
-          console.log(fields.Data);
+        form.parse(req, function(err, fields, files){
           var json = JSON.parse(fields.Data);
-          DB.getPlantName(req.session.user.IdPlant, function(err ,Result){
-            console.log("Got results : ");
-            console.log(Result);
-            var OfferFolderPath = __dirname + '/HTML/Orders/' + json.IdPart_Offer + '/';
-            var FileName = Lib.generateFileName( "OrderFromClient", json.IdPart_Offer, Result.PlantName, json.PartName, json.Location, files.OrderFromClient.name) ;
-            var newpath = OfferFolderPath + FileName;
-            console.log("Creating folder : " + OfferFolderPath);
-            Lib.mkdirSync(OfferFolderPath);
-            console.log("Moving file to : " + newpath);
-            fs.rename(files.OrderFromClient.path, newpath, function (err) {
-              if (err) throw err;
-              DB.uploadOrderFromClient(json.IdPart_Offer, FileName, function(){
-                res.write('File uploaded and moved!');
-                res.end();
-              });
-            });
-          });
+          json.IdPlant = req.session.user.IdPlant;
+          Lib.SaveFile(err, res, json, files, "OrderFromClient", DB)
         });
         break;
       
@@ -232,7 +191,7 @@ app.post('/ERC_Service/*', function(req, res){
   console.log("got post in " + req.originalUrl);
   switch(url){
     case "/index":
-    var json = [];
+      var json = [];
       DB.getOffersRequest(function(err, Result){
         Result.forEach(r => {
           json.push(Lib.doTransformTypeAndStateToString(r));
@@ -244,58 +203,50 @@ app.post('/ERC_Service/*', function(req, res){
       break;
 
     case "/Offer":
-      console.log(req.body);
       var form = new formidable.IncomingForm();
-      form.parse(req, function (err, fields, files) {
-        
-        console.log("Got file : ");
-        console.log(files);
-        console.log("Got fields : ");
-        console.log(fields);
-        var json = JSON.parse(fields);
-        var OfferFolderPath = __dirname + '/HTML/Orders/' + IDpart_offer + '/';
-        var FileName = Lib.generateFileName( "Offer", json.Data.IdPart_Offer, json.Data.PlantName, json.Data.PartName, json.Data.Location, files.Offer.name) ;
-        var newpath = OfferFolderPath + FileName;
-        console.log("Creating folder : " + OfferFolderPath);
-        Lib.mkdirSync(OfferFolderPath);
-        console.log("Moving file to : " + newpath);
-        fs.rename(files.Offer.path, newpath, function (err) {
-          if (err) throw err;
-          DB.uploadOffer(json.Data.IdPart_Offer, FileName, function(){
-            res.write('File uploaded and moved!');
-            res.end();
-          });
-        });
+      
+      form.parse(req, function(err,fields, files){
+        Lib.SaveFile(err, res, JSON.parse(fields.Data), files, "Offer", DB)
       });
+      break;
+
+    case"/GetOrders":
+      DB.getOrdersRequest(function(err, Result){
+        console.log("Sending");
+        console.log(Result);        
+        var json = [];
+        Result.forEach(r => {
+          json.push(Lib.doTransformTypeAndStateToString(r));
+        });
+        res.end(JSON.stringify(json));
+      })
       break;
 
     case "/Order":
-      console.log(req.body);
       var form = new formidable.IncomingForm();
       form.parse(req, function (err, fields, files) {
-        
-        console.log("Got file : ");
-        console.log(files);
-        var OfferFolderPath = __dirname + '/HTML/Orders/' + IDpart_offer + '/';
-        var FileName = Lib.generateFileName( "OrderFromERC", req.body.IdPart_Offer, req.body.PlantName, req.body.PartName, req.body.Location, files.Offer.name) ;
-        var newpath = OfferFolderPath + FileName;
-        console.log("Creating folder : " + OfferFolderPath);
-        Lib.mkdirSync(OfferFolderPath);
-        console.log("Moving file to : " + newpath);
-        fs.rename(files.Offer.path, newpath, function (err) {
-          if (err) throw err;
-          DB.uploadOffer(IDpart_offer, FileName, function(){
-            res.write('File uploaded and moved!');
-            res.end();
-          });
-        });
+        Lib.SaveFile(err, res, JSON.parse(fields.Data), files, "OrderFromERC", DB)
       });
       break;
 
-      case "/CancelOffer":
+    case "/CancelOffer":
       DB.changePartOfferStateToRefused(req.body.IdPart_Offer ,function(err, Results){
         res.end();
       })
+      break;
+
+    case "/GetPlants":
+      DB.getPlants(function(err, Result){
+        res.end(JSON.stringify(Result));
+      });
+      break;
+
+    case "/GetPlantHistory":
+      Lib.SendPlantHistory(res, req.body.IdPlant,DB);
+      break;
+
+    case "/PartDescription":
+      Lib.SendPartHistory(res, req.body.IdPartImplemented, DB);
       break;
   }
 });
@@ -304,7 +255,11 @@ app.post('/ERC_Maintenance/*', function(req, res){
   var url = req.originalUrl.replace('/ERC_Maintenance', '');
   console.log("got post in " + req.originalUrl);
   switch(url){
-
+    case "/index":
+      DB.CreateReviews(Values, function(err, Result){
+        res.end("Done !");
+      });
+      break;
   }
 });
 

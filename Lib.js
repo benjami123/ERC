@@ -28,50 +28,6 @@ var TypeToString = [
 ];
 
 module.exports={
-    MergeAndOrderbyDate: function (history, review){
-    var Merged = [];
-    var iIndexHistory = 0;
-    var iIndexReview = 0;
-    var SizeOfMergedArray = history.length + review.length;
-    if((history.length == 0) && (review.length == 0)){
-      Merged = null;
-    }else if(history.length == 0){
-      for(var i=0; i<review.length; i++){
-        Merged[i] = TransformTypeAndStateToString(review[i]);
-      }
-    }else if(review.length == 0){
-      for(var i=0; i<history.length; i++){
-        Merged[i] = TransformTypeAndStateToString(history[i]);
-      }
-    }else{
-      for(var i=0; i<SizeOfMergedArray; i++){
-        if(history[iIndexHistory].OfferDateStart > review[iIndexReview].ReviewDate){
-          Merged[i] = TransformTypeAndStateToString(history[iIndexHistory]);
-          iIndexHistory++;
-        }else{
-          Merged[i] = TransformTypeAndStateToString(review[iIndexReview]);
-          iIndexReview++;
-        }
-        
-        if(iIndexHistory == history.length){
-          for(var j=iIndexReview; j<review.length; j++){
-            i++;
-            Merged[i] = TransformTypeAndStateToString(review[j]);
-          }
-          break;
-        }
-        if(iIndexReview == review.length){
-          for(var j=iIndexHistory; j<history.length; j++){
-            i++;
-            Merged[i] = TransformTypeAndStateToString(history[j]);
-          }
-          break;
-        }
-      }
-    }
-    return Merged;
-  },
-
   CheckRole: function(req, res, RoleArray){
     var URL = req.originalUrl;
     URL = URL.replace(RoleArray.Link, '');
@@ -92,17 +48,76 @@ module.exports={
     }
   },
 
-  mkdirSync: function(dirPath) {
-    try {
-      fs.mkdirSync(dirPath)
-    } catch (err) {
-      if (err.code !== 'EEXIST') throw err
-    }
+  SaveFile: function(err, res, json, files, s, DB){          
+    console.log("Got file : ");
+    console.log(files);
+    console.log("Got fields : ");
+    console.log(json);    
+    DB.getPlantName(json.IdPlant, function(err ,Result){
+      console.log("Got results : ");
+      console.log(Result);
+      var OfferFolderPath = __dirname + '/HTML/Orders/' + json.IdPart_Offer + '/';
+      var FileName = generateFileName(s, json.IdPart_Offer, Result.PlantName, json.PartName, json.Location, files[s].name) ;
+      var newpath = OfferFolderPath + FileName;
+      console.log("Creating folder : " + OfferFolderPath);
+      mkdirSync(OfferFolderPath);
+      console.log("Moving file to : " + newpath);
+      fs.rename(files[s].path, newpath, function (err) {
+        if (err) throw err; 
+        console.log("Json.OfferState : " + json.OfferState);
+        if(json.OfferState === StateToString[1]){
+          DB.uploadOffer(json.IdPart_Offer, FileName, function(){
+            res.write('File uploaded and moved!');
+            res.end("Done");
+          });
+        }else if(json.OfferState === StateToString[2]){
+          DB.uploadOrderFromClient(json.IdPart_Offer, FileName, function(){
+            res.write('File uploaded and moved!');
+            res.end("Done");
+          });
+        }else if(json.OfferState === StateToString[3]){
+          console.log("Hi from Somewhere");
+          DB.uploadOrderFromERC(json.IdPart_Offer, FileName, function(){
+            res.write('File uploaded and moved!');
+            res.end("Done");
+          });
+        }else{
+          console.log("no good");
+        }
+      });
+    });
   },
 
-  generateFileName : function(sFileType, IDPart_Offer, PlantName, PartName, PartLocation, OriginalFileName){
-    var DotIndex = OriginalFileName.lastIndexOf(".");
-    return '' + IDPart_Offer + '_' + PlantName + '_' + PartName + '_' + PartLocation +  '_' + sFileType + OriginalFileName.substring(DotIndex);
+  SendPartHistory: function(res, IdPartImplemented, DB){
+    console.log("Requesting PartImplementedHistory for id : " + IdPartImplemented);
+    DB.getPartImplementedHistory(IdPartImplemented, function(err, Result){
+      DB.getPartImplementedReviews(IdPartImplemented, function(err, Reviews){
+        console.log("Got Result : ");
+        console.log(Result);
+        console.log("got Reviews");
+        console.log(Reviews);
+        var json = MergeAndOrderbyDate(Result, Reviews);
+        console.log("Sending to client : ");
+        console.log(json);
+        res.end(JSON.stringify(json));
+      });
+    })
+  },
+
+  SendPlantHistory: function(res, IdPlant, DB){
+    DB.getPlantHistoryOffer(IdPlant, true, function(err, Result){
+      DB.getPlantHistoryReview(IdPlant, function(err, Reviews){
+        // console.log("Got Result : ");
+        // console.log(Result);
+        // console.log("got Reviews");
+        // console.log(Reviews);
+        var json = MergeAndOrderbyDate(Result, Reviews);
+        console.log("Sending to client : ");
+        console.log(json);
+        res.end(JSON.stringify(json));
+      });
+    
+    });
   },
 
   getRoleArray: function(){
@@ -124,15 +139,74 @@ function TransformTypeAndStateToString(json){
     if(json.OrderFromClient != null){
       json.OrderFromClient = OfferPath + json.IdPart_Offer + '/' + json.OrderFromClient;
     }
-    if(json.OrderFromERCPath != null){
+    if(json.OrderFromERC != null){
       json.OrderFromERC = OfferPath + json.IdPart_Offer + '/' + json.OrderFromERC;
     }
     json.OfferType = TypeToString[json.OfferType];
-    json.OfferState = StateToString[json.OfferState];
+    if(json.OfferState != null){
+      json.OfferState = StateToString[json.OfferState];
+    }
   }else{
     json.DataType = "R";
     json.ReviewDate = json.ReviewDate.toString().substring(0, 15);
     json.ReviewType = TypeToString[json.ReviewType];
   }
   return json;
+}
+
+function generateFileName (sFileType, IDPart_Offer, PlantName, PartName, PartLocation, OriginalFileName){
+  var DotIndex = OriginalFileName.lastIndexOf(".");
+  return '' + IDPart_Offer + '_' + PlantName + '_' + PartName + '_' + PartLocation +  '_' + sFileType + OriginalFileName.substring(DotIndex);
+}
+
+function mkdirSync (dirPath) {
+  try {
+    fs.mkdirSync(dirPath)
+  } catch (err) {
+    if (err.code !== 'EEXIST') throw err
+  }
+}
+
+function MergeAndOrderbyDate(history, review){
+  var Merged = [];
+  var iIndexHistory = 0;
+  var iIndexReview = 0;
+  var SizeOfMergedArray = history.length + review.length;
+  if((history.length == 0) && (review.length == 0)){
+    Merged = null;
+  }else if(history.length == 0){
+    for(var i=0; i<review.length; i++){
+      Merged[i] = TransformTypeAndStateToString(review[i]);
+    }
+  }else if(review.length == 0){
+    for(var i=0; i<history.length; i++){
+      Merged[i] = TransformTypeAndStateToString(history[i]);
+    }
+  }else{
+    for(var i=0; i<SizeOfMergedArray; i++){
+      if(history[iIndexHistory].OfferDateStart > review[iIndexReview].ReviewDate){
+        Merged[i] = TransformTypeAndStateToString(history[iIndexHistory]);
+        iIndexHistory++;
+      }else{
+        Merged[i] = TransformTypeAndStateToString(review[iIndexReview]);
+        iIndexReview++;
+      }
+      
+      if(iIndexHistory == history.length){
+        for(var j=iIndexReview; j<review.length; j++){
+          i++;
+          Merged[i] = TransformTypeAndStateToString(review[j]);
+        }
+        break;
+      }
+      if(iIndexReview == review.length){
+        for(var j=iIndexHistory; j<history.length; j++){
+          i++;
+          Merged[i] = TransformTypeAndStateToString(history[j]);
+        }
+        break;
+      }
+    }
+  }
+  return Merged;
 }

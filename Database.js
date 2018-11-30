@@ -33,14 +33,7 @@ module.exports= {
         });
     },
     
-    //Plant_Operator : index ReductionAgent
-    createRAOffer: function(IdReductionAgent, QuantityInL, Price, FileOrderFromClientName){
-        var Query = "INSERT INTO ra_offer (IdReductionAgent, DateStart, QuantityInL, Price, UserSeen, OrderFromClient) VALUES ( ? , NOW(),  ? , ? , 0, ? );";
-        con.query(Query, [IdReductionAgent, QuantityInL, Price, FileOrderFromClientName], function(err, rows){
-            if (err) throw err;
-            callback(err, rows);
-        });
-    },
+    /*  Plant_Operator    */ 
 
     //Plant_Operator : index partPreview
     getPlantPartPreviewInfos: function(IDPlant, callback){
@@ -49,7 +42,16 @@ module.exports= {
             if (err) throw err;
             callback(err, rows);
         });
-    }, 
+    },
+
+    //Plant_Operator : index ReductionAgent
+    createRAOffer: function(IdReductionAgent, QuantityInL, Price, FileOrderFromClientName){
+        var Query = "INSERT INTO ra_offer (IdReductionAgent, DateStart, QuantityInL, Price, UserSeen, OrderFromClient) VALUES ( ? , NOW(),  ? , ? , 0, ? );";
+        con.query(Query, [IdReductionAgent, QuantityInL, Price, FileOrderFromClientName], function(err, rows){
+            if (err) throw err;
+            callback(err, rows);
+        });
+    },
     
     //Plant_Operator : PartDescription History(Part_Offer)
     getPartImplementedHistory: function(IDPartImplemented, callback){
@@ -87,9 +89,18 @@ module.exports= {
         });
     },
     
+    //Plant_Operator : Offer GetOffers
+    getPlantOffer: function(IDPlant, callback){
+        var Query = "SELECT part_offer.IdPart_Offer, part_offer.OfferType, part_offer.OfferState, part_offer.OfferDateStart, part_offer.Offer, part.PartName, partimplemented.Location FROM part_offer JOIN partimplemented ON part_offer.IdPartImplemented=partimplemented.IdPartImplemented JOIN part ON partimplemented.IdPart=part.IdPart WHERE part_offer.OfferState=2 AND partimplemented.IdPlant= ? ;"
+        con.query(Query, [IDPlant],function(err, rows){
+            if (err) throw err;
+            callback(err, rows);
+        });
+    },
+    
     //Plant_Operator : Offer AddOrder to part_offer
     uploadOrderFromClient: function(IDPart_Offer, Order, callback){
-        var Query = "UPDATE part_offer SET OrderFromClient = ? , OfferState = 4 WHERE IdPart_Offer = ? ;";
+        var Query = "UPDATE part_offer SET OrderFromClient = ? , OfferState = 3 WHERE IdPart_Offer = ? ;";
         con.query(Query, [Order, IDPart_Offer], function(err, rows){
             if (err) throw err;
             callback(err, rows) ;
@@ -105,18 +116,13 @@ module.exports= {
         });
     },
 
-    //Plant_Operator : Offer GetOffers
-    getPlantOffer: function(IDPlant, callback){
-        var Query = "SELECT part_offer.IdPart_Offer, part_offer.OfferType, part_offer.OfferDateStart, part_offer.Offer, part.PartName, partimplemented.Location FROM part_offer JOIN partimplemented ON part_offer.IdPartImplemented=partimplemented.IdPartImplemented JOIN part ON partimplemented.IdPart=part.IdPart WHERE part_offer.OfferState=2 AND partimplemented.IdPlant= ? ;"
-        con.query(Query, [IDPlant],function(err, rows){
-            if (err) throw err;
-            callback(err, rows);
-        });
-    },
-
     //Plant_Operator : History
-    getPlantHistoryOfferWithFiles: function(IDPlant, callback){
-        var Query = "SELECT part.PartName, partimplemented.Location, partimplemented.IdPlant, part_offer.IdPart_Offer, part_offer.OfferType, part_offer.OfferState, part_offer.OfferDateStart, part_offer.Offer, part_offer.OrderFromClient, part_offer.OrderFromERC FROM part_offer JOIN partimplemented ON part_offer.IdPartImplemented = partimplemented.IdPartImplemented JOIN part ON part.IdPart=partimplemented.IdPart WHERE IdPlant = ? ORDER BY part_offer.OfferDateStart DESC;";
+    getPlantHistoryOffer: function(IDPlant, WithFiles, callback){
+        var s = "";
+        if(WithFiles){
+            s = "part_offer.Offer, part_offer.OrderFromClient, part_offer.OrderFromERC";
+        }
+        var Query = "SELECT part.PartName, partimplemented.Location, partimplemented.IdPlant, part_offer.IdPart_Offer, part_offer.OfferType, part_offer.OfferState, part_offer.OfferDateStart, " + s + " FROM part_offer JOIN partimplemented ON part_offer.IdPartImplemented = partimplemented.IdPartImplemented JOIN part ON part.IdPart=partimplemented.IdPart WHERE IdPlant = ? ORDER BY part_offer.OfferDateStart DESC;";
         con.query(Query, [IDPlant],function(err, rows){
             if (err) throw err;
             callback(err, rows);
@@ -132,9 +138,11 @@ module.exports= {
         });
     },
 
+    /*  ERC_Service     */
+
     //ERC_Service : index
     getOffersRequest: function(callback){
-        var Query = "SELECT user.Login, user.Email, plant.Address, plant.PlantName, plant.IdPlant, partimplemented.Location, part.PartName, part_offer.IdPart_Offer, part_offer.OfferType, part_offer.OfferDateStart FROM part_offer JOIN partimplemented ON part_offer.IdPartImplemented=partimplemented.IdPartImplemented JOIN part ON partimplemented.IdPart=part.IdPart JOIN plant ON partimplemented.IdPlant=plant.IdPlant JOIN user ON plant.IdPlant=user.IdPlant WHERE part_offer.OfferState=1 ORDER BY part_offer.OfferDateStart DESC;";
+        var Query = "SELECT user.Login, user.Email, plant.Address, plant.PlantName, plant.IdPlant, partimplemented.Location, part.PartName, part_offer.IdPart_Offer, part_offer.OfferType, part_offer.OfferDateStart, part_offer.OfferState FROM part_offer JOIN partimplemented ON part_offer.IdPartImplemented=partimplemented.IdPartImplemented JOIN part ON partimplemented.IdPart=part.IdPart JOIN plant ON partimplemented.IdPlant=plant.IdPlant JOIN user ON plant.IdPlant=user.IdPlant WHERE part_offer.OfferState=1 ORDER BY part_offer.OfferDateStart DESC;";
         con.query(Query, function(err, rows){
             if (err) throw err;
             callback(err, rows);
@@ -152,23 +160,62 @@ module.exports= {
     
     //ERC_Service : Orders AddOrder to part_offer
     uploadOrderFromERC: function(IDPartImplemented, Order, callback){
-        var Query = "UPDATE part_offer SET OrderFromERC = ? , OfferState = 3 WHERE IdPartImplemented = ? ;";
+        var Query = "UPDATE part_offer SET OrderFromERC = ? , OfferState = 4 WHERE IdPart_Offer = ? ;";
         con.query(Query, [Order, IDPartImplemented], function(err, rows){
             if (err) throw err;
             callback(err, rows) ;
         });  
     },
 
+    //ERC_Service : Orders Refuse part_offer -> see Plant_Operator RefusePartOffer()
+    
+    //ERC_Service : Orders getOrders
+    getOrdersRequest: function(callback){
+        var Query = "SELECT user.Login, user.Email, plant.Address, plant.PlantName, plant.IdPlant, partimplemented.Location, part.PartName, part_offer.IdPart_Offer, part_offer.OfferType, part_offer.OfferDateStart, part_offer.OfferState, part_offer.Offer, part_offer.OrderFromClient FROM part_offer JOIN partimplemented ON part_offer.IdPartImplemented=partimplemented.IdPartImplemented JOIN part ON partimplemented.IdPart=part.IdPart JOIN plant ON partimplemented.IdPlant=plant.IdPlant JOIN user ON plant.IdPlant=user.IdPlant WHERE part_offer.OfferState=3 ORDER BY part_offer.OfferDateStart DESC;";
+        con.query(Query, function(err, rows){
+            if (err) throw err;
+            callback(err, rows) ;
+        });  
+    },
+
+    //ERC_Service : Customers GetPlants
+    getPlants: function(callback){
+        var Query = "SELECT IdPlant, PlantName FROM plant;";
+        con.query(Query, function(err, rows){
+            if (err) throw err;
+            callback(err, rows) ;
+        });  
+    },
+
+    //ERC_Service : Customers GetPlant ReviewHistory -> see Plant_Operator getPlantHistoryReview() 
+    
+    //ERC_Service : Customers GetPlant PartOfferHistory -> see Plant_Operator getPlantHistoryOffer()
+    
+    /*  ERC_Maintenance */
+
+    //ERC_Maintenance : index GetPlants -> see ERC_Service getPlants()
+
+    //ERC_Maintenance : index CreateReviews
+    CreateReviews: function(Values, callback){
+        var Query = "INSERT INTO review (IdPartImplemented, ReviewDate, ReviewType) VALUES( ? , NOW(), ? );";
+        con.query(Query, Values, function(err, rows){
+            if (err) throw err;
+            callback(err, rows) ;
+        });
+    },
+
+    /*  ERC_Additives   */
+
     //ERC_Additive : index
     getRAOffersRequest: function(callback){
         var Query = "SELECT ra_offer.IdReductionAgent, ra_offer.OrderFromClient, ra_offer.QuantityInL, ra_offer.Price, ra_offer.OfferDateStart ,plant.PlantName, reductionagent.LevelOfRAInL, reductionagent.TotalCapacityInL, reductionagent.AverageConsumption, plant.Address, user.Login FROM ra_offer JOIN reductionagent ON ra_offer.IdReductionAgent=reductionagent.IdReductionAgent JOIN plant ON reductionagent.IdPlant=plant.IdPlant JOIN user ON plant.IdPlant=user.IdPlant WHERE ra_offer.OfferState=1 ORDER BY ra_offer.OfferDateStart DESC;";
-        con.query(Query, [IDPartImplemented, OfferType], function(err, rows){
+        con.query(Query, function(err, rows){
             if (err) throw err;
             callback(err, rows);
         });
     },
 
-
+    /*      Admin       */
 
     //*_Admin : RemoveUser
     removeUser: function(IDUser, callback){
@@ -207,9 +254,11 @@ module.exports= {
     },
 
     getPlantName: function(IDPlant, callback){
-        var Query = "SELECT PlantName FROM plant WHERE IdPlant = ?;";
+        var Query = "SELECT PlantName FROM plant WHERE IdPlant = ? ;";
         con.query(Query, [IDPlant], function(err, rows){
             if (err) throw err;
+            console.log("Results from DB : ")
+            console.log(rows);
             callback(err, rows[0]) ;
         });
     }

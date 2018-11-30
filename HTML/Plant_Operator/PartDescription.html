@@ -20,13 +20,12 @@
             xmlRequest.send(IdPartImplemented);
             xmlRequest.onreadystatechange = function(){
                 if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
-                    console.log("Got response : ");
-                    console.log(JSON.parse(xmlRequest.responseText));
+                    // console.log("Got response : ");
+                    // console.log(JSON.parse(xmlRequest.responseText));
                     var jsonArray = JSON.parse(xmlRequest.responseText);
                     for(var i=0;i<jsonArray.length;i++)
                      {
                          var json = jsonArray[i];
-                         console.log(json);
                          if(json.DataType == "H")
                          {
                              $("#tablePart").append("" +
@@ -40,22 +39,11 @@
                          {
                              $("#tablePart").append("" +
                                  "<tr>" +
-                                 "<tdclass='text-center'>"+json.ReviewDate+"</td>" +
-                                 "<tdclass='text-center'>"+json.ReviewType+"</td>" +
-                                 "<tdclass='text-center'>Review</td>"+
+                                 "<td class='text-center'>"+json.ReviewDate+"</td>" +
+                                 "<td class='text-center'>"+json.ReviewType+"</td>" +
+                                 "<td class='text-center'>Review</td>"+
                                  "</tr>");
                          }
-                         else
-                         {
-                             $("#tablePart").append("" +
-                                 "<tr>" +
-                                 "<tdclass='text-center'>raté</td>" +
-                                 "<tdclass='text-center'>echec</td>" +
-                                 "<tdclass='text-center'>truc</td>"+
-                                 "</tr>");
-                         }
-
-
                     }
                 }
             }
