@@ -46,6 +46,27 @@
                     }
                 }
             };
+<<<<<<< HEAD
+            function SendOffer(OfferFile){
+                console.log("test");
+                var xmlRequest = new XMLHttpRequest();
+                var formData = new FormData();
+                formData.append("Offer", OfferFile);
+                xmlRequest.open("POST", "/ERC_Service/Offer", true);
+                xmlRequest.setRequestHeader('Content-type', 'application/json');
+                xmlRequest.send(formData);
+                xmlRequest.onreadystatechange = function(){
+                    if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
+                        console.log("Got response : ");
+                        jsonArray = JSON.parse(xmlRequest.responseText);
+                        console.log(jsonArray);
+                        
+                    }
+                }
+            }
+            
+=======
+>>>>>>> 7f43180f616c709f3d08b54d2f108d486754a4de
         </script>
 </head>
 <body>
