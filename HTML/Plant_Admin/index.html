@@ -1,9 +1,154 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html>
+    <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-</head>
-<body>
-    <h1>Plant_Admin/index.html</h1>
-</body>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+        
+
+		<style>
+		/*html{
+			background-color:lightblue;
+		}
+		#ERCTitle{
+			
+			color:black;
+			font-family: "Verdana", Arial, sans-serif;
+			
+		}
+		#Logo{
+			
+			margin-left:100px;
+			
+		}
+		#LoginWindow{
+			
+			width: 300px;
+			border: 15px solid rgb(0, 102, 255);
+			padding: 25px;
+			margin: 150px;
+			background-color: white;
+			
+		}
+		#warn{
+			color:red;
+		}	*/
+		table{
+			position: relative;
+			left: 30px;
+
+		}
+		th,td
+		{
+    		border-collapse: collapse;
+		width: 20%;
+		height: 50px;
+    		padding: 15px;
+    		text-align: left;
+		border: 1px solid black;
+		}
+
+		#deleteUser{
+		width: 10%
+		}
+		
+		</style>
+
+
+
+		<script>
+		      /*      function Login(login, password){
+                var data = {};
+                data.username = login;
+                data.password = password;
+                data = JSON.stringify(data);
+                console.log("sent in login to server : " + data);
+                var xmlRequest = new XMLHttpRequest();
+                xmlRequest.open("POST", "/Login", true);
+                xmlRequest.setRequestHeader('Content-type', 'application/json');
+                xmlRequest.send(data);
+                xmlRequest.onreadystatechange = function(){
+                    if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
+                        console.log("Got response : ");
+                        console.log(xmlRequest.responseText);
+						var json = {};
+						try
+						{
+							json = JSON.parse(xmlRequest.responseText);
+						}
+                        catch(e){
+						
+						}
+						
+                        if(json.Redirection != null){
+                            console.log("Redirecting to : " + json.Redirection);
+                            window.location.replace(json.Redirection);
+                        }else{
+                            document.getElementById("warn").innerHTML = xmlRequest.responseText;
+                        }
+                    }
+                }
+            }*/
+		</script>
+    </head>
+    <body>
+	<header id="navbar">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <div class="navbar-brand">
+                    <p>Identifier</p>
+                </div>
+            </div>
+            <ul class="nav navbar-nav">
+                
+                <li><a href="History.html">Operator</a></li>
+                <li><a href="Contact.html">Add Operator</a></li>
+                <li><a href="Offer.html">Parts</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><img width="41%" src="../Picture/ERC_Logo.png"></li>
+                <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+            </ul>
+
+        </div>
+    </nav>
+</header>
+
+	<table style="width:97%">
+		<tr>
+			<th>Login</th>
+			<th>Email</th>
+			<th>Role</th>
+			<th>IdUser</th>
+			<th id="deleteUser">Delete User</th>
+		</tr>
+		<tr>
+			<td>Thomas</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td><button type="button" rel="tooltip" class="btn btn-danger btn-just-icon btn-sm" data-original-title="" title="" >
+                                                <i class="material-icons">close</i>
+                                            </button></td>
+		</tr>
+	
+		<tr>
+			<td>Benji</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td><button type="button" rel="tooltip" class="btn btn-danger btn-just-icon btn-sm" data-original-title="" title="" >
+                                                <i class="material-icons">close</i>
+                                            </button></td>
+		</tr>
+	</table> 
+
+    </body>
 </html>
