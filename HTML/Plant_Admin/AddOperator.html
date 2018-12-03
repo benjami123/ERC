@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+        
+
+		<style>
+		/*html{
+			background-color:lightblue;
+		}
+		#ERCTitle{
+			
+			color:black;
+			font-family: "Verdana", Arial, sans-serif;
+			
+		}
+		#Logo{
+			
+			margin-left:100px;
+			
+		}
+		#LoginWindow{
+			
+			width: 300px;
+			border: 15px solid rgb(0, 102, 255);
+			padding: 25px;
+			margin: 150px;
+			background-color: white;
+			
+		}
+		#warn{
+			color:red;
+		}	*/
+
+
+		#LoginWindow{
+			
+			width: 500px;
+			border: 15px solid rgb(0, 102, 255);
+			padding: 25px;
+			margin: 150px;
+			background-color: white;
+		}	
+		
+		input{
+			width: 250px;
+			}
+
+		</style>
+
+
+
+		<script>
+		      /*      function Login(login, password){
+                var data = {};
+                data.username = login;
+                data.password = password;
+                data = JSON.stringify(data);
+                console.log("sent in login to server : " + data);
+                var xmlRequest = new XMLHttpRequest();
+                xmlRequest.open("POST", "/Login", true);
+                xmlRequest.setRequestHeader('Content-type', 'application/json');
+                xmlRequest.send(data);
+                xmlRequest.onreadystatechange = function(){
+                    if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
+                        console.log("Got response : ");
+                        console.log(xmlRequest.responseText);
+						var json = {};
+						try
+						{
+							json = JSON.parse(xmlRequest.responseText);
+						}
+                        catch(e){
+						
+						}
+						
+                        if(json.Redirection != null){
+                            console.log("Redirecting to : " + json.Redirection);
+                            window.location.replace(json.Redirection);
+                        }else{
+                            document.getElementById("warn").innerHTML = xmlRequest.responseText;
+                        }
+                    }
+                }
+            }*/
+		</script>
+    </head>
+    <body>
+	<header id="navbar">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <div class="navbar-brand">
+                    <p>Identifier</p>
+                </div>
+            </div>
+            <ul class="nav navbar-nav">
+                
+                <li><a href="History.html">Operator</a></li>
+                <li><a href="Contact.html">Add Operator</a></li>
+                <li><a href="Offer.html">Parts</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><img width="41%" src="../Picture/ERC_Logo.png"></li>
+                <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+            </ul>
+
+        </div>
+    </nav>
+</header>
+
+	
+<center><div id="LoginWindow">
+			<h1>Add user</h1>
+			<input type="text" name='username' id='username' placeholder="e-mail">
+			<br>
+			<input type="password" name='password' id='password' placeholder="password">
+			<br>
+			<input type="password" name='password' id='password' placeholder="repeat password">
+			<br>
+			<br>
+			<button onclick='Login(document.getElementById("username").value, document.getElementById("password").value)'>Login</button>
+			<p id="warn"></p>
+		</div></center>
+
+
+
+
+
+
+
+    </body>
+</html>
