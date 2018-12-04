@@ -106,10 +106,10 @@
                 {
                     $("#tablePart").append(""+
                         "<tr onclick='clickPart("+i+")'>"+
-                        "<td>"+json.PartName+"</td>"+
-                        "<td>"+json.Location+"</td>"+
-                        "<td>"+json.PartDescription+"</td>"+
-                        "<td>"+json.SupplierName+"</td>"+
+                        "<td>"+table[i].PartName+"</td>"+
+                        "<td>"+table[i].Location+"</td>"+
+                        "<td>"+table[i].PartDescription+"</td>"+
+                        "<td>"+table[i].SupplierName+"</td>"+
                         "</tr>");
                 }
             }
@@ -143,8 +143,6 @@
     <label class="mr-sm-2" for="inlineFormCustomSelect"></label>
     <select class="custom-select mr-sm-2 form-control" id="inlineFormCustomSelect" onchange="selectedPlant(this.value)">
         <option selected>Choose...</option>
-        <option value="0">azerty</option>
-        <option value="1">azerty2</option>
     </select>
     </div>
     <div id="seachBar" class="col-auto my-2">
