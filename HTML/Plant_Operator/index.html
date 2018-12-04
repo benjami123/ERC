@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="index.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script>
         var jsonArray;
         window.onload = function(){
@@ -38,6 +40,28 @@
         function Logout(){
 				document.getElementById("Logout").submit();
 		}
+        function searchPart(value)
+        {
+            document.getElementById("tablePart").innerHTML = "";
+            AddToTable(tablePart, "tablePart", value);
+        }
+
+        function AddToTable(jsonArray, IdTable, SearchedKeyWord){
+            console.log("Adding to table : " + IdTable);
+            console.log(jsonArray);
+            for(var i=0;i<jsonArray.length;i++){
+                var json = jsonArray[i];
+                if(json.PartName.includes(SearchedKeyWord) || json.Location.includes(SearchedKeyWord) || json.SupplierName.includes(SearchedKeyWord)){
+                    $("#" + IdTable).append(""+
+                        "<tr onclick='clickPart("+i+")'>"+
+                        "<td>"+json.PartName+"</td>"+
+                        "<td>"+json.Location+"</td>"+
+                        "<td>"+json.PartDescription+"</td>"+
+                        "<td>"+json.SupplierName+"</td>"+
+                        "</tr>");
+                }
+            }
+        }
     </script>
     <title>Plant Operator</title>
 </head>
@@ -69,10 +93,10 @@
 <table class="table table-striped border-0">
     <thead>
     <tr>
-        <td id="PartName">Part Name</td>
-        <td id="PartDescription">Part Location</td>
-        <td id="PartLocation">Part Description</td>
-        <td id="SupplierName">Supplier Name</td>
+        <th id="PartName">Part Name</th>
+        <th id="PartDescription">Part Location</th>
+        <th id="PartLocation">Part Description</th>
+        <th id="SupplierName">Supplier Name</th>
     </tr>
     </thead>
     <tbody id="tablePart">
@@ -87,16 +111,15 @@
         <center><h3 id="TitleRa">Reduction Agent</h3></center>
         <canvas class="center-block" id="myCanvas" width="200" height="100"></canvas>
         <center><div id="Button">
-            <a id="BuyButton" class="btn btn-primary" href="#" role="button">Buy</a>
-            <a id="ContactButton" class="btn btn-info" href="#" role="button">Contact</a>
+           <span class="btn btn-primary btn-just-icon btn-sm btn-file" rel="tooltip">
+             <i class="material-icons" >monetization_on</i><input type="file" id="file">
+        </span>
+            <a id="ContactButton" class="btn btn-info" href="#" role="button"><i class="material-icons" >contact_support</i></a>
         </div></center>
     </div>
 </div>
 </body>
-<script>function searchPart(value)
-{
-
-}
+<script>
 
 var c =document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
