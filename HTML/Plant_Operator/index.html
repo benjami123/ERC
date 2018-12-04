@@ -9,7 +9,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script>
-        var jsonArray;
+        var jsonArray, tablePart;
         window.onload = function(){
             console.log("sending post to server");
             var json={};
@@ -22,9 +22,10 @@
                     console.log("Got response : ");
                     console.log(xmlRequest.responseText);
                     jsonArray = JSON.parse(xmlRequest.responseText);
-                    for(var i=0;i<jsonArray.length;i++)
+                    tablePart = JSON.parse(xmlRequest.responseText);
+                    for(var i=0;i<tablePart.length;i++)
                     {
-                        var json = jsonArray[i];
+                        var json = tablePart[i];
                         $("#tablePart").append("" +
                             "<tr onclick='clickPart("+i+")'>" +
                             "<td>"+json.PartName+"</td>" +
