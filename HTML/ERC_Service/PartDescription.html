@@ -14,7 +14,7 @@
             var IdPartImplemented = sessionStorage.getItem("SelectedPart");
             // console.log("sending post to server " + IdPartImplemented);
             xmlRequest = new XMLHttpRequest();
-            xmlRequest.open("POST", "/Plant_Operator/PartHistory", true);
+            xmlRequest.open("POST", "/ERC_Service/PartHistory", true);
             xmlRequest.setRequestHeader('Content-type', 'application/json');
             xmlRequest.send(IdPartImplemented);
             xmlRequest.onreadystatechange = function(){
@@ -99,14 +99,9 @@
 </div>
 <div id="RecommandedAction">
     <p>Recommended Action : just cry </p>
-    <label class="form-check-label">Performed action :</label>
-    <input id="checkbox" class="form-check-input" type="checkbox" onchange="ownAction()">
     <br><br>
     <div id="Action">
-        <input class="btn btn-primary" role="button" value="Replace (without service)" onclick='createOffer(1)'>
-        <input class="btn btn-primary" role="button" value="Replace (with service)" onclick='createOffer(2)'>
-        <input class="btn btn-primary" role="button" value="Check" onclick='createOffer(3)'>
-        <input class="btn btn-primary" role="button" value="Repair" onclick='createOffer(4)'>
+        <input class="btn btn-primary" role="button" value="Create maintenance offer" onclick='createOffer(2)'>
     </div>
 </div>
 </body>
@@ -120,34 +115,12 @@
             "<li class='list-group-item list-group-item-info'><p>Supplier name : "+selectedPart.SupplierName+"</p></li>" +
             "</ul>");
     }
-    function ownAction(){
-        if($("#checkbox").prop('checked'))
-        {
-            document.getElementById("Action").innerHTML = "<select id='ReviewType' class=form-control>\n" +
-                "        <option value=\"1\">Replace</option>\n" +
-                "        <option value=\"3\">Check</option>\n" +
-                "        <option value=\"4\">Repair</option>\n" +
-                "        </select>\n" +
-                "        <br>\n" +
-                "        <input id='ReviewDate' type=\"date\" class=\"form-control\" placeholder=\"Insert date\">\n" +
-                "        <br>\n" +
-                "        <input class=\"btn btn-primary\" role=\"button\" value=\"OK\" onclick='createReview()'>" +
-                "        <p id='notif'></p>";
-        }else
-        {
-            document.getElementById("Action").innerHTML = " <input class=\"btn btn-primary\" role=\"button\" value=\"Replace (without service)\" onclick='createOffer(1)'>\n" +
-                "        <input class=\"btn btn-primary\" role=\"button\" value=\"Replace (with service)\" onclick='createOffer(2)'>\n" +
-                "        <input class=\"btn btn-primary\" role=\"button\" value=\"Check\" onclick='createOffer(3)'>\n" +
-                "        <input class=\"btn btn-primary\" role=\"button\" value=\"Repair\" onclick='createOffer(4)'>" +
-                "        <p id='notif'></p>";
-        }
-    }
 
     function createOffer(numOffer)
     {
         selectedPart.OfferType = numOffer;
         xmlRequest = new XMLHttpRequest();
-        xmlRequest.open("POST", "/Plant_Operator/CreateOffer", true);
+        xmlRequest.open("POST", "/ERC_Service/CreateOffer", true);
         xmlRequest.setRequestHeader('Content-type', 'application/json');
         xmlRequest.send(JSON.stringify(selectedPart));
         xmlRequest.onreadystatechange = function(){
@@ -158,31 +131,6 @@
             }
             };
     }
-
-    function createReview()
-    {
-        if($("#ReviewDate").val() == "")
-        {
-            document.getElementById("notif").innerHTML = "The date is required";
-            return;
-        }
-        selectedPart.ReviewType = document.getElementById("ReviewType").value;
-        selectedPart.ReviewDate = $("#ReviewDate").val();
-        xmlRequest = new XMLHttpRequest();
-        xmlRequest.open("POST", "/Plant_Operator/CreateReview", true);
-        xmlRequest.setRequestHeader('Content-type', 'application/json');
-        console.log("Sending to server : ");
-        console.log(selectedPart);
-        xmlRequest.send(JSON.stringify(selectedPart));
-        xmlRequest.onreadystatechange = function(){
-            if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)) {
-                console.log("Got answer : ");
-                console.log(xmlRequest.responseText);
-                document.getElementById("notif").innerHTML = xmlRequest.responseText;
-            }
-        };
-    }
-    ownAction();
     information();
 
 </script>

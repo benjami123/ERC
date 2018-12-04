@@ -1,0 +1,53 @@
+#table{
+    width: 60%;
+    height: 50%;
+    right: 0.5%;
+    position: absolute;
+    right:0.5%;
+    bottom: 1%;
+    top: 55px;
+
+}
+#titleHistory{
+    background-color: darkgray;
+    color: white;
+}
+#title
+{
+    width: 60%;
+    position: fixed;
+}
+#body{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top:72px;
+    overflow: auto;
+    border: gray solid;
+}
+#TitleDefault{
+    background-color: gray;
+}
+#Information{
+    float: left;
+    left: 0.5%;
+    bottom : 1%;
+    max-width: 50%;
+    position: absolute;
+    top : 100px;
+}
+#tablePart{
+    font-size: 90%;
+    border: 1px solid gray;
+}
+#RecommandedAction{
+    position: absolute;
+    top : 400px;
+    bottom : 1%;
+    left: 0.5%;
+}
+#notif
+{
+    font-family:fantasy;
+    color: red;
+}
