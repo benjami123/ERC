@@ -17,7 +17,7 @@
     bottom: 1%;
     top: 55px;
 }
-td{
+td,th{
     width: 18%;
 }
 #body{
