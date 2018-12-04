@@ -57,7 +57,7 @@
             $('[data-toggle="tooltip"]').tooltip()
         });
 
-        function SendOffer(numOffer)
+        function SendOffer(file)
         {
             xmlRequest = new XMLHttpRequest();
             var formData = new FormData();
@@ -127,7 +127,7 @@
     <br><br>
     <div id="Action">
         <span class="btn btn-success btn-just-icon btn-sm btn-file" rel="tooltip">
-             <i class="material-icons" >create</i><input type="file" value="Create maintenance offer" oninput="SendOffer(this.files[0])">
+             <i class="material-icons" >create</i><input type="file" oninput="SendOffer(this.files[0])">
         </span>
         <p id="confirmation"></p>
     </div>
