@@ -50,6 +50,9 @@
                 }
             }
         };
+        function Logout(){
+            document.getElementById("Logout").submit();
+        }
     </script>
 </head>
 <body>
@@ -68,7 +71,8 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><img width="41%" src="../Picture/ERC_Logo.png"></li>
-                <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+                <li onclick="Logout()"><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+				<form method="POST" id="Logout" action="/Logout"></form>
             </ul>
         </div>
     </nav>

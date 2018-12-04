@@ -191,6 +191,9 @@ module.exports= {
     
     //ERC_Service : Customers GetPlant PartOfferHistory -> see Plant_Operator getPlantHistoryOffer()
     
+    //ERC_Service : Customers GetPlantsPart -> see Plant_Operator getPlantPartPreviewInfos()
+
+
     /*  ERC_Maintenance */
 
     //ERC_Maintenance : index GetPlants -> see ERC_Service getPlants()
@@ -219,7 +222,7 @@ module.exports= {
 
     //*_Admin : RemoveUser
     removeUser: function(IDUser, callback){
-        var Query = "DELETE FROM TABLE user WHERE IdUser = ? ;";
+        var Query = "DELETE FROM user WHERE IdUser = ? ;";
         con.query(Query, [IDUser], function(err, rows){
             if (err) throw err;
             callback(err, rows) ;
@@ -227,9 +230,27 @@ module.exports= {
     },
     
     //*_Admin : AddUser with role
-    createUser: function(IDPlant, Login, Password, Role, callback){
-        var Query = "INSERT INTO user(IdPlant, Login, Passowrd, Role) VALUES( ? , ? , ? , ? );";
-        con.query(Query, [IDPlant, Login, Password, Role], function(err, rows){
+    createUser: function(IDPlant, Login, Email, Password, Role, callback){
+        console.log("Creating user : " + IDPlant + ", " + Login + ", " + Password + ", " + Role);
+        var Query = "INSERT INTO user(IdPlant, Login, Email, Password, Role) VALUES( ? , ? , ? , ? , ? );";
+        con.query(Query, [IDPlant, Login, Email, Password, Role], function(err, rows){
+            if (err) {
+                if(err.code === "ER_DUP_ENTRY"){
+                    console.log("Got Login duplicate");
+                    callback(err, false);
+                }else{
+                    throw err;
+                }
+            }else{
+                callback(err, rows) ;
+            }
+        });
+    },
+
+    //Plant_Admin : index Get users from plant
+    getUserWithRole: function(IDPlant, Role, callback){
+        var Query = "SELECT IdUser, Login,  Email FROM user WHERE IdPlant = ? AND Role = ? ;";
+        con.query(Query, [IDPlant, Role], function(err, rows){
             if (err) throw err;
             callback(err, rows) ;
         });
@@ -245,9 +266,9 @@ module.exports= {
     },
     
     //Plant_Admin : Parts removing partimplemented from plant
-    removePartImplemented: function(ArrayPartimplementedID, callback){
+    removePartImplemented: function(ArrayPartImplementedID, callback){
         var Query = "UPDATE partimplemented SET isImplemented = 0 WHERE IdPartImplemented = ? ;";
-        con.query(Query, ArrayPartimplementedID, function(err, rows){
+        con.query(Query, ArrayPartImplementedID, function(err, rows){
             if (err) throw err;
             callback(err, rows) ;
         });

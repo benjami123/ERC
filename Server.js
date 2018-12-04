@@ -112,6 +112,19 @@ app.post('/Login',function(req,res){
   });
 });
 
+app.post('/Logout', function(req, res){
+  if (req.session) {
+    req.session.destroy(function(err) {
+      if(err) {
+        return next(err);
+      } else {
+        return res.redirect('/');
+      }
+    });
+  }
+
+})
+
 app.post('/Plant_Operator/*', function(req, res){
   var url = req.originalUrl.replace('/Plant_Operator', '');
   console.log("got post in " + req.originalUrl);
@@ -182,7 +195,54 @@ app.post('/Plant_Admin/*', function(req, res){
   var url = req.originalUrl.replace('/Plant_Admin', '');
   console.log("got post in " + req.originalUrl);
   switch(url){
+    case "/index":
+      DB.getUserWithRole(req.session.user.IdPlant, 3, function(err, Result){ //Get all operator from current plant
+        console.log("Sending ");
+        console.log(Result);
+        res.end(JSON.stringify(Result));
+      });
+      break;
 
+    case "/RemoveUser":
+      console.log("Removing user : ");
+      console.log(req.body);1
+      DB.removeUser(req.body.IdUser, function(err, Result){
+       res.end(JSON.stringify({})); 
+      })
+      break;
+
+    case "/AddUser":
+      var UserEmail = req.body.Email;
+      var UserLogin = req.body.Login;
+      var UserIdPlant = req.session.user.IdPlant;
+      var UserPassword = Lib.GeneratePassword();
+      DB.createUser(UserIdPlant, UserLogin, UserEmail, UserPassword, 3, function(err, Results){
+        console.log("Got results : ");
+        console.log(Results);
+        if(Results){
+          Lib.SendEmail(UserLogin, UserEmail, UserPassword);
+          res.end("User Added !");
+        }else{
+          res.end("User already exists !");
+        }
+      });
+      break;
+
+    case "/AddParts":
+      console.log("Adding partimplemented : ");
+      console.log(req.body.Values);
+      DB.createPartImplemented(req.body.Values, function(err, Result){
+        res.end();
+      });
+      break;
+
+    case "/RemoveParts":
+      console.log("Deleting partimplemented : ");
+      console.log(req.body.Values);
+      DB.removePartImplemented(req.body.ArrayPartImplementedID, function(err, Result){
+        res.end();
+      });
+      break;
   }
 });
 
@@ -243,6 +303,18 @@ app.post('/ERC_Service/*', function(req, res){
 
     case "/GetPlantHistory":
       Lib.SendPlantHistory(res, req.body.IdPlant,DB);
+      break;
+
+    case"/GetPlantPart":
+      DB.getPlantPartPreviewInfos(req.body.IdPlant, function(err, Results){
+        console.log("Sending");
+        console.log(Results);        
+        var json = [];
+        Results.forEach(r => {
+          json.push(Lib.doTransformTypeAndStateToString(r));
+        });
+        res.end(JSON.stringify(json));
+      });
       break;
 
     case "/PartDescription":

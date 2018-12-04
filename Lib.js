@@ -120,6 +120,20 @@ module.exports={
     });
   },
 
+  GeneratePassword: function() {
+    var pw = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  
+    for (var i = 0; i < 5; i++)
+      pw += possible.charAt(Math.floor(Math.random() * possible.length));
+  
+    return pw;
+  },
+
+  SendEmail: function(Login, Email, Password){
+    console.log("Sending email to " + Email + " with Login : " + Login + ", Password : " + Password);
+  },
+
   getRoleArray: function(){
       return RoleArray;
   }, 
