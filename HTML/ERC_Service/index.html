@@ -121,15 +121,14 @@
     {
 
         xmlRequest = new XMLHttpRequest();
-        var json = {Data: info};
         xmlRequest.open("POST", "/ERC_Service/CancelOffer", true);
         xmlRequest.setRequestHeader('Content-type', 'application/json');
-        xmlRequest.send(json);
-        if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
-            if(xmlRequest.responseText)
-            {
-                $("#"+num).remove();
-            }
+        xmlRequest.send(JSON.stringify(info));
+        xmlRequest.onreadystatechange = function(){
+                if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
+                        $("#"+num).remove();
+                        
+                }
         }
     }
 
