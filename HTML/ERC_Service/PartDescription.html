@@ -57,11 +57,14 @@
             $('[data-toggle="tooltip"]').tooltip()
         });
 
-        function SendOffer(file)
+        function SendOffer(file,type)
         {
+            alert(type);
+            alert(file);
             xmlRequest = new XMLHttpRequest();
             var formData = new FormData();
             formData.append('OrderFromERC', file);
+            formData.append('OfferType', type);
             formData.append('Data', sessionStorage.getItem("SelectedPart"));
             xmlRequest.open("POST", "/ERC_Service/CreateOffer", true);
             // xmlRequest.setRequestHeader('Content-type', 'application/json');
@@ -125,9 +128,17 @@
     <p>Recommended Action : choose you are the seller </p>
     <br><br>
     <div id="Action">
+        <select id='Type' class=form-control>
+            <option value="2">Replace</option>
+            <option value="3">Check</option>
+            <option value="4">Repair</option>
+            </select>
+        <br>
         <span class="btn btn-success btn-just-icon btn-sm btn-file" rel="tooltip">
-             <i class="material-icons" >create</i><input type="file" oninput="SendOffer(this.files[0])">
+             <i class="material-icons" >cloud_upload</i><input type="file" id="file">
         </span>
+        <br>
+        <input class="btn btn-primary" role="button" value="OK" onclick="SendOffer($('#file').val(),$('#Type').val())">
         <p id="confirmation"></p>
     </div>
 
