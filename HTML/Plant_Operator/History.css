@@ -11,8 +11,6 @@
 }
 #History {
     height: 90%;
-    border: gray;
-    border-style: solid;
     position: absolute;
     right: 0.5%;
     left: 0.5%;
@@ -24,4 +22,9 @@ td{
 }
 #body{
     overflow: auto;
+    margin-top: -22px;
+    margin-right: 0.5px;
+    border: gray;
+    border-style: solid;
+    height: 89%;
 }
