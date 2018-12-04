@@ -5,9 +5,116 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="Customer.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>Customers</title>
+
+    <script>
+        var jsonArray;
+        window.onload = function (){
+            console.log("sending post to server");
+            var json={};
+            xmlRequest = new XMLHttpRequest();
+            xmlRequest.open("POST", "/ERC_Service/GetPart", true);
+            xmlRequest.setRequestHeader('Content-type', 'application/json');
+            xmlRequest.send();
+            xmlRequest.onreadystatechange = function() {
+                if ((xmlRequest.readyState == 4) && (xmlRequest.status == 200)) {
+                    console.log("Got response : ");
+                    console.log(xmlRequest.responseText);
+                    jsonArray = JSON.parse(xmlRequest.responseText);
+                    for (var i = 0; i < jsonArray.length; i++) {
+                        var json = jsonArray[i];
+                        $("#tablePart").append("" +
+                            "<option value=\"" + json.IdPlant + "\">json.PlantName</option>");
+                    }
+                }
+            }
+        };
+
+
+
+        var tablePart;
+        function selectedPlant(id){
+            console.log("sending post to server");
+            var json={};
+            xmlRequest = new XMLHttpRequest();
+            xmlRequest.open("POST", "/ERC_Service/PlantPart", true);
+            xmlRequest.setRequestHeader('Content-type', 'application/json');
+            xmlRequest.send(id);
+            xmlRequest.onreadystatechange = function(){
+                if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
+                    console.log("Got response : ");
+                    console.log(xmlRequest.responseText);
+                    tablePart = JSON.parse(xmlRequest.responseText);
+                    for(var i=0;i<tablePart.length;i++)
+                    {
+                        var json = tablePart[i];
+                        $("#tablePart").append(""+
+                            "<tr onclick='clickPart("+i+")'>"+
+                            "<td>"+json.PartName+"</td>"+
+                            "<td>"+json.Location+"</td>"+
+                            "<td>"+json.PartDescription+"</td>"+
+                            "<td>"+json.SupplierName+"</td>"+
+                            "</tr>");
+                    }
+                }
+            };
+
+            xmlRequest2 = new XMLHttpRequest();
+            xmlRequest2.open("POST", "/ERC_Service/GetPlantHistory", true);
+            xmlRequest2.setRequestHeader('Content-type', 'application/json');
+            xmlRequest2.send(id);
+            xmlRequest2.onreadystatechange = function(){
+                if((xmlRequest2.readyState == 4 ) && (xmlRequest2.status == 200)){
+                    console.log("Got response : ");
+                    console.log(xmlRequest2.responseText);
+                    jsonArray = JSON.parse(xmlRequest2.responseText);
+                    for(var i=0;i<jsonArray.length;i++)
+                    {
+                        var json = jsonArray[i];
+                        if(json.DataType == "H") {
+                            $("#tableHistory").append("" +
+                                "<tr>" +
+                                "<td>" + json.PartName + "</td>" +
+                                "<td><center>" + json.Location + "</center></td>" +
+                                "<td><center>" + json.OfferType + "</center></td>" +
+                                "<td><center>"+json.OfferDateStart+"</center></td>" +
+                                "</tr>");
+                        }
+                        else if(json.DataType == "R")
+                        {
+                            $("#tableHistory").append("" +
+                                "<tr>" +
+                                "<td>" + json.PartName + "</td>" +
+                                "<td><center>" + json.Location + "</center></td>" +
+                                "<td><center>" + json.ReviewDate + "</center></td>" +
+                                "<td><center>"+json.ReviewDate+"</center></td>" +
+                                "</tr>");
+                        }
+                    }
+                }
+            };
+        }
+
+        function searchPart(part){
+            document.getElementById("tablePart").innerHTML = "";
+            for(var i=0;i<tablePart.length;i++)
+            {
+                if(table[i].PartName.indexOf(part))
+                {
+                    $("#tablePart").append(""+
+                        "<tr onclick='clickPart("+i+")'>"+
+                        "<td>"+json.PartName+"</td>"+
+                        "<td>"+json.Location+"</td>"+
+                        "<td>"+json.PartDescription+"</td>"+
+                        "<td>"+json.SupplierName+"</td>"+
+                        "</tr>");
+                }
+            }
+        }
+    </script>
 </head>
 <body>
 <header id="navbar">
@@ -20,8 +127,8 @@
             </div>
             <ul class="nav navbar-nav">
                 <li ><a href="index.html">Home</a></li>
-                <li><a href="Customer.html">Customers</a></li>
-                <li class="active"><a href="Order.html">Orders</a></li>
+                <li class="active"><a href="Customer.html">Customers</a></li>
+                <li><a href="Order.html">Orders</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><img width="41%" src="../Picture/ERC_Logo.png"></li>
@@ -32,16 +139,15 @@
     </nav>
 </header>
 <div class="form-row align-items-center">
-    <div class="col-auto my-1">
+    <div id="select" class="col-auto my-1">
     <label class="mr-sm-2" for="inlineFormCustomSelect"></label>
-    <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+    <select class="custom-select mr-sm-2 form-control" id="inlineFormCustomSelect" onchange="selectedPlant(this.value)">
         <option selected>Choose...</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
+        <option value="0">azerty</option>
+        <option value="1">azerty2</option>
     </select>
     </div>
-    <div class="col-auto my-2">
+    <div id="seachBar" class="col-auto my-2">
     <input type="text" width="20%" class="form-control" id="search" placeholder="Search" onkeyup="searchPart(this.value)">
     </div>
 
@@ -50,18 +156,43 @@
 <div id="PartTable" class="col-1">
     <table class="table table-striped border-0">
         <thead>
-        <tr>
-            <td id="PartName">Part Name</td>
-            <td id="PartDescription">Part Location</td>
-            <td id="PartLocation">Part Description</td>
-            <td id="SupplierName">Supplier Name</td>
-        </tr>
+            <th id="PartName">Part Name</th>
+            <th id="PartDescription">Part Location</th>
+            <th id="PartLocation">Part Description</th>
+            <th id="SupplierName">Supplier Name</th>
         </thead>
+    </table >
+    <div id="body" class="table-wrapper-scroll-y scrollbar scrollbar-near-moon thin">
+    <table  class="table table-striped border-0">
         <tbody id="tablePart">
         </tbody>
     </table>
+    </div>
 </div>
-<div id="Right">
+<div id="Right" >
+    <table id="history" class="table table-striped border-0">
+        <thead>
+            <th>Part Name</th>
+            <th>Part Location</th>
+            <th>Type</th>
+            <th>Date</th>
+        </thead>
+    </table>
+    <div id="Right2" class="table-wrapper-scroll-y scrollbar scrollbar-near-moon thin">
+    <table id="history2"  class="table table-striped border-0">
+        <tbody id="tableHistory">
+        <tr>
+        <td>something</td>
+        <td><center>a4z5e74f8df4</center></td>
+        <td><center>replace without service</center></td>
+        <td><center>2016-45-48</center></td>
+        </tr>
+        </tbody>
+    </table>
+    </div>
 </div>
 </body>
+<script>
+
+</script>
 </html>
