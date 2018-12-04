@@ -36,7 +36,7 @@
 
 
 
-        var tablePart;
+        var tablePart, IdPlant;
         function selectedPlant(id){
             console.log("sending post to server");
             var json={};
@@ -51,6 +51,7 @@
                     console.log("Got response : ");
                     console.log(xmlRequest.responseText);
                     tablePart = JSON.parse(xmlRequest.responseText);
+                    IdPlant = id;
                     AddToTable(tablePart, "tablePart", "");
                 }
             };
@@ -190,6 +191,7 @@
 <script>
     function clickPart(IdJson)
     {
+        tablePart[IdJson].IdPlant = IdPlant;
         xmlRequest = new XMLHttpRequest();
         xmlRequest.open("POST", "/Plant_Operator/PartDescription", true);
         xmlRequest.setRequestHeader('Content-type', 'application/json');
