@@ -11,6 +11,7 @@
     <title>Customers</title>
 
     <script>
+
         var jsonArray;
         window.onload = function (){
             console.log("sending post to server");
@@ -187,6 +188,15 @@
 </div>
 </body>
 <script>
+    function clickPart(IdJson)
+    {
+        xmlRequest = new XMLHttpRequest();
+        xmlRequest.open("POST", "/Plant_Operator/PartDescription", true);
+        xmlRequest.setRequestHeader('Content-type', 'application/json');
+        xmlRequest.send(jsonArray[IdJson]);
+        sessionStorage.setItem("SelectedPart", JSON.stringify(jsonArray[IdJson]));
+        window.location.replace("/ERC_Service/PartDescription.html");
+    }
 
 </script>
 </html>
