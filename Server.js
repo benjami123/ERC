@@ -306,7 +306,9 @@ app.post('/ERC_Service/*', function(req, res){
       break;
 
     case"/GetPlantPart":
-      DB.getPlantPartPreviewInfos(req.body.IdPlant, function(err, Results){
+      var json = req.body;
+      console.log(json);
+      DB.getPlantPartPreviewInfos(json.IdPlant, function(err, Results){
         console.log("Sending");
         console.log(Results);        
         var json = [];

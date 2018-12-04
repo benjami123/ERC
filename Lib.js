@@ -162,8 +162,12 @@ function TransformTypeAndStateToString(json){
     }
   }else{
     json.DataType = "R";
-    json.ReviewDate = json.ReviewDate.toString().substring(0, 15);
-    json.ReviewType = TypeToString[json.ReviewType];
+    if(json.ReviewDate != null){
+      json.ReviewDate = json.ReviewDate.toString().substring(0, 15);
+    }
+    if(json.ReviewType != null){
+      json.ReviewType = TypeToString[json.ReviewType];
+    }
   }
   return json;
 }

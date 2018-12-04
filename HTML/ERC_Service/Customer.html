@@ -16,7 +16,7 @@
             console.log("sending post to server");
             var json={};
             xmlRequest = new XMLHttpRequest();
-            xmlRequest.open("POST", "/ERC_Service/GetPart", true);
+            xmlRequest.open("POST", "/ERC_Service/GetPlants", true);
             xmlRequest.setRequestHeader('Content-type', 'application/json');
             xmlRequest.send();
             xmlRequest.onreadystatechange = function() {
@@ -26,8 +26,8 @@
                     jsonArray = JSON.parse(xmlRequest.responseText);
                     for (var i = 0; i < jsonArray.length; i++) {
                         var json = jsonArray[i];
-                        $("#tablePart").append("" +
-                            "<option value=\"" + json.IdPlant + "\">json.PlantName</option>");
+                        $("#inlineFormCustomSelect").append("" +
+                            "<option value=\"" + json.IdPlant + "\">" + json.PlantName + "</option>");
                     }
                 }
             }
@@ -40,32 +40,24 @@
             console.log("sending post to server");
             var json={};
             xmlRequest = new XMLHttpRequest();
-            xmlRequest.open("POST", "/ERC_Service/PlantPart", true);
+            xmlRequest.open("POST", "/ERC_Service/GetPlantPart", true);
             xmlRequest.setRequestHeader('Content-type', 'application/json');
-            xmlRequest.send(id);
+            json.IdPlant = id;
+            json = JSON.stringify(json);
+            xmlRequest.send(json);
             xmlRequest.onreadystatechange = function(){
                 if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
                     console.log("Got response : ");
                     console.log(xmlRequest.responseText);
                     tablePart = JSON.parse(xmlRequest.responseText);
-                    for(var i=0;i<tablePart.length;i++)
-                    {
-                        var json = tablePart[i];
-                        $("#tablePart").append(""+
-                            "<tr onclick='clickPart("+i+")'>"+
-                            "<td>"+json.PartName+"</td>"+
-                            "<td>"+json.Location+"</td>"+
-                            "<td>"+json.PartDescription+"</td>"+
-                            "<td>"+json.SupplierName+"</td>"+
-                            "</tr>");
-                    }
+                    AddToTable(tablePart, "tablePart", "");
                 }
             };
 
             xmlRequest2 = new XMLHttpRequest();
             xmlRequest2.open("POST", "/ERC_Service/GetPlantHistory", true);
             xmlRequest2.setRequestHeader('Content-type', 'application/json');
-            xmlRequest2.send(id);
+            xmlRequest2.send(json);
             xmlRequest2.onreadystatechange = function(){
                 if((xmlRequest2.readyState == 4 ) && (xmlRequest2.status == 200)){
                     console.log("Got response : ");
@@ -100,16 +92,21 @@
 
         function searchPart(part){
             document.getElementById("tablePart").innerHTML = "";
-            for(var i=0;i<tablePart.length;i++)
-            {
-                if(table[i].PartName.indexOf(part))
-                {
-                    $("#tablePart").append(""+
+            AddToTable(tablePart, "tablePart", part)
+        }
+
+        function AddToTable(jsonArray, IdTable, SearchedKeyWord){
+            console.log("Adding to table : " + IdTable);
+            console.log(jsonArray);
+            for(var i=0;i<jsonArray.length;i++){
+                var json = jsonArray[i];
+                if(json.PartName.includes(SearchedKeyWord) || json.Location.includes(SearchedKeyWord) || json.SupplierName.includes(SearchedKeyWord)){
+                    $("#" + IdTable).append(""+
                         "<tr onclick='clickPart("+i+")'>"+
-                        "<td>"+table[i].PartName+"</td>"+
-                        "<td>"+table[i].Location+"</td>"+
-                        "<td>"+table[i].PartDescription+"</td>"+
-                        "<td>"+table[i].SupplierName+"</td>"+
+                        "<td>"+json.PartName+"</td>"+
+                        "<td>"+json.Location+"</td>"+
+                        "<td>"+json.PartDescription+"</td>"+
+                        "<td>"+json.SupplierName+"</td>"+
                         "</tr>");
                 }
             }
@@ -184,12 +181,6 @@
     <div id="Right2" class="table-wrapper-scroll-y scrollbar scrollbar-near-moon thin">
     <table id="history2"  class="table table-striped border-0">
         <tbody id="tableHistory">
-        <tr>
-        <td>something</td>
-        <td><center>a4z5e74f8df4</center></td>
-        <td><center>replace without service</center></td>
-        <td><center>2016-45-48</center></td>
-        </tr>
         </tbody>
     </table>
     </div>
