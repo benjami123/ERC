@@ -59,8 +59,6 @@
 
         function SendOffer(file,type)
         {
-            alert(type);
-            alert(file);
             xmlRequest = new XMLHttpRequest();
             var formData = new FormData();
             formData.append('OrderFromERC', file);
@@ -138,7 +136,7 @@
              <i class="material-icons" >cloud_upload</i><input type="file" id="file">
         </span>
         <br>
-        <input class="btn btn-primary" role="button" value="OK" onclick="SendOffer($('#file').val(),$('#Type').val())">
+        <input class="btn btn-primary" role="button" value="OK" onclick="SendOffer(document.getElementById('file').files[0],$('#Type').val())">
         <p id="confirmation"></p>
     </div>
 
