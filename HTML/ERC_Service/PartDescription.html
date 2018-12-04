@@ -70,7 +70,7 @@
                 if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
                     if(xmlRequest.responseText)
                     {
-
+                        document.getElementById("confirmation").innerHTML = xmlRequest.responseText;
                     }
                 }
             }
@@ -129,7 +129,9 @@
         <span class="btn btn-success btn-just-icon btn-sm btn-file" rel="tooltip">
              <i class="material-icons" >create</i><input type="file" value="Create maintenance offer" oninput="SendOffer(this.files[0])">
         </span>
+        <p id="confirmation"></p>
     </div>
+
 </div>
 </body>
 <script>
