@@ -63,7 +63,7 @@
             var formData = new FormData();
             formData.append('OrderFromERC', file);
             formData.append('Data', sessionStorage.getItem("SelectedPart"));
-            xmlRequest.open("POST", "/ERC_Service/Order", true);
+            xmlRequest.open("POST", "/ERC_Service/CreateOffer", true);
             // xmlRequest.setRequestHeader('Content-type', 'application/json');
             xmlRequest.send(formData);
             xmlRequest.onreadystatechange = function(){
