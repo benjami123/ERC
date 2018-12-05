@@ -9,7 +9,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script>
-        var jsonArray, tablePart;
+        var jsonArray, RA;
         window.onload = function(){
             console.log("sending post to server");
             var json={};
@@ -35,7 +35,25 @@
                             "</tr>");
                     }
                 }
-            }
+            };
+            xmlRequest2 = new XMLHttpRequest();
+            xmlRequest2.open("POST", "/Plant_Operator/GetRALevel", true);
+            xmlRequest2.setRequestHeader('Content-type', 'application/json');
+            xmlRequest2.send();
+            xmlRequest.onreadystatechange = function() {
+                if ((xmlRequest.readyState == 4) && (xmlRequest.status == 200)) {
+                    RA = JSON.parse(xmlRequest.responseText);
+                    for(var i=0;i<RA.length;i++)
+                    {
+                        var json = RA[i];
+                        $("#ReductionAgent").append("<center>"+
+                        "<canvas class=\"center-block\" id=\"myCanvas\""+json.IdReductionAgent+" width=\"235\" height=\"150\"></canvas>"+
+                        "</center>");
+                        var percentage = Math.floor((json.LevelOfRAInL*100)/json.TotalCapacityInL);
+                        $("#AddCanvas").append(canvas(percentage,json));
+                    }
+                }
+            };
         };
         
         function Logout(){
@@ -110,40 +128,44 @@
     </div>
     <div id="ReductionAgent">
         <center><h3 id="TitleRa">Reduction Agent</h3></center>
-        <canvas class="center-block" id="myCanvas" width="235" height="120"></canvas>
-        <center><div id="Button">
+        <center>
+        <canvas class="center-block" id="myCanvas" width="235" height="150"></canvas>
+        </center>
+            <div id="Button"><center>
            <span class="btn btn-primary btn-just-icon btn-sm btn-file" rel="tooltip">
              <i class="material-icons" >monetization_on</i><input type="file" id="file">
         </span>
             <a id="ContactButton" class="btn btn-info" href="#" role="button"><i class="material-icons" >contact_support</i></a>
-        </div></center>
-    </div>
+            </center></div>
+
 </div>
 </body>
-<script>
+<script id="AddCanvas">
 
 function LevelRa(percentage)
 {
     return percentage*($("#myCanvas").width()-36)/100;
 }
-var literStorage = 150;
-function canvas(percentage)
+
+function canvas(percentage,array)
 {
-    var c =document.getElementById("myCanvas");
+    var c =document.getElementById(array.IdReductionAgent);
     var ctx = c.getContext("2d");
     var grd = ctx.createLinearGradient(0,0,200,0);
     grd.addColorStop(0,"red");
     grd.addColorStop(1,"blue");
     ctx.fillStyle = grd;
-    ctx.strokeRect(0,0,200,100);
+    ctx.strokeRect(0,25,200,100);
     var RaLevel = LevelRa(percentage);
-    ctx.fillRect(0,0,RaLevel,100);
+    ctx.fillRect(0,25,RaLevel,100);
     ctx.font = "15px Helvetica";
-    ctx.fillText(percentage+"%",RaLevel+5,50);
-    ctx.fillText("0",0,120);
-    ctx.fillText(literStorage+" L",185,120);
+    ctx.fillText(percentage+"%",RaLevel+5,75);
+    ctx.fillText("0",0,145);
+    ctx.fillText(array.TotalCapacityInL+" L",185,145);
+    ctx.font = "20px Helvetica";
+    ctx.fillStyle = "black";
+    ctx.fillText(array.IdReductionAgent,(($("#myCanvas").width()-36)/2),20);
 }
-canvas(50);
 
 function clickPart(IdJson)
 {
