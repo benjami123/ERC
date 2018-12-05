@@ -75,6 +75,7 @@
                                 "<td>" + json.Location + "</td>" +
                                 "<td>" + json.OfferType + "</td>" +
                                 "<td>"+json.OfferDateStart+"</td>" +
+                                "<td>"+json.OfferStatus+"</td>" +
                                 "</tr>");
                         }
                         else if(json.DataType == "R")
@@ -85,6 +86,7 @@
                                 "<td>" + json.Location + "</td>" +
                                 "<td>" + json.ReviewDate + "</td>" +
                                 "<td>"+json.ReviewDate+"</td>" +
+                                "<td>"+json.ReviewStatus+"</td>" +
                                 "</tr>");
                         }
                     }
@@ -178,6 +180,7 @@
             <th>Part Location</th>
             <th>Type</th>
             <th>Date</th>
+            <th>Status</th>
         </thead>
     </table>
     <div id="Right2" class="table-wrapper-scroll-y scrollbar scrollbar-near-moon thin">
