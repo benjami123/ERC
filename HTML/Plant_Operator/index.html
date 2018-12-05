@@ -50,7 +50,7 @@
                         "<canvas class=\"center-block\" id=\"myCanvas\""+json.IdReductionAgent+" width=\"235\" height=\"150\"></canvas>"+
                         "</center>");
                         var percentage = Math.floor((json.LevelOfRAInL*100)/json.TotalCapacityInL);
-                        $("#AddCanvas").append("canvas(percentage,json)");
+                        $("#AddCanvas").append("canvas(percentage,json);");
                     }
                 }
             };
@@ -78,6 +78,25 @@
                         "<td>"+json.PartDescription+"</td>"+
                         "<td>"+json.SupplierName+"</td>"+
                         "</tr>");
+                }
+            }
+        }
+
+        function SendOffer(file,RA)
+        {
+            xmlRequest = new XMLHttpRequest();
+            var formData = new FormData();
+            formData.append('OrderFromERC', file);
+            formData.append('Data', RA);
+            xmlRequest.open("POST", "/Plant_Operator/CreateRAOffer", true);
+            // xmlRequest.setRequestHeader('Content-type', 'application/json');
+            xmlRequest.send(JSON.stringify(formData));
+            xmlRequest.onreadystatechange = function(){
+                if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
+                    if(xmlRequest.responseText)
+                    {
+                        document.getElementById("confirmation").innerHTML = xmlRequest.responseText;
+                    }
                 }
             }
         }
@@ -131,7 +150,7 @@
     </div>
             <div id="Button"><center>
            <span class="btn btn-primary btn-just-icon btn-sm btn-file" rel="tooltip">
-             <i class="material-icons" >monetization_on</i><input type="file" id="file">
+             <i class="material-icons" >monetization_on</i><input type="file" id="file" oninput="SendOffer(this.files[0],RA)">
         </span>
             <a id="ContactButton" class="btn btn-info" href="#" role="button"><i class="material-icons" >contact_support</i></a>
             </center></div>
