@@ -72,9 +72,9 @@
                             $("#tableHistory").append("" +
                                 "<tr>" +
                                 "<td>" + json.PartName + "</td>" +
-                                "<td><center>" + json.Location + "</center></td>" +
-                                "<td><center>" + json.OfferType + "</center></td>" +
-                                "<td><center>"+json.OfferDateStart+"</center></td>" +
+                                "<td>" + json.Location + "</td>" +
+                                "<td>" + json.OfferType + "</td>" +
+                                "<td>"+json.OfferDateStart+"</td>" +
                                 "</tr>");
                         }
                         else if(json.DataType == "R")
@@ -82,9 +82,9 @@
                             $("#tableHistory").append("" +
                                 "<tr>" +
                                 "<td>" + json.PartName + "</td>" +
-                                "<td><center>" + json.Location + "</center></td>" +
-                                "<td><center>" + json.ReviewDate + "</center></td>" +
-                                "<td><center>"+json.ReviewDate+"</center></td>" +
+                                "<td>" + json.Location + "</td>" +
+                                "<td>" + json.ReviewDate + "</td>" +
+                                "<td>"+json.ReviewDate+"</td>" +
                                 "</tr>");
                         }
                     }
