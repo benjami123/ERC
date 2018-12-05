@@ -63,7 +63,7 @@
             xmlRequest2.onreadystatechange = function(){
                 if((xmlRequest2.readyState == 4 ) && (xmlRequest2.status == 200)){
                     console.log("Got response : ");
-                    console.log(xmlRequest2.responseText);
+                    console.log(JSON.parse(xmlRequest2.responseText));
                     jsonArray = JSON.parse(xmlRequest2.responseText);
                     for(var i=0;i<jsonArray.length;i++)
                     {
@@ -75,7 +75,7 @@
                                 "<td>" + json.Location + "</td>" +
                                 "<td>" + json.OfferType + "</td>" +
                                 "<td>"+json.OfferDateStart+"</td>" +
-                                "<td>"+json.OfferStatus+"</td>" +
+                                "<td>"+json.OfferState+"</td>" +
                                 "</tr>");
                         }
                         else if(json.DataType == "R")
@@ -86,7 +86,7 @@
                                 "<td>" + json.Location + "</td>" +
                                 "<td>" + json.ReviewDate + "</td>" +
                                 "<td>"+json.ReviewDate+"</td>" +
-                                "<td>"+json.ReviewStatus+"</td>" +
+                                "<td>Review</td>" +
                                 "</tr>");
                         }
                     }
