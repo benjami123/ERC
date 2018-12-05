@@ -51,6 +51,7 @@
                         "<canvas class=\"center-block\" id=\""+json.IdReductionAgent+"\" width=\"235\" height=\"150\"></canvas>"+
                         "</center>");
                         var percentage = Math.floor((json.LevelOfRAInL*100)/json.TotalCapacityInL);
+                        console.log(percentage);
                         canvas(percentage,json);
                     }
                 }
