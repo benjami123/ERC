@@ -138,12 +138,27 @@ app.post('/Plant_Operator/*', function(req, res){
       });
       break;
 
+    case "/GetRALevel":
+      DB.GetRALevel(req.session.user.IdPlant, function(err, Result){
+        console.log("Got result : ");
+        console.log(Result);
+      });
+      break;
+
     case "/PartHistory":
       Lib.SendPartHistory(res, req.body.IdPartImplemented, DB);
       break;
 
     case "/History":
       Lib.SendPlantHistory(res, req.session.user.IdPlant, DB);
+      break;
+    
+    case "/RAHistory":
+      DB.getPlantHistoryRA(req.session.user.IdPlant, function(err, Result){
+          // console.log("Sending ");
+          // console.log(json);
+          res.end(JSON.stringify(json));
+      });
       break;
 
       case "/GetOffers":
@@ -152,14 +167,14 @@ app.post('/Plant_Operator/*', function(req, res){
           Result.forEach(r => {
              json.push(Lib.doTransformTypeAndStateToString(r));
           });
-          console.log("Sending ");
-          console.log(json);
+          // console.log("Sending ");
+          // console.log(json);
           res.end(JSON.stringify(json));
         });
         break;
 
       case "/CreateOffer":
-        DB.createPartOffer(req.body.IdPartImplemented, req.body.OfferType, function(err, Result){
+        DB.createPartOffer(req.body.IdPartImplemented, req.body.OfferType, req.session.user.IdUser ,function(err, Result){
           // console.log("got result : ");
           // console.log(Result);
           res.end("Request sent");
@@ -272,8 +287,8 @@ app.post('/ERC_Service/*', function(req, res){
 
     case"/GetOrders":
       DB.getOrdersRequest(function(err, Result){
-        console.log("Sending");
-        console.log(Result);        
+        // console.log("Sending");
+        // console.log(Result);        
         var json = [];
         Result.forEach(r => {
           json.push(Lib.doTransformTypeAndStateToString(r));
@@ -290,7 +305,7 @@ app.post('/ERC_Service/*', function(req, res){
       break;
 
     case "/CancelOffer":
-      DB.changePartOfferStateToRefused(req.body.IdPart_Offer ,function(err, Results){
+      DB.changePartOfferStateToRefused(req.body.IdPart_Offer, false, function(err, Results){
         res.end();
       })
       break;
@@ -307,10 +322,9 @@ app.post('/ERC_Service/*', function(req, res){
 
     case"/GetPlantPart":
       var json = req.body;
-      console.log(json);
       DB.getPlantPartPreviewInfos(json.IdPlant, function(err, Results){
-        console.log("Sending");
-        console.log(Results);        
+        // console.log("Sending");
+        // console.log(Results);        
         var json = [];
         Results.forEach(r => {
           json.push(Lib.doTransformTypeAndStateToString(r));
@@ -321,6 +335,18 @@ app.post('/ERC_Service/*', function(req, res){
 
     case "/PartDescription":
       Lib.SendPartHistory(res, req.body.IdPartImplemented, DB);
+      break;
+
+    case "/PartHistory":
+      Lib.SendPartHistory(res, req.body.IdPartImplemented, DB);
+      break;
+
+    case "/CreateOffer":
+      var form = new formidable.IncomingForm();
+        
+      form.parse(req, function(err,fields, files){
+        Lib.SaveFile(err, res, JSON.parse(fields.Data), files, "OrderFromERC", DB)
+      });
       break;
   }
 });
@@ -343,8 +369,8 @@ app.post('/ERC_Additiives/*', function(req, res){
   switch(url){
     case "/index":
       DB.getRAOffersRequest(function(err, Result){
-        console.log("Sending ");
-        console.log(Result);
+        // console.log("Sending ");
+        // console.log(Result);
         res.end(JSON.stringify(Result));
       })
       break;
