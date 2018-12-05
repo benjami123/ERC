@@ -47,7 +47,7 @@
                     {
                         var json = RA[i];
                         $("#ReductionAgent").append("<center>"+
-                        "<canvas class=\"center-block\" id=\"myCanvas\""+json.IdReductionAgent+" width=\"235\" height=\"150\"></canvas>"+
+                        "<canvas class=\"center-block\" id=\""+json.IdReductionAgent+"\" width=\"235\" height=\"150\"></canvas>"+
                         "</center>");
                         var percentage = Math.floor((json.LevelOfRAInL*100)/json.TotalCapacityInL);
                         canvas(percentage,json);
@@ -88,6 +88,7 @@
             var formData = new FormData();
             formData.append('OrderFromERC', file);
             formData.append('Data', RA);
+            console.log(RA);
             xmlRequest.open("POST", "/Plant_Operator/CreateRAOffer", true);
             // xmlRequest.setRequestHeader('Content-type', 'application/json');
             xmlRequest.send(JSON.stringify(formData));
