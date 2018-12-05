@@ -98,7 +98,7 @@
     function SendOffer(file,info,num){
         xmlRequest = new XMLHttpRequest();
         var formData = new FormData();
-        formData.append('ConfirmationOrderFromERC', file);
+        formData.append('OrderFromERC', file);
         formData.append('Data', JSON.stringify(info));
         xmlRequest.open("POST", "/ERC_Additives/ConfirmationOrder", true);
         // xmlRequest.setRequestHeader('Content-type', 'application/json');
