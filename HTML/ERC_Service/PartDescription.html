@@ -60,10 +60,11 @@
         function SendOffer(file,type)
         {
             xmlRequest = new XMLHttpRequest();
-            sessionStorage.getItem("SelectedPart").OfferType = type;
+            var addType = sessionStorage.getItem("SelectedPart");
+            addType.OfferType = type;
             var formData = new FormData();
             formData.append('OrderFromERC', file);
-            formData.append('Data', sessionStorage.getItem("SelectedPart"));
+            formData.append('Data', addType);
             xmlRequest.open("POST", "/ERC_Service/CreateOffer", true);
             // xmlRequest.setRequestHeader('Content-type', 'application/json');
             xmlRequest.send(formData);
