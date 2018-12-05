@@ -88,7 +88,7 @@
         {
             xmlRequest = new XMLHttpRequest();
             var formData = new FormData();
-            formData.append('OrderFromERC', file);
+            formData.append('OrderFromClient', file);
             formData.append('Data', JSON.stringify(RA));
             xmlRequest.open("POST", "/Plant_Operator/CreateRAOffer", true);
             // xmlRequest.setRequestHeader('Content-type', 'application/json');
