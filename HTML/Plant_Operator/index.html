@@ -110,7 +110,7 @@
     </div>
     <div id="ReductionAgent">
         <center><h3 id="TitleRa">Reduction Agent</h3></center>
-        <canvas class="center-block" id="myCanvas" width="200" height="100"></canvas>
+        <canvas class="center-block" id="myCanvas" width="235" height="120"></canvas>
         <center><div id="Button">
            <span class="btn btn-primary btn-just-icon btn-sm btn-file" rel="tooltip">
              <i class="material-icons" >monetization_on</i><input type="file" id="file">
@@ -122,18 +122,28 @@
 </body>
 <script>
 
-var c =document.getElementById("myCanvas");
-var ctx = c.getContext("2d");
-var grd = ctx.createLinearGradient(0,0,200,0);
-grd.addColorStop(0,"red");
-grd.addColorStop(1,"blue");
-ctx.fillStyle = grd;
 function LevelRa(percentage)
 {
-    return percentage*$("#myCanvas").width()/100;
+    return percentage*($("#myCanvas").width()-36)/100;
 }
-var RaLevel = LevelRa(74);
-ctx.fillRect(0,0,RaLevel,100);
+var literStorage = 150;
+function canvas(percentage)
+{
+    var c =document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    var grd = ctx.createLinearGradient(0,0,200,0);
+    grd.addColorStop(0,"red");
+    grd.addColorStop(1,"blue");
+    ctx.fillStyle = grd;
+    ctx.strokeRect(0,0,200,100);
+    var RaLevel = LevelRa(percentage);
+    ctx.fillRect(0,0,RaLevel,100);
+    ctx.font = "15px Helvetica";
+    ctx.fillText(percentage+"%",RaLevel+5,50);
+    ctx.fillText("0",0,120);
+    ctx.fillText(literStorage+" L",185,120);
+}
+canvas(50);
 
 function clickPart(IdJson)
 {

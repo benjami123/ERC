@@ -31,21 +31,7 @@
     margin-top: -21px;
     overflow:auto;
 }
-#myCanvas{
-    border:1px solid #000000;
-}
 
-#Button{
-    margin-top : 10%;
-}
-#BuyButton{
-    position: relative;
-    left: -5%;
-}
-#ContactButton{
-    position: relative;
-    left: 5%;
-}
 #navbar {
     height: 10%;
 }
