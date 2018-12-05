@@ -60,8 +60,9 @@
         function SendOffer(file,type)
         {
             xmlRequest = new XMLHttpRequest();
-            var addType = sessionStorage.getItem("SelectedPart");
+            var addType = JSON.parse(sessionStorage.getItem("SelectedPart"));
             addType.OfferType = type;
+            console.log(addType);
             var formData = new FormData();
             formData.append('OrderFromERC', file);
             formData.append('Data', addType);
