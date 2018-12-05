@@ -89,11 +89,10 @@
             xmlRequest = new XMLHttpRequest();
             var formData = new FormData();
             formData.append('OrderFromERC', file);
-            formData.append('Data', RA);
-            console.log(RA);
+            formData.append('Data', JSON.stringify(RA));
             xmlRequest.open("POST", "/Plant_Operator/CreateRAOffer", true);
             // xmlRequest.setRequestHeader('Content-type', 'application/json');
-            xmlRequest.send(JSON.stringify(formData));
+            xmlRequest.send(formData);
             xmlRequest.onreadystatechange = function(){
                 if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
                     if(xmlRequest.responseText)
@@ -164,7 +163,7 @@
 
 function LevelRa(percentage)
 {
-    return percentage*($("#myCanvas").width()-36)/100;
+    return
 }
 
 function canvas(percentage,array)
@@ -176,7 +175,7 @@ function canvas(percentage,array)
     grd.addColorStop(1,"blue");
     ctx.fillStyle = grd;
     ctx.strokeRect(0,25,200,100);
-    var RaLevel = LevelRa(percentage);
+    var RaLevel = percentage*($("#"+array.IdReductionAgent).width()-36)/100;
     ctx.fillRect(0,25,RaLevel,100);
     ctx.font = "15px Helvetica";
     ctx.fillText(percentage+"%",RaLevel+5,75);
@@ -184,7 +183,7 @@ function canvas(percentage,array)
     ctx.fillText(array.TotalCapacityInL+" L",185,145);
     ctx.font = "20px Helvetica";
     ctx.fillStyle = "black";
-    ctx.fillText(array.IdReductionAgent,(($("#myCanvas").width()-36)/2),20);
+    ctx.fillText(array.IdReductionAgent,(($("#"+array.IdReductionAgent).width()-36)/2),20);
 }
 
 function clickPart(IdJson)
