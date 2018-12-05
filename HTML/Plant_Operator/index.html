@@ -50,7 +50,7 @@
                         "<canvas class=\"center-block\" id=\"myCanvas\""+json.IdReductionAgent+" width=\"235\" height=\"150\"></canvas>"+
                         "</center>");
                         var percentage = Math.floor((json.LevelOfRAInL*100)/json.TotalCapacityInL);
-                        $("#AddCanvas").append(canvas(percentage,json));
+                        $("#AddCanvas").append("canvas(percentage,json)");
                     }
                 }
             };
@@ -128,9 +128,6 @@
     </div>
     <div id="ReductionAgent">
         <center><h3 id="TitleRa">Reduction Agent</h3></center>
-        <center>
-        <canvas class="center-block" id="myCanvas" width="235" height="150"></canvas>
-        </center>
     </div>
             <div id="Button"><center>
            <span class="btn btn-primary btn-just-icon btn-sm btn-file" rel="tooltip">
