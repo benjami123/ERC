@@ -53,7 +53,7 @@ app.get('/Picture/*', function(req, res){
   }
 });
 app.get('/Orders/*', function(req, res){
-  if(req.session.user.Role != null){
+  if(req.session.user.UserRole != null){
     var URL = __dirname + '/HTML' + req.originalUrl;
     console.log("Requesting file : " + URL);
     if(fs.existsSync(URL)){
@@ -74,7 +74,7 @@ app.post('/Login',function(req,res){
   DB.getUser(req.body.username, req.body.password, function(err, user){
     if(user != undefined){
       sess.user = user;
-      switch(user.Role){
+      switch(user.UserRole){
         case 1 : var json = {};
           json.Redirection ="/Plant_Admin/index.html"
           res.end(JSON.stringify(json));
@@ -138,10 +138,32 @@ app.post('/Plant_Operator/*', function(req, res){
       });
       break;
 
+    case"/CreateRAOffer":
+      var form = new formidable.IncomingForm();
+      form.parse(req, function(err, fields, files){
+        console.log("Got file : ");
+        console.log(files);
+        console.log("Got values : ");
+        var json = JSON.parse(fields.Data);
+        console.log(json);
+        var TotalQuantity;
+        var TotalPrice;
+        TotalQuantity, TotalPrice = Lib.ComputeRAQuantityAndPrice(json, DB);
+        
+        Lib.SaveFile(err, res, json, files, "OrderFromClient", DB)
+        DB.createRAOffer(req.body.IdReductionAgent, TotalQuantity, TotalPrice, files["OrderFromClient"].name, function(err, Result){
+          console.log("Got result : ");
+          console.log(Result);
+          res.end(JSON.stringify(Result));
+        });
+      });
+      break;
+
     case "/GetRALevel":
-      DB.GetRALevel(req.session.user.IdPlant, function(err, Result){
+      DB.getRAInfos(req.session.user.IdPlant, function(err, Result){
         console.log("Got result : ");
         console.log(Result);
+        res.end(JSON.stringify(Result));
       });
       break;
 
@@ -154,7 +176,7 @@ app.post('/Plant_Operator/*', function(req, res){
       break;
     
     case "/RAHistory":
-      DB.getPlantHistoryRA(req.session.user.IdPlant, function(err, Result){
+      DB.getPlantHistoryRA(req.session.user.IdPlant, true, function(err, Result){
           // console.log("Sending ");
           // console.log(json);
           res.end(JSON.stringify(json));
@@ -199,7 +221,7 @@ app.post('/Plant_Operator/*', function(req, res){
         break;
       
       case "/CancelOffer":
-        DB.changePartOfferStateToRefused(req.body.Data.IdPart_Offer ,function(err, Results){
+        DB.changePartOfferStateToRefused(req.body.Data.IdPart_Offer, false, function(err, Results){
           res.end();
         });
         break;
@@ -345,7 +367,26 @@ app.post('/ERC_Service/*', function(req, res){
       var form = new formidable.IncomingForm();
         
       form.parse(req, function(err,fields, files){
-        Lib.SaveFile(err, res, JSON.parse(fields.Data), files, "OrderFromERC", DB)
+        var json = fields.Data;
+        console.log("Got file : ");
+        console.log(files);
+        console.log("Got fields : ");
+        json = JSON.parse(json);
+        console.log(json);
+        if(files.lenght != 0){
+          DB.createPartOffer(json.IdPartImplemented, json.OfferType, req.session.user.IdUser, function(err, Result){
+            DB.getLastIndexOfLastAddedLinePart_Offer(function(err, Result){
+              console.log("Got result : ");
+              console.log(Result);
+              json.IdPart_Offer = Result;
+              var StateToString = Lib.getStateToString();
+              json.OfferState = StateToString[1];
+              Lib.SaveFile(err, res, json, files, "OfferFromERC", DB);
+            })
+          });
+        }else{
+          res.end("No file uploaded");
+        }
       });
       break;
   }
@@ -373,6 +414,11 @@ app.post('/ERC_Additiives/*', function(req, res){
         // console.log(Result);
         res.end(JSON.stringify(Result));
       })
+      break;
+      
+    case"/ConfirmationOrder":
+      
+      //Lib.SaveFile() //OrderFromERC
       break;
   }
 });

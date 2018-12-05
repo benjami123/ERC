@@ -46,16 +46,24 @@ module.exports= {
 
     //Plant_Operator : index Get ReductionAgent Level and tank capacity
 
-    getRALevel: function(IDPlant, callback){
-        var Query = "SELECT IdRedutionAgent, LevelOfRAInL, TotalCapacityInL FROM reductionagent WHERE IdPlant = ? ;";
+    getRAInfos: function(IDPlant, callback){
+        var Query = "SELECT IdReductionAgent, LevelOfRAInL, TotalCapacityInL, TankName FROM reductionagent WHERE IdPlant = ? ;";
         con.query(Query, [IDPlant],function(err, rows){
             if (err) throw err;
             callback(err, rows);
         });
     },
 
+    getRAPrices: function(IDRA, callback){
+        var Query = "SELECT PricePerL FROM reductionagent WHERE IdReductionAgent = ? ;";
+        con.query(Query, [IDRA],function(err, rows){
+            if (err) throw err;
+            callback(err, rows);
+        });
+    },
+
     //Plant_Operator : index Create ReductionAgent offer
-    createRAOffer: function(IdReductionAgent, QuantityInL, Price, FileOrderFromClientName){
+    createRAOffer: function(IdReductionAgent, QuantityInL, Price, FileOrderFromClientName, callback){
         var Query = "INSERT INTO ra_offer (IdReductionAgent, DateStart, QuantityInL, Price, UserSeen, OrderFromClient) VALUES ( ? , NOW(),  ? , ? , 0, ? );";
         con.query(Query, [IdReductionAgent, QuantityInL, Price, FileOrderFromClientName], function(err, rows){
             if (err) throw err;
@@ -158,7 +166,7 @@ module.exports= {
         if(WithFiles){
             s = "ra_offer.OrderFromClient, ra_offer.OrderFromERC";
         }
-        var Query = "SELECT plant.IdPlant, reductionagent.IdReductionAgent, reductionagent.LevelOfRaInL, reductionagent.TotalCapacityInL, ra_offer.QuantityInL, ra_offer.OfferDateStart, ra_offer.OfferState " + s + " FROM ra_offer JOIN reductionagent ON ra_offer.IdReductionAgent=reductionagent.IdReductionAgent JOIN plant ON reductionagent.IdPlant=plant.IdPlant WHERE reductionagent.IdPlant = '1' ORDER BY ra_offer.OfferDateStart DESC;";
+        var Query = "SELECT plant.IdPlant, reductionagent.IdReductionAgent, reductionagent.TotalCapacityInL, ra_offer.QuantityInL, ra_offer.OfferDateStart, ra_offer.OfferState " + s + " FROM ra_offer JOIN reductionagent ON ra_offer.IdReductionAgent=reductionagent.IdReductionAgent JOIN plant ON reductionagent.IdPlant=plant.IdPlant WHERE reductionagent.IdPlant = '1' ORDER BY ra_offer.OfferDateStart DESC;";
         con.query(Query, [IDPlant],function(err, rows){
             if (err) throw err;
             callback(err, rows);
@@ -169,7 +177,7 @@ module.exports= {
 
     //ERC_Service : index
     getOffersRequest: function(callback){
-        var Query = "SELECT user.Login, user.Email, plant.Address, plant.PlantName, plant.IdPlant, partimplemented.Location, part.PartName, part_offer.IdPart_Offer, part_offer.OfferType, part_offer.OfferDateStart, part_offer.OfferState FROM part_offer JOIN partimplemented ON part_offer.IdPartImplemented=partimplemented.IdPartImplemented JOIN part ON partimplemented.IdPart=part.IdPart JOIN plant ON partimplemented.IdPlant=plant.IdPlant JOIN user ON part_offer.IdUser=user.IdUser WHERE part_offer.OfferState=1 ORDER BY part_offer.OfferDateStart DESC;";
+        var Query = "SELECT user.Login, user.UserRole, plant.Address, plant.PlantName, plant.IdPlant, partimplemented.Location, part.PartName, part_offer.IdPart_Offer, part_offer.OfferType, part_offer.OfferDateStart, part_offer.OfferState FROM part_offer JOIN partimplemented ON part_offer.IdPartImplemented=partimplemented.IdPartImplemented JOIN part ON partimplemented.IdPart=part.IdPart JOIN plant ON partimplemented.IdPlant=plant.IdPlant JOIN user ON part_offer.IdUser=user.IdUser WHERE part_offer.OfferState=1 ORDER BY part_offer.OfferDateStart DESC;";
         con.query(Query, function(err, rows){
             if (err) throw err;
             callback(err, rows);
@@ -202,7 +210,7 @@ module.exports= {
     
     //ERC_Service : Orders getOrders
     getOrdersRequest: function(callback){
-        var Query = "SELECT user.Login, user.Email, plant.Address, plant.PlantName, plant.IdPlant, partimplemented.Location, part.PartName, part_offer.IdPart_Offer, part_offer.OfferType, part_offer.OfferDateStart, part_offer.OfferState, part_offer.Offer, part_offer.OrderFromClient FROM part_offer JOIN partimplemented ON part_offer.IdPartImplemented=partimplemented.IdPartImplemented JOIN part ON partimplemented.IdPart=part.IdPart JOIN plant ON partimplemented.IdPlant=plant.IdPlant JOIN user ON plant.IdPlant=user.IdPlant WHERE part_offer.OfferState=3 ORDER BY part_offer.OfferDateStart DESC;";
+        var Query = "SELECT user.Login, user.UserRole, plant.Address, plant.PlantName, plant.IdPlant, partimplemented.Location, part.PartName, part_offer.IdPart_Offer, part_offer.OfferType, part_offer.OfferDateStart, part_offer.OfferState, part_offer.Offer, part_offer.OrderFromClient FROM part_offer JOIN partimplemented ON part_offer.IdPartImplemented=partimplemented.IdPartImplemented JOIN part ON partimplemented.IdPart=part.IdPart JOIN plant ON partimplemented.IdPlant=plant.IdPlant JOIN user ON plant.IdPlant=user.IdPlant WHERE part_offer.OfferState=3 ORDER BY part_offer.OfferDateStart DESC;";
         con.query(Query, function(err, rows){
             if (err) throw err;
             callback(err, rows) ;
@@ -263,7 +271,7 @@ module.exports= {
     //*_Admin : AddUser with role
     createUser: function(IDPlant, Login, Email, Password, Role, callback){
         console.log("Creating user : " + IDPlant + ", " + Login + ", " + Password + ", " + Role);
-        var Query = "INSERT INTO user(IdPlant, Login, Email, Password, Role) VALUES( ? , ? , ? , ? , ? );";
+        var Query = "INSERT INTO user(IdPlant, Login, Email, Password, UserRole) VALUES( ? , ? , ? , ? , ? );";
         con.query(Query, [IDPlant, Login, Email, Password, Role], function(err, rows){
             if (err) {
                 if(err.code === "ER_DUP_ENTRY"){
@@ -280,7 +288,7 @@ module.exports= {
 
     //Plant_Admin : index Get users from plant
     getUserWithRole: function(IDPlant, Role, callback){
-        var Query = "SELECT IdUser, Login,  Email FROM user WHERE IdPlant = ? AND Role = ? ;";
+        var Query = "SELECT IdUser, Login,  Email FROM user WHERE IdPlant = ? AND UserRole = ? ;";
         con.query(Query, [IDPlant, Role], function(err, rows){
             if (err) throw err;
             callback(err, rows) ;
@@ -323,9 +331,19 @@ module.exports= {
         }
         con.query(Query, [IDOffer], function(err, rows){
             if (err) throw err;
-            console.log("Results from DB : ")
-            console.log(rows);
+            // console.log("Results from DB : ")
+            // console.log(rows);
             callback(err, rows[0]) ;
+        });
+    },
+
+    getLastIndexOfLastAddedLinePart_Offer: function(callback){
+        var Query = "SELECT IdPart_Offer FROM part_offer ORDER BY IdPart_Offer DESC limit 1";
+        con.query(Query, function(err, rows){
+            if (err) throw err;
+            // console.log("Results from DB : ")
+            // console.log(rows);
+            callback(err, rows[0].IdPart_Offer) ;
         });
     }
 };

@@ -2,12 +2,12 @@ var fs = require('fs');
 var PartsOfferPath = "./../Orders/Parts/";
 var RAOfferPath = "./../Orders/RA/";
 
-var RoleArray = [ {Role:1, Link:"/Plant_Admin/"}, 
-                {Role:2, Link:"/ERC_Admin/"},
-                {Role:3, Link:"/Plant_Operator/"},
-                {Role:4, Link:"/ERC_Service/"},
-                {Role:5, Link:"/ERC_Additives/"},
-                {Role:6, Link:"/ERC_Maintenance/"}
+var RoleArray = [ {UserRole:1, Link:"/Plant_Admin/"}, 
+                {UserRole:2, Link:"/ERC_Admin/"},
+                {UserRole:3, Link:"/Plant_Operator/"},
+                {UserRole:4, Link:"/ERC_Service/"},
+                {UserRole:5, Link:"/ERC_Additives/"},
+                {UserRole:6, Link:"/ERC_Maintenance/"}
               ];
 
 var StateToString = [
@@ -34,7 +34,7 @@ module.exports={
     URL = URL.replace(RoleArray.Link, '');
     console.log("Request from : " + URL);
     var sess = req.session;
-    if(sess.user != null && sess.user.Role == RoleArray.Role){
+    if(sess.user != null && sess.user.UserRole == RoleArray.UserRole){
       URL = __dirname + '/HTML'+RoleArray.Link + URL;
       console.log("Requesting file : " + URL);
       if(fs.existsSync(URL)){
@@ -50,15 +50,11 @@ module.exports={
   },
 
   SaveFile: function(err, res, json, files, s, DB){ 
-    var isRA = false; 
+    var isRA = true; 
     var OfferFolderPath, FileName;
-    if(json.PartName !== undefined){
-      isRA = true;
+    if(json.PartName !== undefined){    //If there is a PartName in the json
+      isRA = false;                     //Offer is coming from part_offer and not ra_offer
     }
-    console.log("Got file : ");
-    console.log(files);
-    console.log("Got fields : ");
-    console.log(json);
     DB.getPlantName(json.IdPlant, function(err ,Result){
       console.log("Got results : ");
       console.log(Result);
@@ -79,49 +75,38 @@ module.exports={
         console.log("Json.OfferState : " + json.OfferState);
         if(json.OfferState === StateToString[1]){
           DB.uploadOffer(json.IdPart_Offer, FileName, function(){
-            res.write('File uploaded and moved!');
             res.end("Done");
           });
         }else if(json.OfferState === StateToString[2]){
           DB.uploadOrderFromClient(json.IdPart_Offer, FileName, isRA, function(){
-            res.write('File uploaded and moved!');
             res.end("Done");
           });
         }else if(json.OfferState === StateToString[3]){
-          console.log("Hi from Somewhere");
           DB.uploadOrderFromERC(json.IdPart_Offer, FileName, isRA, function(){
-            res.write('File uploaded and moved!');
             res.end("Done");
           });
         }else{
           console.log("no good");
         }
       });
-      // }else{
-      //   var FileName = generateFileNameRA(s, json.IdRA_Offer, Result.PlantName, json.OfferDateStart, files[s].name) ;
-      //   var newpath = OfferFolderPath + FileName;
-      //   console.log("Creating folder : " + OfferFolderPath);
-      //   mkdirSync(OfferFolderPath);
-      //   console.log("Moving file to : " + newpath);
-      //   fs.rename(files[s].path, newpath, function (err) {
-      //     if (err) throw err; 
-      //     console.log("Json.OfferState : " + json.OfferState);
-      //     if(json.OfferState === StateToString[2]){
-      //       DB.uploadOrderFromClient(json.IdPart_Offer, FileName, true, function(){
-      //         res.write('File uploaded and moved!');
-      //         res.end("Done");
-      //       });
-      //     }else if(json.OfferState === StateToString[3]){
-      //       console.log("Hi from Somewhere");
-      //       DB.uploadOrderFromERC(json.IdPart_Offer, FileName, true, function(){
-      //         res.write('File uploaded and moved!');
-      //         res.end("Done");
-      //       });
-      //     }else{
-      //       console.log("no good");
-      //     }
-      //   });
-      // }
+    });
+  },
+
+  ComputeRAQuantityAndPrice: function(RAArray, DB){
+    var TotalQuantity = 0;
+    var TotalPrice = 0;
+    var ArrayIdRA = [];
+    for(var i=0; i<RAArray.length; i++){
+      ArrayIdRA[i] = RAArray[i].IdReductionAgent;
+    }
+    DB.getRAPrices(ArrayIdRA, function(err, Result){
+
+      for(var i=0; i<Result.length; i++){
+        TotalQuantity += (RAArray[i].TotalCapacityInL - RAArray[i].LevelOfRAInL);
+        TotalPrice += Result[i].PricePerL;
+      }
+      console.log("Quantity : " + TotalQuantity + " Price : " + TotalPrice);
+      return TotalQuantity, TotalPrice;
     });
   },
 
@@ -174,6 +159,10 @@ module.exports={
   getRoleArray: function(){
       return RoleArray;
   }, 
+
+  getStateToString: function(){
+    return StateToString;
+  },
   
   doTransformTypeAndStateToString: function(json){
     return TransformTypeAndStateToString(json);
@@ -205,6 +194,8 @@ function TransformTypeAndStateToString(json){
     if(json.ReviewType != null){
       json.ReviewType = TypeToString[json.ReviewType];
     }
+  }else if(json.IdReductionAgent != null){
+    json.DataType = "A";
   }
   return json;
 }
