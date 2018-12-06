@@ -31,7 +31,7 @@
                             "<div class=\"container\" onclick=\"show("+i+")\">\n" +
                                 "            <h4 class=\"title text-center\">Offer : "+json.OfferState+"</h4>\n" +
                                 "            <div class=\"top row\">\n" +
-                                "                <i class=\"material-icons icon col-sm-1\">"+json.OfferType+"</i><p class=\"col-sm-8\"><span class=\"name\">"+json.PartName+"</span> is located at <span class=\"name\">\"+json.Location+\"</span> <span class=\"applicant\"> Asked by : <span class=\"name\">"+json.Login+"</span> on the <span class=\"name\"></span></span></p>\n" +
+                                "                <i class=\"material-icons icon col-sm-1\">"+json.OfferType+"</i><p class=\"col-sm-8\"><span class=\"name\">"+json.PartName+"</span> is located at <span class=\"name\">\"+json.Location+\"</span> <span class=\"applicant\"> Asked by : <span class=\"name\">"+json.Login+"</span> on the <span class=\"name\">"+json.OfferDateStart+"</span></span></p>\n" +
                                 "            </div>\n" +
                                 "        </div>");
                             if(json.OrderFromERC)
@@ -58,7 +58,7 @@
                                 $("#body").append("<div class=\"container\" onclick=\"show("+i+")\">\n" +
                                     "            <h4 class=\"title text-center\">Review</h4>\n" +
                                     "            <div class=\"top row\">\n" +
-                                    "                <i class=\"material-icons icon col-sm-1\">"+json.OfferType+"</i><p class=\"col-sm-8\"><span class=\"name\">"+json.PartName+"</span> is located at <span class=\"name\">\"+json.Location+\"</span> <span class=\"applicant\"> Asked by : <span class=\"name\">"+json.Login+"</span> on the <span class=\"name\"></span></span></p>\n" +
+                                    "                <i class=\"material-icons icon col-sm-1\">"+json.OfferType+"</i><p class=\"col-sm-8\"><span class=\"name\">"+json.PartName+"</span> is located at <span class=\"name\">\"+json.Location+\"</span> <span class=\"applicant\"> Asked by : <span class=\"name\">"+json.Login+"</span> on the <span class=\"name\">"+json.ReviewDate+"</span></span></p>\n" +
                                     "            </div>\n" +
                                     "        </div>");
                             }
@@ -67,7 +67,7 @@
                             $("#body").append("<div class=\"container\" onclick=\"show("+i+")\">\n" +
                                 "            <h4 class=\"title text-center\">Reduction Agent</h4>\n" +
                                 "            <div class=\"top row\">\n" +
-                                "                <i class=\"material-icons icon col-sm-1\">opacity</i><p class=\"col-sm-8\">  Name is located at location and this offer is on going and you asked this action</p>\n" +
+                                "                <i class=\"material-icons icon col-sm-1\">"+json.OfferType+"</i><p class=\"col-sm-8\"><span class=\"name\">"+json.PartName+"</span> is located at <span class=\"name\">\"+json.Location+\"</span> <span class=\"applicant\"> Asked by : <span class=\"name\">"+json.Login+"</span> on the <span class=\"name\">"+json.OfferDateStart+"</span></span></p>\n" +
                                 "            </div>\n" +
                                 "        </div>");
 
@@ -94,7 +94,7 @@
         }
         function stringToIcon(array){
 		    if(array.OfferType.includes("without")){
-		        array.OfferType = "rotate_left";
+		        array.OfferType = "cached";
             }
             else if(array.OfferType.includes("repair")){
                 array.OfferType = "build";
@@ -102,13 +102,13 @@
             else if(array.OfferType.includes("check")){
                 array.OfferType = "check_circle";
             }else {
-                array.OfferType = "cached";
+                array.OfferType = "transfer_within_a_station";
             }
             return array;
         }
     </script>
 </head>
-<body>
+<body class="table-wrapper-scroll-y scrollbar scrollbar-near-moon thin">
 <header id="navbar">
     <nav class="navbar navbar-default">
         <div class="container-fluid">
@@ -131,7 +131,7 @@
         </div>
     </nav>
 </header>
-    <div id="body" class="table-wrapper-scroll-y scrollbar scrollbar-near-moon thin">
+    <div id="body" class="text-center">
     </div>
 </body>
 <script>

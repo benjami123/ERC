@@ -1,34 +1,4 @@
-#tablePart, tablePartRa{
-    font-size: 90%;
-    /*border: 1px solid gray;*/
-}
-#TitleDefault, #RaTitleDefault{
-    background-color: gray;
-}
-#TitleHistory, #TitleRaHistory{
-    background-color: darkgray;
-    color: white;
-}
-#History{
-    height: 30%;
-    position: absolute;
-    right: 0.5%;
-    left: 0.5%;
-    bottom: 1%;
-    top: 55px;
-}
-#RaHistory{
-    height: 45%;
-    position: absolute;
-    right: 0.5%;
-    left: 0.5%;
-    bottom: 1%;
-    top: 350px;
-}
-td,th{
-    width: 18%;
-}
-#body, #bodyRa{
+#body{
     overflow: auto;
     margin-top: -22px;
     margin-right: 0.5px;
@@ -37,7 +7,6 @@ td,th{
 
 .container{
     border: 3px black solid;
-    width: 99%;
     height: 40%;
     margin-top: 5px;
 }
