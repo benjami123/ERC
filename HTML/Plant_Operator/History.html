@@ -33,24 +33,27 @@
                                 "            <div class=\"top row\">\n" +
                                 "                <i class=\"material-icons icon col-sm-1\">"+json.OfferType+"</i><p class=\"col-sm-8\"><span class=\"name\">"+json.PartName+"</span> is located at <span class=\"name\">\"+json.Location+\"</span> <span class=\"applicant\"> Asked by : <span class=\"name\">"+json.Login+"</span> on the <span class=\"name\">"+json.OfferDateStart+"</span></span></p>\n" +
                                 "            </div>\n" +
-                                "        </div>");
+                                );
                             if(json.OrderFromERC)
                             {
                                 $("#body").append("            <div id=\""+i+"\" class=\"bottom row\" style=\"display: none\">\n" +
                                     "                <p><center><a href=\""+json.Offer+"\" download=\"Offer\"><img width=\"3%\"  src=\"../Picture/File_Picture.png\">Offer</a>&nbsp&nbsp&nbsp<a href=\""+json.OrderFromClient+"\" download=\"OrderFromClient\"><img width=\"3%\"  src=\"../Picture/File_Picture.png\">OrderFromClient</a>&nbsp&nbsp&nbsp<a href=\""+json.OrderFromERC+"\" download=\"OrderFromERC\"><img width=\"3%\"  src=\"../Picture/File_Picture.png\">OrderFromERC</a></center></p>\n" +
-                                    "            </div>\n");
+                                    "            </div>\n" +
+                                    "        </div>");
                             }
                             else if(json.OrderFromClient)
                             {
                                 $("#body").append("            <div id=\""+i+"\" class=\"bottom row\" style=\"display: none\">\n" +
                                     "                <p><center><a href=\""+json.Offer+"\" download=\"Offer\"><img width=\"3%\"  src=\"../Picture/File_Picture.png\">Offer</a>&nbsp&nbsp&nbsp<a href=\""+json.OrderFromClient+"\" download=\"OrderFromClient\"><img width=\"3%\"  src=\"../Picture/File_Picture.png\">OrderFromClient</a></center></p>\n" +
-                                    "            </div>\n");
+                                    "            </div>\n"+
+                                    "        </div>");
                             }
                             else if(json.Offer)
                             {
                                 $("#body").append("            <div id=\""+i+"\" class=\"bottom row\" style=\"display: none\">\n" +
                                     "                <p><center><a href=\""+json.Offer+"\" download=\"Offer\"><img width=\"3%\"  src=\"../Picture/File_Picture.png\">Offer</a></center></p>\n" +
-                                    "            </div>\n");
+                                    "            </div>\n"+
+                                    "        </div>");
                             }
                         }
                         else if(json.DataType == "R")
@@ -75,13 +78,15 @@
                             {
                                 $("#body").append("            <div id=\""+i+"\" class=\"bottom row\" style=\"display: none\">\n" +
                                     "                <p><center><a href=\""+json.OrderFromClient+"\" download=\"OrderFromClient\"><img width=\"3%\"  src=\"../Picture/File_Picture.png\">OrderFromClient</a>&nbsp&nbsp&nbsp<a href=\""+json.OrderFromERC+"\" download=\"OrderFromERC\"><img width=\"3%\"  src=\"../Picture/File_Picture.png\">OrderFromERC</a></center></p>\n" +
-                                    "            </div>\n");
+                                    "            </div>\n"+
+                                    "        </div>");
                             }
                             else if(json.OrderFromClient)
                             {
                                 $("#body").append("            <div id=\""+i+"\" class=\"bottom row\" style=\"display: none\">\n" +
                                     "                <p><center><a href=\""+json.OrderFromClient+"\" download=\"OrderFromClient\"><img width=\"3%\"  src=\"../Picture/File_Picture.png\">OrderFromClient</a></center></p>\n" +
-                                    "            </div>\n");
+                                    "            </div>\n"+
+                                    "        </div>");
                             }
                         }
                     }
