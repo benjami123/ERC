@@ -1,35 +1,63 @@
-#tablePart{
+#tablePart, tablePartRa{
     font-size: 90%;
     /*border: 1px solid gray;*/
 }
-#TitleDefault{
+#TitleDefault, #RaTitleDefault{
     background-color: gray;
 }
-#TitleHistory{
+#TitleHistory, #TitleRaHistory{
     background-color: darkgray;
     color: white;
 }
-#History {
-    height: 90%;
+#History{
+    height: 30%;
     position: absolute;
     right: 0.5%;
     left: 0.5%;
     bottom: 1%;
     top: 55px;
 }
+#RaHistory{
+    height: 45%;
+    position: absolute;
+    right: 0.5%;
+    left: 0.5%;
+    bottom: 1%;
+    top: 350px;
+}
 td,th{
     width: 18%;
 }
-#body{
+#body, #bodyRa{
     overflow: auto;
     margin-top: -22px;
     margin-right: 0.5px;
-    border: gray;
-    border-style: solid;
     height: 89%;
 }
 
-
+.container{
+    border: 3px black solid;
+    width: 99%;
+    height: 40%;
+    margin-top: 5px;
+}
+.bottom{
+    border-top: 2px black dotted;
+    height: 20%;
+}
+.top{
+    height: 20%;
+}
+.title{
+    text-decoration: underline;
+}
+.name{
+    font-weight: bold;
+    font-size: medium;
+}
+.applicant{
+    float: right;
+}
 
 
 

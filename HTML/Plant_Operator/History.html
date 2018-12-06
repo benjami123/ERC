@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="History.css">
     <script src="Jquery.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -23,92 +24,66 @@
                     for(var i=0;i<jsonArray.length;i++)
                     {
                         var json = jsonArray[i];
+                        json = stringToIcon(json);
                         if(json.DataType == "H")
                         {
-                            $("#tablePart").append("" +
-                                "<tr onclick='show("+i+")'>" +
-                                "<td><center>"+json.PartName+"</center></td>" +
-                                "<td><center>"+json.Location+"</center></td>" +
-                                "<td><center>"+json.OfferType+"</center></td>" +
-                                "<td><center>"+json.OfferDateStart+"</center></td>" +
-                                "<td><center>"+json.OfferState+"</td>" +
-                                "</tr>");
+                            $("#body").append(""+
+                            "<div class=\"container\" onclick=\"show("+i+")\">\n" +
+                                "            <h4 class=\"title text-center\">Offer : "+json.OfferState+"</h4>\n" +
+                                "            <div class=\"top row\">\n" +
+                                "                <i class=\"material-icons icon col-sm-1\">"+json.OfferType+"</i><p class=\"col-sm-8\"><span class=\"name\">"+json.PartName+"</span> is located at <span class=\"name\">\"+json.Location+\"</span> <span class=\"applicant\"> Asked by : <span class=\"name\">"+json.Login+"</span> on the <span class=\"name\"></span></span></p>\n" +
+                                "            </div>\n" +
+                                "        </div>");
                             if(json.OrderFromERC)
                             {
-                                $("#tablePart").append(
-                                    "<tr id=\""+i+"\" style=\"display:none\">\n" +
-                                    "                <td><center><img width=\"10%\" height=\"10%\" src=\"../Picture/File_Picture.png\"><a href=\""+json.Offer+"\" download=\"Offer\">Offer</a></center></td>\n" +
-                                    "                <td><center><img width=\"10%\" height=\"10%\" src=\"../Picture/File_Picture.png\"><a href=\""+json.OrderFromClient+"\" download=\"Client_Order\">Client Order</a></center></td>\n" +
-                                    "                <td><center><img width=\"10%\" height=\"10%\" src=\"../Picture/File_Picture.png\"><a href=\""+json.OrderFromERC+"\" download=\"ERC_Confirmation_Order\">ERC confirmation order</a></center></td>\n" +
-                                    "                <td></td>\n" +
-                                    "                <td></td>\n" +
-                                    "            </tr>");
+                                $("#body").append("            <div id=\""+i+"\" class=\"bottom row\" style=\"display: none\">\n" +
+                                    "                <p><center><a href=\""+json.Offer+"\" download=\"Offer\"><img width=\"3%\"  src=\"../Picture/File_Picture.png\">Offer</a>&nbsp&nbsp&nbsp<a href=\""+json.OrderFromClient+"\" download=\"OrderFromClient\"><img width=\"3%\"  src=\"../Picture/File_Picture.png\">OrderFromClient</a>&nbsp&nbsp&nbsp<a href=\""+json.OrderFromERC+"\" download=\"OrderFromERC\"><img width=\"3%\"  src=\"../Picture/File_Picture.png\">OrderFromERC</a></center></p>\n" +
+                                    "            </div>\n");
                             }
                             else if(json.OrderFromClient)
                             {
-                                $("#tablePart").append(
-                                    "<tr id=\""+i+"\" style=\"display:none\">\n" +
-                                    "                <td><center><img width=\"10%\" height=\"10%\" src=\"../Picture/File_Picture.png\"><a href=\""+json.Offer+"\" download=\"Offer\">Offer</a></center></td>\n" +
-                                    "                <td><center><img width=\"10%\" height=\"10%\" src=\"../Picture/File_Picture.png\"><a href=\""+json.OrderFromClient+"\" download=\"Client_Order\">Client Order</a></center></td>\n" +
-                                    "                <td></td>\n" +
-                                    "                <td></td>\n" +
-                                    "                <td></td>\n" +
-                                    "            </tr>");
+                                $("#body").append("            <div id=\""+i+"\" class=\"bottom row\" style=\"display: none\">\n" +
+                                    "                <p><center><a href=\""+json.Offer+"\" download=\"Offer\"><img width=\"3%\"  src=\"../Picture/File_Picture.png\">Offer</a>&nbsp&nbsp&nbsp<a href=\""+json.OrderFromClient+"\" download=\"OrderFromClient\"><img width=\"3%\"  src=\"../Picture/File_Picture.png\">OrderFromClient</a></center></p>\n" +
+                                    "            </div>\n");
                             }
                             else if(json.Offer)
                             {
-                                $("#tablePart").append("<tr id=\""+i+"\" style=\"display:none\">\n" +
-                                    "                <td><center><img width=\"10%\" height=\"10%\" src=\"../Picture/File_Picture.png\"><a href=\""+json.Offer+"\" download=\"Offer\">Offer</a></center></td>\n" +
-                                    "                <td></center></td>\n" +
-                                    "                <td></td>\n" +
-                                    "                <td></td>\n" +
-                                    "                <td></td>\n" +
-                                    "            </tr>");
+                                $("#body").append("            <div id=\""+i+"\" class=\"bottom row\" style=\"display: none\">\n" +
+                                    "                <p><center><a href=\""+json.Offer+"\" download=\"Offer\"><img width=\"3%\"  src=\"../Picture/File_Picture.png\">Offer</a></center></p>\n" +
+                                    "            </div>\n");
                             }
-                            else
-                            {
-                                $("#tablePart").append("<tr id="+i+" style=\"display:none\">\n" +
-                                    "                <td></td>\n" +
-                                    "                <td></td>\n" +
-                                    "                <td></td>\n" +
-                                    "                <td></td>\n" +
-                                    "                <td></td>\n" +
-                                    "            </tr>");
-                            }
-
                         }
                         else if(json.DataType == "R")
                             {
-                            $("#tablePart").append("<tr style=\"display:none\">\n" +
-                                "                <td></td>\n" +
-                                "                <td></td>\n" +
-                                "                <td></td>\n" +
-                                "                <td></td>\n" +
-                                "                <td></td>\n" +
-                                "            </tr>");
-                            $("#tablePart").append("" +
-                                "<tr>" +
-                                "<td><center>"+json.PartName+"</center></td>" +
-                                "<td><center>"+json.Location+"</center></td>" +
-                                "<td><center>" + json.ReviewType + "</center></td>" +
-                                "<td><center>" + json.ReviewDate + "</center></td>" +
-                                "<td><center>Review</center></td>" +
-                                "</tr>" +
-                                "");
-                        }
+                                $("#body").append("<div class=\"container\" onclick=\"show("+i+")\">\n" +
+                                    "            <h4 class=\"title text-center\">Review</h4>\n" +
+                                    "            <div class=\"top row\">\n" +
+                                    "                <i class=\"material-icons icon col-sm-1\">"+json.OfferType+"</i><p class=\"col-sm-8\"><span class=\"name\">"+json.PartName+"</span> is located at <span class=\"name\">\"+json.Location+\"</span> <span class=\"applicant\"> Asked by : <span class=\"name\">"+json.Login+"</span> on the <span class=\"name\"></span></span></p>\n" +
+                                    "            </div>\n" +
+                                    "        </div>");
+                            }
                         else if(json.DataType == "A")
                         {
-                            $("#tablePartRa").append("" +
-                                "<tr onclick='show("+i+")'>" +
-                                "<td><center>"+json.PlantName+"</center></td>" +
-                                "<td><center>"+json.Location+"</center></td>" +
-                                "<td><center>"+json.OfferType+"</center></td>" +
-                                "<td><center>"+json.OfferDateStart+"</center></td>" +
-                                "<td><center>"+json.OfferState+"</td>" +
-                                "</tr>");
+                            $("#body").append("<div class=\"container\" onclick=\"show("+i+")\">\n" +
+                                "            <h4 class=\"title text-center\">Reduction Agent</h4>\n" +
+                                "            <div class=\"top row\">\n" +
+                                "                <i class=\"material-icons icon col-sm-1\">opacity</i><p class=\"col-sm-8\">  Name is located at location and this offer is on going and you asked this action</p>\n" +
+                                "            </div>\n" +
+                                "        </div>");
+
+                            if(json.OrderFromERC)
+                            {
+                                $("#body").append("            <div id=\""+i+"\" class=\"bottom row\" style=\"display: none\">\n" +
+                                    "                <p><center><a href=\""+json.OrderFromClient+"\" download=\"OrderFromClient\"><img width=\"3%\"  src=\"../Picture/File_Picture.png\">OrderFromClient</a>&nbsp&nbsp&nbsp<a href=\""+json.OrderFromERC+"\" download=\"OrderFromERC\"><img width=\"3%\"  src=\"../Picture/File_Picture.png\">OrderFromERC</a></center></p>\n" +
+                                    "            </div>\n");
+                            }
+                            else if(json.OrderFromClient)
+                            {
+                                $("#body").append("            <div id=\""+i+"\" class=\"bottom row\" style=\"display: none\">\n" +
+                                    "                <p><center><a href=\""+json.OrderFromClient+"\" download=\"OrderFromClient\"><img width=\"3%\"  src=\"../Picture/File_Picture.png\">OrderFromClient</a></center></p>\n" +
+                                    "            </div>\n");
+                            }
                         }
-
-
                     }
                 }
             }
@@ -116,6 +91,20 @@
 
 		function Logout(){
             document.getElementById("Logout").submit();
+        }
+        function stringToIcon(array){
+		    if(array.OfferType.includes("without")){
+		        array.OfferType = "rotate_left";
+            }
+            else if(array.OfferType.includes("repair")){
+                array.OfferType = "build";
+            }
+            else if(array.OfferType.includes("check")){
+                array.OfferType = "check_circle";
+            }else {
+                array.OfferType = "cached";
+            }
+            return array;
         }
     </script>
 </head>
@@ -142,47 +131,8 @@
         </div>
     </nav>
 </header>
-<div id="History" class="col-1">
-    <div>
-        <table class="table table-striped border-0">
-        <caption id="TitleHistory"><center>History</center></caption>
-        <thead id="TitleDefault">
-            <th id="PartName"><center>Part Name</center></th>
-            <th id="PartLocation"><center>Location</center></th>
-            <th id="PartDescription"><center>Action</center></th>
-            <th id="PartDate"><center>Date</center></th>
-            <th id="PartStatus"><center>Status</center></th>
-        </thead>
-    </table>
-    </div>
     <div id="body" class="table-wrapper-scroll-y scrollbar scrollbar-near-moon thin">
-    <table class="table table-striped border-0">
-        <tbody id="tablePart">
-        </tbody>
-    </table>
     </div>
-</div>
-<div id="RaHistory" class="col-1">
-    <div>
-        <table class="table table-striped border-0">
-            <caption id="TitleRaHistory"><center>History</center></caption>
-            <thead id="RaTitleDefault">
-            <th><center>Plant Name</center></th>
-            <th><center>Status</center></th>
-            <th><center>Status</center></th>
-            <th><center>Action</center></th>
-            <th><center>Date</center></th>
-            <th><center>Status</center></th>
-            </thead>
-        </table>
-    </div>
-    <div id="bodyRa" class="table-wrapper-scroll-y scrollbar scrollbar-near-moon thin">
-        <table class="table table-striped border-0">
-            <tbody id="tablePartRa">
-            </tbody>
-        </table>
-    </div>
-</div>
 </body>
 <script>
     function show(id)
@@ -198,7 +148,7 @@
     }
     function appear(id)
     {
-        $("#"+id).css("display","table-row");
+        $("#"+id).css({"display":"inherit"});
     }
     function desappear(id)
     {
