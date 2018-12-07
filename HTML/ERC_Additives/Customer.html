@@ -7,15 +7,52 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="Customer.css">
     <title>Customer</title>
+    <script>
+        window.onload = function(){
+            xmlRequest = new XMLHttpRequest();
+            xmlRequest.open("POST", "/ERC_Additive/Customer", true);
+            xmlRequest.setRequestHeader('Content-type', 'application/json');
+            xmlRequest.send(IdPartImplemented);
+            xmlRequest.onreadystatechange = function() {
+                if ((xmlRequest.readyState == 4) && (xmlRequest.status == 200)) {
+                    var jsonArray = JSON.parse(xmlRequest.responseText);
+                    for(var i=0;i<jsonArray.length;i++)
+                    {
+                        var json = jsonArray[i];
+                        var tank;
+                        for(var j = 0;j<json.RALevels.length;j++)
+                        {
+                            var ra = json.RALevels[j];
+                            var percentage = Math.floor((json.LevelOfRAInL*100)/json.TotalCapacityInL);
+                            tank += "                    <p>"+ra.TankName+" : "+percentage+"%</p>";
+                        }
+                        $("#body").append(" <div class=\"container\">\n" +
+                            "        <div class=\"row\">\n" +
+                            "            <div class=\"name col-sm-3\">\n" +
+                            "                    <p >"+json.Login+"</p>\n" +
+                            "                    <p >"+json.PlantName+"</p>\n" +
+                            "            </div>\n" +
+                            "            <div class=\"col-sm-3\">\n" +
+                            "                <canvas id=\""+i+"\" width=\"235px\" height=\"150px\"></canvas>\n" +
+                            "            </div>\n" +
+                            "            <div class=\"name col-sm-3\">\n" +
+                            "                    <p>"+json.+" : "+json+"%</p>\n" +
+                            "                    <p>"+json+" : "+json+"%</p>\n" +
+                            "            </div>\n" +
+                            "            <div class=\"name col-sm-3 text-center\">\n" +
+                            "                <p>Date of the last order : "+json+"</p>\n" +
+                            "            </div>\n" +
+                            "        </div>\n" +
+                            "    </div>");
+                    }
+                }
+            }
+        };
+    </script>
 
     <style>
-        .container{
-            border: 3px black solid;
-        }
-        .name{
-            margin-top: 35px;
-        }
     </style>
     <script>
         var array = {IdReductionAgent: "tankLevel",TankName:"Tank",TotalCapacityInL:500};
@@ -42,6 +79,7 @@
         </div>
     </nav>
 </header>
+<div id="body">
     <div class="container">
         <div class="row">
             <div class="name col-sm-3">
@@ -60,6 +98,7 @@
             </div>
         </div>
     </div>
+</div>
 </body>
 <script>
     function canvas(percentage,array)
@@ -77,9 +116,6 @@
         ctx.fillText(percentage+"%",RaLevel+5,75);
         ctx.fillText("0",0,145);
         ctx.fillText(array.TotalCapacityInL+" L",185,145);
-        ctx.font = "20px Helvetica";
-        ctx.fillStyle = "black";
-        ctx.fillText(array.TankName,(($("#"+array.IdReductionAgent).width()-36)/2),20);
     }
     canvas(80,array);
 </script>
