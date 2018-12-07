@@ -12,7 +12,7 @@
     <script>
         window.onload = function(){
             xmlRequest = new XMLHttpRequest();
-            xmlRequest.open("POST", "/ERC_Additive/Customer", true);
+            xmlRequest.open("POST", "/ERC_Additive/GetCustomers", true);
             xmlRequest.setRequestHeader('Content-type', 'application/json');
             xmlRequest.send(IdPartImplemented);
             xmlRequest.onreadystatechange = function() {
@@ -21,12 +21,14 @@
                     for(var i=0;i<jsonArray.length;i++)
                     {
                         var json = jsonArray[i];
-                        var tank;
+                        var tank ="";
+                        var totalCapacity = 0;
                         for(var j = 0;j<json.RALevels.length;j++)
                         {
                             var ra = json.RALevels[j];
-                            var percentage = Math.floor((json.LevelOfRAInL*100)/json.TotalCapacityInL);
+                            var percentage = Math.floor((ra.LevelOfRAInL*100)/ra.TotalCapacityInL);
                             tank += "                    <p>"+ra.TankName+" : "+percentage+"%</p>";
+                            totalCapacity += ra.TotalCapacityInL;
                         }
                         $("#body").append(" <div class=\"container\">\n" +
                             "        <div class=\"row\">\n" +
@@ -37,25 +39,39 @@
                             "            <div class=\"col-sm-3\">\n" +
                             "                <canvas id=\""+i+"\" width=\"235px\" height=\"150px\"></canvas>\n" +
                             "            </div>\n" +
-                            "            <div class=\"name col-sm-3\">\n" +
-                            "                    <p>"+json.+" : "+json+"%</p>\n" +
-                            "                    <p>"+json+" : "+json+"%</p>\n" +
+                            "            <div class=\"name col-sm-3\">\n" + tank +
                             "            </div>\n" +
                             "            <div class=\"name col-sm-3 text-center\">\n" +
-                            "                <p>Date of the last order : "+json+"</p>\n" +
+                            "                <p>Date of the last order : "+json.DateLastOrder+"</p>\n" +
                             "            </div>\n" +
                             "        </div>\n" +
                             "    </div>");
+                        canvas(json.TotalLevelInPercent,i,totalCapacity);
                     }
                 }
             }
         };
-    </script>
 
-    <style>
-    </style>
-    <script>
-        var array = {IdReductionAgent: "tankLevel",TankName:"Tank",TotalCapacityInL:500};
+        function canvas(percentage,id,totalCapacity)
+        {
+            var c =document.getElementById(id);
+            var ctx = c.getContext("2d");
+            var grd = ctx.createLinearGradient(0,0,200,0);
+            grd.addColorStop(0,"red");
+            grd.addColorStop(1,"blue");
+            ctx.fillStyle = grd;
+            ctx.strokeRect(0,25,200,100);
+            var RaLevel = percentage*($("#"+id).width()-36)/100;
+            ctx.fillRect(0,25,RaLevel,100);
+            ctx.font = "15px Helvetica";
+            ctx.fillText(percentage+"%",RaLevel+5,75);
+            ctx.fillText("0",0,145);
+            ctx.fillText(totalCapacity+" L",185,145);
+        }
+
+        function Logout(){
+            document.getElementById("Logout").submit();
+        }
     </script>
 </head>
 <body>
@@ -68,8 +84,8 @@
                 </div>
             </div>
             <ul class="nav navbar-nav">
-                <li class="active"><a href="index.html">Home</a></li>
-                <li><a href="Customer.html">Customer</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li class="active"><a href="Customer.html">Customer</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><img width="41%" src="../Picture/ERC_Logo.png"></li>
@@ -80,43 +96,8 @@
     </nav>
 </header>
 <div id="body">
-    <div class="container">
-        <div class="row">
-            <div class="name col-sm-3">
-                    <p >Customer name</p>
-                    <p >Plant 1</p>
-            </div>
-            <div class="col-sm-3">
-                <canvas id="tankLevel" width="235px" height="150px"></canvas>
-            </div>
-            <div class="name col-sm-3">
-                    <p>Tank 1 : 46%</p>
-                    <p>Tank 2 : 20%</p>
-            </div>
-            <div class="name col-sm-3 text-center">
-                <p>Date of the last order : 20/11/2018</p>
-            </div>
-        </div>
-    </div>
 </div>
 </body>
 <script>
-    function canvas(percentage,array)
-    {
-        var c =document.getElementById(array.IdReductionAgent);
-        var ctx = c.getContext("2d");
-        var grd = ctx.createLinearGradient(0,0,200,0);
-        grd.addColorStop(0,"red");
-        grd.addColorStop(1,"blue");
-        ctx.fillStyle = grd;
-        ctx.strokeRect(0,25,200,100);
-        var RaLevel = percentage*($("#"+array.IdReductionAgent).width()-36)/100;
-        ctx.fillRect(0,25,RaLevel,100);
-        ctx.font = "15px Helvetica";
-        ctx.fillText(percentage+"%",RaLevel+5,75);
-        ctx.fillText("0",0,145);
-        ctx.fillText(array.TotalCapacityInL+" L",185,145);
-    }
-    canvas(80,array);
 </script>
 </html>
