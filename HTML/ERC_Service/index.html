@@ -104,9 +104,9 @@
     function SendOffer(file,info,num){
         xmlRequest = new XMLHttpRequest();
         var formData = new FormData();
-        formData.append('OrderFromERC', file);
+        formData.append('OfferFromERC', file);
         formData.append('Data', JSON.stringify(info));
-        xmlRequest.open("POST", "/ERC_Service/Order", true);
+        xmlRequest.open("POST", "/ERC_Service/CreateOffer", true);
         // xmlRequest.setRequestHeader('Content-type', 'application/json');
         xmlRequest.send(formData);
         xmlRequest.onreadystatechange = function(){

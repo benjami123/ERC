@@ -13,6 +13,9 @@
         .container{
             border: 3px black solid;
         }
+        .name{
+            margin-top: 35px;
+        }
     </style>
     <script>
         var array = {IdReductionAgent: "tankLevel",TankName:"Tank",TotalCapacityInL:500};
@@ -41,21 +44,19 @@
 </header>
     <div class="container">
         <div class="row">
-            <div class="name col-sm-4">
-                <div class="row">
-                    <p class="col-sm-5">Customer name</p>
-                </div>
-                <div class="row">
-                    <p class="col-sm-5">Plant 1</p>
-                </div>
+            <div class="name col-sm-3">
+                    <p >Customer name</p>
+                    <p >Plant 1</p>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <canvas id="tankLevel" width="235px" height="150px"></canvas>
             </div>
-            <div>
-                <div class="row">
-                    <p class=""></p>
-                </div>
+            <div class="name col-sm-3">
+                    <p>Tank 1 : 46%</p>
+                    <p>Tank 2 : 20%</p>
+            </div>
+            <div class="name col-sm-3 text-center">
+                <p>Date of the last order : 20/11/2018</p>
             </div>
         </div>
     </div>
