@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>Customer</title>
+
+    <style>
+        .container{
+            border: 3px black solid;
+            width: 99%;
+            height: 10%;
+        }
+    </style>
+    <script>
+        var array = {IdReductionAgent: "tankLevel",TankName:"Tank",TotalCapacityInL:500};
+    </script>
+</head>
+<body>
+<header id="navbar">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <div class="navbar-brand">
+                    <p>Identifier</p>
+                </div>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="index.html">Home</a></li>
+                <li><a href="Customer.html">Customer</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><img width="41%" src="../Picture/ERC_Logo.png"></li>
+                <li onclick="Logout()"><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+                <form method="POST" id="Logout" action="/Logout"></form>
+            </ul>
+        </div>
+    </nav>
+</header>
+<div class="container">
+    <div class="top row">
+        <p class="col-sm">
+            One of three columns
+        </p>
+        <p class="col-sm">
+            One of three columns
+        </p>
+        <div class="col-sm">
+            One of three columns
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    function canvas(percentage,array)
+    {
+        var c =document.getElementById(array.IdReductionAgent);
+        var ctx = c.getContext("2d");
+        var grd = ctx.createLinearGradient(0,0,200,0);
+        grd.addColorStop(0,"red");
+        grd.addColorStop(1,"blue");
+        ctx.fillStyle = grd;
+        ctx.strokeRect(0,25,200,100);
+        var RaLevel = percentage*($("#"+array.IdReductionAgent).width()-36)/100;
+        ctx.fillRect(0,25,RaLevel,100);
+        ctx.font = "15px Helvetica";
+        ctx.fillText(percentage+"%",RaLevel+5,75);
+        ctx.fillText("0",0,145);
+        ctx.fillText(array.TotalCapacityInL+" L",185,145);
+        ctx.font = "20px Helvetica";
+        ctx.fillStyle = "black";
+        ctx.fillText(array.TankName,(($("#"+array.IdReductionAgent).width()-36)/2),20);
+    }
+    /*canvas(80,array);*/
+</script>
+</html>
