@@ -30,9 +30,11 @@
                             "                                        <td class=\"text-center num\">"+(i+1)+"</td>\n" +
                             "                                        <td>"+json.Login+"</td>\n" +
                             "                                        <td>"+json.PlantName+"</td>\n" +
-                            "                                        <td>"+json.Location+"</td>\n" +
-                            // "                                        <td>"+json.OfferType+"</td>\n" +
-                            "                                        <td>"+json.OfferDateStart+"</td>\n" +
+                            "                                        <td>"+json.QuantityInL+"</td>\n" +
+                            "                                        <td>"+json.OfferType+"</td>\n" +
+                            "            <td><a href=\""+json.Offer+"\" download=\"Offer\"><button type=\"button\" rel=\"tooltip\" class=\"btn btn-info btn-just-icon btn-sm\" data-original-title=\"\" title=\"\">\n" +
+                            "                <i class=\"material-icons\">file_download</i>\n" +
+                            "            </button></a>\n" +
                             "                                        <td class=\"td-actions\">\n" +
                             "                                                        <span class=\"btn btn-success btn-just-icon btn-sm btn-file\" rel=\"tooltip\">\n" +
                             "                                                                <i class=\"material-icons\">check</i><input type=\"file\" oninput=\"SendOffer(this.files[0],jsonArray["+i+"],"+i+")\">\n" +
@@ -81,8 +83,8 @@
                     <th class="text-center num">#</th>
                     <th>UserName</th>
                     <th>PlantName</th>
-                    <th>Location</th>
-                    <!--<th>Offer Type</th>-->
+                    <th>Quantity</th>
+                    <th>Order File</th>
                     <th>Date</th>
                     <th>Actions</th>
                 </tr>
