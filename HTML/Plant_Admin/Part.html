@@ -43,7 +43,7 @@
                 if ((xmlRequest2.readyState == 4) && (xmlRequest2.status == 200)) {
                     PlantPart = JSON.parse(xmlRequest2.responseText);
                     for(var i = 0;i<PlantPart.length;i++){
-                        var json = SupplerPart[i];
+                        var json = PlantPart[i];
                         $("#bodyR").append("" +
                             "<tr id=\"R"+json.IdPart+"\" onclick=\"color('R"+json.IdPart+"')\">\n" +
                             "                <td>"+json.PartName+"</td>\n" +
@@ -172,21 +172,6 @@
     <div  class="table table-wrapper-scroll-y scrollbar scrollbar-near-moon thin body">
     <table class="table table-striped border-0">
         <tbody id="bodyL">
-            <tr id="L0" onclick="color('L0')">
-                <td>PartName</td>
-                <td>PartDescription</td>
-                <td>SupplierName</td>
-            </tr>
-            <tr id="L1" onclick="color('L1')">
-                <td>PartName</td>
-                <td>PartDescription</td>
-                <td>SupplierName</td>
-            </tr>
-            <tr id="L2" onclick="color('L2')">
-                <td>PartName</td>
-                <td>PartDescription</td>
-                <td>SupplierName</td>
-            </tr>
         </tbody>
     </table>
     </div>
@@ -205,24 +190,6 @@
     <div class="table table-wrapper-scroll-y scrollbar scrollbar-near-moon thin body">
         <table class="table table-striped border-0">
             <tbody id="bodyR">
-            <tr id="R0" onclick="color('R0')">
-                <td>PartName</td>
-                <td>PartDescription</td>
-                <td>PartLocation</td>
-                <td>SupportName</td>
-            </tr>
-            <tr id="R1" onclick="color('R1')">
-                <td>PartName</td>
-                <td>PartDescription</td>
-                <td>PartLocation</td>
-                <td>SupportName</td>
-            </tr>
-            <tr id="R2" onclick="color('R2')">
-                <td>PartName</td>
-                <td>PartDescription</td>
-                <td>PartLocation</td>
-                <td>SupportName</td>
-            </tr>
             </tbody>
         </table>
     </div>
