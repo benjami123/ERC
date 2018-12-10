@@ -42,10 +42,12 @@
             xmlRequest2.onreadystatechange = function() {
                 if ((xmlRequest2.readyState == 4) && (xmlRequest2.status == 200)) {
                     PlantPart = JSON.parse(xmlRequest2.responseText);
+                    console.log(PlantPart);
                     for(var i = 0;i<PlantPart.length;i++){
+
                         var json = PlantPart[i];
                         $("#bodyR").append("" +
-                            "<tr id=\"R"+json.IdPart+"\" onclick=\"color('R"+json.IdPart+"')\">\n" +
+                            "<tr id=\"R"+json.IdPartImplemented+"\" onclick=\"color('R"+json.IdPartImplemented+"')\">\n" +
                             "                <td>"+json.PartName+"</td>\n" +
                             "                <td>"+json.PartDescription+"</td>\n" +
                             "                <td>"+json.Location+"</td>\n" +
