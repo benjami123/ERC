@@ -63,9 +63,9 @@ app.get('/Orders/*', function(req, res){
       res.sendStatus(404);
       res.end('404 : This Page doesn\'t exist');
     }
-}else{
-  res.end('404');
-}
+  }else{
+    res.end('404');
+  }
 })
 
 app.post('/Login',function(req,res){
@@ -221,7 +221,8 @@ app.post('/Plant_Operator/*', function(req, res){
           console.log(files);
           console.log("Got fields : ");
           console.log(json);
-          DB.getPlantName(req.session.user.IdPlant, function(err, PlantName){
+          DB.getPlantName(req.session.user.IdPlant, function(PlantName){
+            console.log("PlantName : " + PlantName);
             Lib.SaveFile(json, files, PlantName,"OrderFromClient", function(FileName){
               DB.uploadOrderFromClient(json.IdPart_Offer, FileName, false, function(){
                 res.end("Done");
@@ -253,7 +254,7 @@ app.post('/Plant_Admin/*', function(req, res){
 
     case "/RemoveUser":
       console.log("Removing user : ");
-      console.log(req.body);1
+      console.log(req.body);
       DB.removeUser(req.body.IdUser, function(err, Result){
        res.end(JSON.stringify({})); 
       })
@@ -274,19 +275,35 @@ app.post('/Plant_Admin/*', function(req, res){
       });
       break;
 
-    case "/AddParts":
-      console.log("Adding partimplemented : ");
-      console.log(req.body.Values);
-      DB.createPartImplemented(req.body.Values, function(err, Result){
-        res.end();
+    case "/GetPlantPart":
+      DB.getPlantPartPreviewInfos(req.session.user.IdPlant, function(err, PartsInfo){
+        console.log("Got results : ");
+        console.log(PartsInfo);
+        res.end(JSON.stringify(PartsInfo));
       });
       break;
 
-    case "/RemoveParts":
-      console.log("Deleting partimplemented : ");
+    case "/GetSupplierPart":
+      DB.getSupplierPart(function(err, PartsInfo){
+        console.log("Got results : ");
+        console.log(PartsInfo);
+        res.end(JSON.stringify(PartsInfo));
+      });
+      break;
+
+    case "/AddPart":
+      console.log("Adding partimplemented : ");
       console.log(req.body.Values);
+      DB.createPartImplemented(req.body.Values, function(err, Result){
+        res.end("Done !");
+      });
+      break;
+
+    case "/RemovePart":
+      console.log("Deleting partimplemented : ");
+      console.log(req.body.ArrayPartImplementedID);
       DB.removePartImplemented(req.body.ArrayPartImplementedID, function(err, Result){
-        res.end();
+        res.end("Done !");
       });
       break;
   }
@@ -331,7 +348,7 @@ app.post('/ERC_Service/*', function(req, res){
         DB.getPlantName(json.IdPlant, function(PlantName){
           Lib.SaveFile(json, files, PlantName, "OrderFromERC", function(FileName){
             DB.uploadOrderFromERC(json.IdPart_Offer, FileName, false, function(){
-              res.end("Done");
+              res.end("Done !");
             });
           });
         });
@@ -345,7 +362,7 @@ app.post('/ERC_Service/*', function(req, res){
         var json = JSON.parse(fields.Data);
         if(files.lenght != 0){
           DB.getLastIndexOfLastAddedLine_Offer(false, function(err, IdPart_Offer){
-            json.IdPart_Offer = IdPart_Offer + 1;
+            json.IdPart_Offer = IdPart_Offer;
             var StateToString = Lib.getStateToString();
             json.OfferState = StateToString[1];
             Lib.SaveFile(json, files, json.PlantName, "OfferFromERC", function(FileName){

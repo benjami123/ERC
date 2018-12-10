@@ -375,7 +375,21 @@ module.exports= {
             callback(err, rows) ;
         });
     },
-    
+
+    //Plant_Admin Parts Get PartImplemented from plant -> see Plant_Operator getPlantPartPreviewInfos()
+
+    //Plant_Admin Parts GetSupplierParts
+    getSupplierPart: function(callback){
+        var Query = "SELECT part.IdPart, part.PartName, part.PartDescription, supplier.SupplierName "
+                +   "FROM part "
+                +   "JOIN supplier ON supplier.IdSupplier=part.IdSupplier "
+                +   "ORDER BY supplier.SupplierName;";
+        con.query(Query, function(err, rows){
+            if (err) throw err;
+            callback(err, rows) ;
+        });
+    },
+
     //Plant_Admin : Parts Adding partsImplemented to plant
     createPartImplemented: function(Values, callback){
         var Query = "INSERT INTO partimplemented (IdPlant, IdPart, isImplemented, Location) VALUES( ? , ? , 1 , ? );";
@@ -420,22 +434,16 @@ module.exports= {
         });
     },
 
-    getLastIndexOfLastAddedLine_Offer: function(isRA, callback){
+    getAutoIncrementOfferValue: function(isRA, callback){
         if(isRA){
-            var Query = "SELECT IdRA_Offer FROM ra_offer ORDER BY IdRA_Offer DESC limit 1;";
+            var Query = "SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'ERC' AND TABLE_NAME = 'ra_offer'";
         }else{
-            var Query = "SELECT IdPart_Offer FROM part_offer ORDER BY IdPart_Offer DESC limit 1;";
+            var Query = "SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'ERC' AND TABLE_NAME = 'part_offer';";
         }
         con.query(Query, function(err, rows){
             if (err) throw err;
             if(rows.length > 0){
-                if(rows[0].IdPart_Offer != null){
-                    callback(err, rows[0].IdPart_Offer) ;
-                }else if(rows[0].IdRA_Offer != null){
-                    callback(err, rows[0].IdRA_Offer) ;
-                }else{
-                    console.log("You shouldn't be here get out");
-                }
+                callback(err, rows[0].AUTO_INCREMENT);
             }else{
                 callback(err, null);
             }

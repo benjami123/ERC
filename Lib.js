@@ -1,4 +1,6 @@
 var fs = require('fs');
+var nodemailer = require('nodemailer');
+
 var PartsOfferPath = "./../Orders/Parts/";
 var RAOfferPath = "./../Orders/RA/";
 
@@ -28,6 +30,14 @@ var TypeToString = [
   "Repair"
 ];
 
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'youremail@gmail.com',
+    pass: 'yourpassword'
+  }
+});
+
 module.exports={
   CheckRole: function(req, res, RoleArray){
     var URL = req.originalUrl;
@@ -49,107 +59,103 @@ module.exports={
     }
   },
   
-  ComputeRAQuantityAndPrice: function(IDPlant, DB, callback){
+  ComputeRAQuantityAndPrice: function(IDPlant, DB, callback){   //Compute the total price of RA missing in the plant IDPlant
     DB.getRAPricesAndLevel(IDPlant, function(err, Result){
       var TotalQuantity = 0;
       var TotalPrice = 0;
-      for(var i=0; i<Result.length; i++){
-        var diff = (Result[i].TotalCapacityInL - Result[i].LevelOfRAInL);
-        TotalQuantity += diff;
-        TotalPrice += Result[i].PricePerL * diff;
+      for(var i=0; i<Result.length; i++){                       //For the number of tank in the plant
+        var diff = (Result[i].TotalCapacityInL - Result[i].LevelOfRAInL); //Compute the missing volume
+        TotalQuantity += diff;                                  //Update the total Quantity 
+        TotalPrice += Result[i].PricePerL * diff;               //Update the total price
       }
       callback(TotalQuantity, TotalPrice);
     });
   },
   
   CreateRAOffer: function(json, files, PlantName, TotalQuantity, TotalPrice, DB, callback){
-    DB.getLastIndexOfLastAddedLine_Offer(true, function(err, IdRA_Offer){
-      json.IdRA_Offer = IdRA_Offer + 1;
-      json.OfferDateStart = getCurrentDate();
-      console.log("Got files : ");
-      console.log(files);
-      SaveFile(json, files, PlantName, "OrderFromClient", function(FileName){
+    DB.getAutoIncrementOfferValue(true, function(err, IdRA_Offer){  //Gets the value of nextline in ra_offer;
+      json.IdRA_Offer = IdRA_Offer;                                 //Adds it to the json
+      json.OfferDateStart = getCurrentDate();                       //get the current date
+      SaveFile(json, files, PlantName, "OrderFromClient", function(FileName){ //Save the file 
         var opt = {"IdPlant" : json.IdPlant, "QuantityInL" : TotalQuantity, "Price" : TotalPrice,"FileOrderFromClientName" : FileName, "OfferState" : 2, "IdUser":json.IdUser}
-        DB.createRAOffer(opt, function(err, Result){
+        DB.createRAOffer(opt, function(err, Result){                //Insert the 
           callback();
         });
       });
     });
   },
 
-  SaveFile: function(json, files, PlantName, s, callback){
-    SaveFile(json, files, PlantName, s, callback);
-  },
-
-  SendPartHistory: function(res, IdPartImplemented, DB){
-    // console.log("Requesting PartImplementedHistory for id : " + IdPartImplemented);
-    DB.getPartImplementedHistory(IdPartImplemented, function(err, Result){
-      DB.getPartImplementedReviews(IdPartImplemented, function(err, Reviews){
-        // console.log("Got Result : ");
-        // console.log(Result);
-        // console.log("got Reviews");
-        // console.log(Reviews);
-        var json = MergeAndOrderbyDate(Result, Reviews);
-        // console.log("Sending to client : ");
-        // console.log(json);
+  
+  SendPartHistory: function(res, IdPartImplemented, DB){  //Gets the partHistory for partDescription
+    DB.getPartImplementedHistory(IdPartImplemented, function(err, Result){    //Gets from ra_offer
+      DB.getPartImplementedReviews(IdPartImplemented, function(err, Reviews){ //Gets from review
+        var json = MergeAndOrderbyDate(Result, Reviews);                      //Merge
         res.end(JSON.stringify(json));
       });
     })
   },
-
-  SendPlantHistory: function(res, IdPlant, DB){
-    DB.getPlantHistoryOffer(IdPlant, true, function(err, Result){
-      DB.getPlantHistoryReview(IdPlant, function(err, Reviews){
-        DB.getPlantHistoryRA(IdPlant, true, function(err, RAOffer){
-          console.log("Got Result : ");
-          console.log(Result);
-          console.log("got Reviews");
-          console.log(Reviews);
-          console.log("Got RAOffer : ");
-          console.log(RAOffer);
-          var json = MergeAndOrderbyDate(Result, Reviews);
-          json = MergeAndOrderbyDate(json, RAOffer);
-          console.log("Sending to client : ");
-          console.log(json);
-          res.end(JSON.stringify(json));
-        })
+  
+  SendPlantHistory: function(res, IdPlant, DB){   //Gets the part_offer and ra_offer history for the selected plant
+    DB.getPlantHistoryOffer(IdPlant, true, function(err, Result){   //Gets from ra_offer
+      DB.getPlantHistoryReview(IdPlant, function(err, Reviews){     //Gets from review
+        DB.getPlantHistoryRA(IdPlant, true, function(err, RAOffer){ //Gets from ra_ofefr
+          var json = MergeAndOrderbyDate(Result, Reviews);          //Merge part_offer and review
+          json = MergeAndOrderbyDate(json, RAOffer);                //Merge result with ra_offer
+          res.end(JSON.stringify(json));          //Send result
+        });
       });
-    
     });
   },
-
-  GeneratePassword: function() {
+  
+  GeneratePassword: function() {      //Generate a random password when creating an account
     var pw = "";
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  
-    for (var i = 0; i < 5; i++)
-      pw += possible.charAt(Math.floor(Math.random() * possible.length));
-  
+    
+    for (var i = 0; i < 15; i++)
+    pw += possible.charAt(Math.floor(Math.random() * possible.length));
+    
     return pw;
   },
-
-  SendEmail: function(Login, Email, Password){
+  
+  SendEmail: function(Login, Email, Password, callback){      //Sending mail when the password has been changed
     console.log("Sending email to " + Email + " with Login : " + Login + ", Password : " + Password);
+    var ResetPassword_MailContent = {
+      from: 'youremail@gmail.com',
+      to: Email,
+      subject: 'Your password has been reseted !',
+      text: 'Your account :' + Login + '\nHere is your new Password : ' + Password
+    };
+    
+    transporter.sendMail(ResetPassword_MailContent, function(error, info){
+      if(err) console.log(err);
+      callback();
+    }); 
   },
-
+  
+  //Getters
   getRoleArray: function(){
-      return RoleArray;
+    return RoleArray;
   }, 
-
+  
   getStateToString: function(){
     return StateToString;
   },
   
+  //Local function getters
+  SaveFile: function(json, files, PlantName, s, callback){
+    SaveFile(json, files, PlantName, s, callback);
+  },
+
   doTransformTypeAndStateToString: function(json){
     return TransformTypeAndStateToString(json);
   }
 }
 
-function TransformTypeAndStateToString(json){
-  if(json.OfferType != null){
-    json.DataType = "H";
-    json.OfferDateStart = json.OfferDateStart.toString().substring(0, 15);
-    if((json.Offer != null) && (!json.Offer.includes("/Orders/"))) {
+function TransformTypeAndStateToString(json){           //Transform type/state/date to string
+  if(json.OfferType != null){                                               //Check if we received something from part_offer
+    json.DataType = "H";                                                    //DataType can be H or R, its used for the client side
+    json.OfferDateStart = json.OfferDateStart.toString().substring(0, 15);  //Transforms the date to a YYYY-MM-DD
+    if((json.Offer != null) && (!json.Offer.includes("/Orders/"))) {        //set the path to the file if it isn't null nor already setted
       json.Offer = PartsOfferPath + json.IdPart_Offer + '/' + json.Offer;
     }
     if((json.OrderFromClient != null) && (!json.OrderFromClient.includes("/Orders/"))){
@@ -178,10 +184,10 @@ function TransformTypeAndStateToString(json){
     if(json.OfferState ==='number'){
       json.OfferState = StateToString[json.OfferState];
     }
-    if((json.OrderFromClient != null) && (!json.OrderFromClient.includes("/Orders/"))){
+    if((json.OrderFromClient != null) && (!json.OrderFromClient.includes("/RA/"))){
       json.OrderFromClient = RAOfferPath + json.IdRA_Offer + '/' + json.OrderFromClient;
     }
-    if((json.OrderFromERC != null) && (!json.OrderFromERC.includes("/Orders/"))){
+    if((json.OrderFromERC != null) && (!json.OrderFromERC.includes("/RA/"))){
       json.OrderFromERC = RAOfferPath + json.IdRA_Offer + '/' + json.OrderFromERC;
     }
   }
@@ -202,6 +208,9 @@ function generateFileName(json, PlantName, OriginalFileName, s,  callback){
 
 function generateFileNameRA(IDRA_Offer, PlantName, OfferDateStart, OriginalFileName, sFileType){
   var DotIndex = OriginalFileName.lastIndexOf(".");
+  if(OfferDateStart.includes(' ')){
+    OfferDateStart = new Date(OfferDateStart).toISOString().substring(0,10);
+  }
   return '' + IDRA_Offer + '_' + PlantName + '_' + OfferDateStart + '_' + sFileType + OriginalFileName.substring(DotIndex);
 }
 
@@ -210,7 +219,7 @@ function generateFileNameParts (IDPart_Offer, PlantName, PartName, PartLocation,
   return '' + IDPart_Offer + '_' + PlantName + '_' + PartName + '_' + PartLocation +  '_' + sFileType + OriginalFileName.substring(DotIndex);
 }
 
-function mkdirSync (dirPath) {
+function mkdirSync (dirPath) {    //MakeDirectory
   try {
     if(!fs.existsSync(dirPath)){
       fs.mkdirSync(dirPath)
@@ -233,48 +242,49 @@ function SaveFile(json, files, PlantName, s, callback){
   });
 }
 
-function getCurrentDate(){
+function getCurrentDate(){  //Returns the current date as format YYYY-MM-DD
   return new Date().toISOString().substring(0,10);
 }
 
-function MergeAndOrderbyDate(history, review){
+function MergeAndOrderbyDate(history, review){      //Merge and Order by date, used for the Plant_Operator history and partDescription
   var Merged = [];
   var iIndexHistory = 0;
   var iIndexReview = 0;
   var SizeOfMergedArray = history.length + review.length;
-  if((history.length == 0) && (review.length == 0)){
+
+  if((history.length == 0) && (review.length == 0)){  //If both of them are empty
     Merged = null;
-  }else if(history.length == 0){
-    for(var i=0; i<review.length; i++){
+  }else if(history.length == 0){                      //If one is empty
+    for(var i=0; i<review.length; i++){               //Merged = The other transformed
       Merged[i] = TransformTypeAndStateToString(review[i]);
     }
-  }else if(review.length == 0){
+  }else if(review.length == 0){                       //Same but for the other array
     for(var i=0; i<history.length; i++){
       Merged[i] = TransformTypeAndStateToString(history[i]);
     }
-  }else{
+  }else{                                              //If both aren't empty
     for(var i=0; i<SizeOfMergedArray; i++){
-      if(history[iIndexHistory].OfferDateStart > review[iIndexReview].ReviewDate){
-        Merged[i] = TransformTypeAndStateToString(history[iIndexHistory]);
-        iIndexHistory++;
+      if(history[iIndexHistory].OfferDateStart > review[iIndexReview].ReviewDate){  //Compare the dates with the indexes
+        Merged[i] = TransformTypeAndStateToString(history[iIndexHistory]);  //Load the transfomred json
+        iIndexHistory++;                                                    //Update the index
       }else{
-        Merged[i] = TransformTypeAndStateToString(review[iIndexReview]);
+        Merged[i] = TransformTypeAndStateToString(review[iIndexReview]);    //Same but for the other array
         iIndexReview++;
       }
       
-      if(iIndexHistory == history.length){
-        for(var j=iIndexReview; j<review.length; j++){
+      if(iIndexHistory == history.length){              //If we're at then end of one array
+        for(var j=iIndexReview; j<review.length; j++){  //Fill merged with other array transformed
           i++;
           Merged[i] = TransformTypeAndStateToString(review[j]);
         }
-        break;
+        break;                                          //Then break from the big for loop
       }
-      if(iIndexReview == review.length){
+      if(iIndexReview == review.length){                //Same but for the other array
         for(var j=iIndexHistory; j<history.length; j++){
           i++;
           Merged[i] = TransformTypeAndStateToString(history[j]);
         }
-        break;
+        break;                                          //Then break from the big for loop
       }
     }
   }
