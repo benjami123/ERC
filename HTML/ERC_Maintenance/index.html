@@ -200,15 +200,7 @@
     </table >
     <div id="body" class="table-wrapper-scroll-y scrollbar scrollbar-near-moon thin">
         <table  class="table table-striped border-0">
-            <tbody >
-            <td >Part Name</td>
-            <td >Part Location</td>
-            <td><select id='ReviewType' class=form-control>
-                <option value="0">Choose...</option>
-                <option value="1">Replace</option>
-                <option value="3">Check</option>
-                <option value="4">Repair</option>
-                </select></td>
+            <tbody id="tablePart">
             </tbody>
         </table>
     </div>
@@ -231,17 +223,4 @@
     </div>
 </div>
 </body>
-<script>
-    function clickPart(IdJson)
-    {
-        tablePart[IdJson].IdPlant = IdPlant;
-        xmlRequest = new XMLHttpRequest();
-        xmlRequest.open("POST", "/Plant_Operator/PartDescription", true);
-        xmlRequest.setRequestHeader('Content-type', 'application/json');
-        xmlRequest.send(tablePart[IdJson]);
-        sessionStorage.setItem("SelectedPart", JSON.stringify(tablePart[IdJson]));
-        window.location.replace("/ERC_Service/PartDescription.html");
-    }
-
-</script>
 </html>
