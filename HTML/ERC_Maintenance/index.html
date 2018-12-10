@@ -134,8 +134,10 @@
         {
             var json = {};
             for(var i =0;i<tablePart;i++){
-                if($("#" + i).val()!=0)
-                    json[i]= {ReviewType: $("#" + i).val(),IdPartImplemented:tablePart[i].IdPartImplemented};
+                if($("#" + i).val()!=0) {
+                    json[i] = {ReviewType: $("#" + i).val(), IdPartImplemented: tablePart[i].IdPartImplemented};
+                    console.log(json);
+                }
             }
             return json;
         }
