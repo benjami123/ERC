@@ -11,8 +11,9 @@
     <title>Customer</title>
     <script>
         window.onload = function(){
+            console.log("sending post to server"),
             xmlRequest = new XMLHttpRequest();
-            xmlRequest.open("POST", "/ERC_Additive/GetCustomers", true);
+            xmlRequest.open("POST", "/ERC_Additives/GetCustomers", true);
             xmlRequest.setRequestHeader('Content-type', 'application/json');
             xmlRequest.send();
             xmlRequest.onreadystatechange = function() {

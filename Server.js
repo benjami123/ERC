@@ -9,7 +9,7 @@ var Lib = require('./Lib.js');
 var fs = require('fs');
 RoleArray = Lib.getRoleArray();
 
-app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use( bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
@@ -71,7 +71,8 @@ app.get('/Orders/*', function(req, res){
 app.post('/Login',function(req,res){
   var sess = req.session;
   console.log("Username : " + req.body.username + ", Password : " + req.body.password);
-  DB.getUser(req.body.username, req.body.password, function(err, user){
+  var opt = {"Login": req.body.username, "Password": req.body.password};
+  DB.getUser(opt, function(err, user){
     if(user != undefined){
       sess.user = user;
       switch(user.UserRole){
@@ -141,20 +142,19 @@ app.post('/Plant_Operator/*', function(req, res){
     case"/CreateRAOffer":
       var form = new formidable.IncomingForm();
       form.parse(req, function(err, fields, files){
+        var json = JSON.parse(fields.Data);
         console.log("Got file : ");
         console.log(files);
-        console.log("Got values : ");
-        var json = JSON.parse(fields.Data);
+        console.log("Got fields : ");
         console.log(json);
-        var TotalQuantity;
-        var TotalPrice;
-        TotalQuantity, TotalPrice = Lib.ComputeRAQuantityAndPrice(json, DB);
-        
-        Lib.SaveFile(err, res, json, files, "OrderFromClient", DB)
-        DB.createRAOffer(req.body.IdReductionAgent, TotalQuantity, TotalPrice, files["OrderFromClient"].name, function(err, Result){
-          console.log("Got result : ");
-          console.log(Result);
-          res.end(JSON.stringify(Result));
+        json.IdPlant = req.session.user.IdPlant;
+        json.IdUser = req.session.user.IdUser;
+        Lib.ComputeRAQuantityAndPrice(json.IdPlant, DB, function(TotalQuantity, TotalPrice){
+          DB.getPlantName(json.IdPlant, function(PlantName){
+            Lib.CreateRAOffer(json, files, PlantName, TotalQuantity, TotalPrice, DB, function(){
+              res.end("Done !");
+            });
+          })    
         });
       });
       break;
@@ -196,7 +196,8 @@ app.post('/Plant_Operator/*', function(req, res){
         break;
 
       case "/CreateOffer":
-        DB.createPartOffer(req.body.IdPartImplemented, req.body.OfferType, req.session.user.IdUser ,function(err, Result){
+        var opt = {"IdPartImplemented" : req.body.IdPartImplemented, "OfferType" : req.body.OfferType, "IdUser" : req.session.user.IdUser};
+        DB.createPartOffer(opt, function(err, Result){
           // console.log("got result : ");
           // console.log(Result);
           res.end("Request sent");
@@ -204,7 +205,8 @@ app.post('/Plant_Operator/*', function(req, res){
         break;
       
       case "/CreateReview":
-        DB.createPartReview(req.body.IdPartImplemented, req.body.ReviewType, req.body.ReviewDate, function(err, Result){
+        var opt = {"IdPartImplemented" : req.body.IdPartImplemented, "ReviewType" : req.body.ReviewType, "ReviewDate" : req.body.ReviewDate};
+        DB.createPartReview(opt, function(err, Result){
           // console.log("got result : ");
           // console.log(Result);
           res.end("Request sent");
@@ -215,8 +217,17 @@ app.post('/Plant_Operator/*', function(req, res){
         var form = new formidable.IncomingForm();
         form.parse(req, function(err, fields, files){
           var json = JSON.parse(fields.Data);
-          json.IdPlant = req.session.user.IdPlant;
-          Lib.SaveFile(err, res, json, files, "OrderFromClient", DB)
+          console.log("Got file : ");
+          console.log(files);
+          console.log("Got fields : ");
+          console.log(json);
+          DB.getPlantName(req.session.user.IdPlant, function(err, PlantName){
+            Lib.SaveFile(json, files, PlantName,"OrderFromClient", function(FileName){
+              DB.uploadOrderFromClient(json.IdPart_Offer, FileName, false, function(){
+                res.end("Done");
+              });
+            });
+          });
         });
         break;
       
@@ -249,11 +260,9 @@ app.post('/Plant_Admin/*', function(req, res){
       break;
 
     case "/AddUser":
-      var UserEmail = req.body.Email;
-      var UserLogin = req.body.Login;
-      var UserIdPlant = req.session.user.IdPlant;
       var UserPassword = Lib.GeneratePassword();
-      DB.createUser(UserIdPlant, UserLogin, UserEmail, UserPassword, 3, function(err, Results){
+      var opt = {"IdPlant" : req.session.user.IdPlant, "Login" : req.body.Login, "Email" : req.body.Email, "Password" : UserPassword, "Role" : 3};
+      DB.createUser(opt, function(err, Results){
         console.log("Got results : ");
         console.log(Results);
         if(Results){
@@ -299,14 +308,6 @@ app.post('/ERC_Service/*', function(req, res){
       });
       break;
 
-    case "/Offer":
-      var form = new formidable.IncomingForm();
-      
-      form.parse(req, function(err,fields, files){
-        Lib.SaveFile(err, res, JSON.parse(fields.Data), files, "Offer", DB)
-      });
-      break;
-
     case"/GetOrders":
       DB.getOrdersRequest(function(err, Result){
         // console.log("Sending");
@@ -322,7 +323,58 @@ app.post('/ERC_Service/*', function(req, res){
     case "/Order":
       var form = new formidable.IncomingForm();
       form.parse(req, function (err, fields, files) {
-        Lib.SaveFile(err, res, JSON.parse(fields.Data), files, "OrderFromERC", DB)
+        var json = JSON.parse(fields.Data);
+        console.log("Got files : ");
+        console.log(files);
+        console.log("Got Data : ");
+        console.log(json);
+        DB.getPlantName(json.IdPlant, function(PlantName){
+          Lib.SaveFile(json, files, PlantName, "OrderFromERC", function(FileName){
+            DB.uploadOrderFromERC(json.IdPart_Offer, FileName, false, function(){
+              res.end("Done");
+            });
+          });
+        });
+      });
+      break;
+    
+    case "/CreateOffer":
+      var form = new formidable.IncomingForm();
+        
+      form.parse(req, function(err,fields, files){
+        var json = JSON.parse(fields.Data);
+        if(files.lenght != 0){
+          DB.getLastIndexOfLastAddedLine_Offer(false, function(err, IdPart_Offer){
+            json.IdPart_Offer = IdPart_Offer + 1;
+            var StateToString = Lib.getStateToString();
+            json.OfferState = StateToString[1];
+            Lib.SaveFile(json, files, json.PlantName, "OfferFromERC", function(FileName){
+              var opt={"IdPartImplemented" : json.IdPartImplemented,"OfferType" : json.OfferType, "IdUser" : req.session.IdUser, "Offer" : FileName};
+              DB.createPartOffer(opt, function(err, Result){
+                res.end("Done !");
+              })
+            });
+          });
+        }else{
+          res.end("No file uploaded")
+        }
+      });
+      break;
+    
+    case "/Offer":
+      var form = new formidable.IncomingForm();
+        
+      form.parse(req, function(err,fields, files){
+        var json = JSON.parse(fields.Data);
+        if(files.lenght != 0){
+          Lib.SaveFile(json, files, json.PlantName,"OfferFromERC", function(FileName){
+            DB.uploadOffer(json.IdPart_Offer, FileName, function(){
+              res.end("Done");
+            });
+          });
+        }else{
+          res.end("No file uploaded");
+        }
       });
       break;
 
@@ -362,33 +414,6 @@ app.post('/ERC_Service/*', function(req, res){
     case "/PartHistory":
       Lib.SendPartHistory(res, req.body.IdPartImplemented, DB);
       break;
-
-    case "/CreateOffer":
-      var form = new formidable.IncomingForm();
-        
-      form.parse(req, function(err,fields, files){
-        var json = fields.Data;
-        console.log("Got file : ");
-        console.log(files);
-        console.log("Got fields : ");
-        json = JSON.parse(json);
-        console.log(json);
-        if(files.lenght != 0){
-          DB.createPartOffer(json.IdPartImplemented, json.OfferType, req.session.user.IdUser, function(err, Result){
-            DB.getLastIndexOfLastAddedLinePart_Offer(function(err, Result){
-              console.log("Got result : ");
-              console.log(Result);
-              json.IdPart_Offer = Result;
-              var StateToString = Lib.getStateToString();
-              json.OfferState = StateToString[1];
-              Lib.SaveFile(err, res, json, files, "OfferFromERC", DB);
-            })
-          });
-        }else{
-          res.end("No file uploaded");
-        }
-      });
-      break;
   }
 });
 
@@ -404,21 +429,42 @@ app.post('/ERC_Maintenance/*', function(req, res){
   }
 });
 
-app.post('/ERC_Additiives/*', function(req, res){
-  var url = req.originalUrl.replace('/ERC_Additiives', '');
+app.post('/ERC_Additives/*', function(req, res){
+  var url = req.originalUrl.replace('/ERC_Additives', '');
   console.log("got post in " + req.originalUrl);
   switch(url){
     case "/index":
       DB.getRAOffersRequest(function(err, Result){
-        // console.log("Sending ");
-        // console.log(Result);
-        res.end(JSON.stringify(Result));
+        console.log("Sending ");
+        console.log(Result);
+        var json = [];
+        Result.forEach(r => {
+           json.push(Lib.doTransformTypeAndStateToString(r));
+        });
+        res.end(JSON.stringify(json));
       })
       break;
+    
+    case "/GetCustomers":
       
+      break;
+
     case"/ConfirmationOrder":
-      
-      //Lib.SaveFile() //OrderFromERC
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files){
+      console.log("Got files : ");
+      console.log(files);
+      console.log("Got fields : ");
+      console.log(fields);
+      var json = JSON.parse(fields.Data);
+      DB.getPlantName(json.IdPlant, function(PlantName){
+        Lib.SaveFile(json, files, PlantName, "OrderFromERC", function(FileName){
+          DB.uploadOrderFromERC(json.IdRA_Offer, FileName, true, function(err, Result){
+            res.end("Done !");
+          });
+        });
+      });
+    });
       break;
   }
 });
@@ -433,5 +479,5 @@ app.post('/ERC_Admin/*', function(req, res){
 
 
 app.listen(3000, function () {
-  console.log('Example app listening on port 3000!')
+  console.log('listening on port 3000!');
 });

@@ -48,66 +48,37 @@ module.exports={
       res.redirect("/");
     }
   },
-
-  SaveFile: function(err, res, json, files, s, DB){ 
-    var isRA = true; 
-    var OfferFolderPath, FileName;
-    if(json.PartName !== undefined){    //If there is a PartName in the json
-      isRA = false;                     //Offer is coming from part_offer and not ra_offer
-    }
-    DB.getPlantName(json.IdPlant, function(err ,Result){
-      console.log("Got results : ");
-      console.log(Result);
-      if(isRA){
-        OfferFolderPath = __dirname + '/HTML/Orders/RA/' + json.IdRA_Offer + '/';
-        FileName = generateFileNameRA(s, json.IdRA_Offer, Result.PlantName, json.OfferDateStart, files[s].name) ;        
-      }else{
-        OfferFolderPath = __dirname + '/HTML/Orders/Parts/' + json.IdPart_Offer + '/';
-        FileName = generateFileNameParts(s, json.IdPart_Offer, Result.PlantName, json.PartName, json.Location, files[s].name) ;
+  
+  ComputeRAQuantityAndPrice: function(IDPlant, DB, callback){
+    DB.getRAPricesAndLevel(IDPlant, function(err, Result){
+      var TotalQuantity = 0;
+      var TotalPrice = 0;
+      for(var i=0; i<Result.length; i++){
+        var diff = (Result[i].TotalCapacityInL - Result[i].LevelOfRAInL);
+        TotalQuantity += diff;
+        TotalPrice += Result[i].PricePerL * diff;
       }
-
-      var newpath = OfferFolderPath + FileName;
-      console.log("Creating folder : " + OfferFolderPath);
-      mkdirSync(OfferFolderPath);
-      console.log("Moving file to : " + newpath);
-      fs.rename(files[s].path, newpath, function (err) {
-        if (err) throw err; 
-        console.log("Json.OfferState : " + json.OfferState);
-        if(json.OfferState === StateToString[1]){
-          DB.uploadOffer(json.IdPart_Offer, FileName, function(){
-            res.end("Done");
-          });
-        }else if(json.OfferState === StateToString[2]){
-          DB.uploadOrderFromClient(json.IdPart_Offer, FileName, isRA, function(){
-            res.end("Done");
-          });
-        }else if(json.OfferState === StateToString[3]){
-          DB.uploadOrderFromERC(json.IdPart_Offer, FileName, isRA, function(){
-            res.end("Done");
-          });
-        }else{
-          console.log("no good");
-        }
+      callback(TotalQuantity, TotalPrice);
+    });
+  },
+  
+  CreateRAOffer: function(json, files, PlantName, TotalQuantity, TotalPrice, DB, callback){
+    DB.getLastIndexOfLastAddedLine_Offer(true, function(err, IdRA_Offer){
+      json.IdRA_Offer = IdRA_Offer + 1;
+      json.OfferDateStart = getCurrentDate();
+      console.log("Got files : ");
+      console.log(files);
+      SaveFile(json, files, PlantName, "OrderFromClient", function(FileName){
+        var opt = {"IdPlant" : json.IdPlant, "QuantityInL" : TotalQuantity, "Price" : TotalPrice,"FileOrderFromClientName" : FileName, "OfferState" : 2, "IdUser":json.IdUser}
+        DB.createRAOffer(opt, function(err, Result){
+          callback();
+        });
       });
     });
   },
 
-  ComputeRAQuantityAndPrice: function(RAArray, DB){
-    var TotalQuantity = 0;
-    var TotalPrice = 0;
-    var ArrayIdRA = [];
-    for(var i=0; i<RAArray.length; i++){
-      ArrayIdRA[i] = RAArray[i].IdReductionAgent;
-    }
-    DB.getRAPrices(ArrayIdRA, function(err, Result){
-
-      for(var i=0; i<Result.length; i++){
-        TotalQuantity += (RAArray[i].TotalCapacityInL - RAArray[i].LevelOfRAInL);
-        TotalPrice += Result[i].PricePerL;
-      }
-      console.log("Quantity : " + TotalQuantity + " Price : " + TotalPrice);
-      return TotalQuantity, TotalPrice;
-    });
+  SaveFile: function(json, files, PlantName, s, callback){
+    SaveFile(json, files, PlantName, s, callback);
   },
 
   SendPartHistory: function(res, IdPartImplemented, DB){
@@ -129,14 +100,19 @@ module.exports={
   SendPlantHistory: function(res, IdPlant, DB){
     DB.getPlantHistoryOffer(IdPlant, true, function(err, Result){
       DB.getPlantHistoryReview(IdPlant, function(err, Reviews){
-        // console.log("Got Result : ");
-        // console.log(Result);
-        // console.log("got Reviews");
-        // console.log(Reviews);
-        var json = MergeAndOrderbyDate(Result, Reviews);
-        // console.log("Sending to client : ");
-        // console.log(json);
-        res.end(JSON.stringify(json));
+        DB.getPlantHistoryRA(IdPlant, true, function(err, RAOffer){
+          console.log("Got Result : ");
+          console.log(Result);
+          console.log("got Reviews");
+          console.log(Reviews);
+          console.log("Got RAOffer : ");
+          console.log(RAOffer);
+          var json = MergeAndOrderbyDate(Result, Reviews);
+          json = MergeAndOrderbyDate(json, RAOffer);
+          console.log("Sending to client : ");
+          console.log(json);
+          res.end(JSON.stringify(json));
+        })
       });
     
     });
@@ -173,17 +149,19 @@ function TransformTypeAndStateToString(json){
   if(json.OfferType != null){
     json.DataType = "H";
     json.OfferDateStart = json.OfferDateStart.toString().substring(0, 15);
-    if(json.Offer != null){
+    if((json.Offer != null) && (!json.Offer.includes("/Orders/"))) {
       json.Offer = PartsOfferPath + json.IdPart_Offer + '/' + json.Offer;
     }
-    if(json.OrderFromClient != null){
+    if((json.OrderFromClient != null) && (!json.OrderFromClient.includes("/Orders/"))){
       json.OrderFromClient = PartsOfferPath + json.IdPart_Offer + '/' + json.OrderFromClient;
     }
-    if(json.OrderFromERC != null){
+    if((json.OrderFromERC != null) && (!json.OrderFromERC.includes("/Orders/"))){
       json.OrderFromERC = PartsOfferPath + json.IdPart_Offer + '/' + json.OrderFromERC;
     }
-    json.OfferType = TypeToString[json.OfferType];
-    if(json.OfferState != null){
+    if(typeof json.OfferType === 'number'){
+      json.OfferType = TypeToString[json.OfferType];
+    }
+    if(typeof json.OfferState === 'number'){
       json.OfferState = StateToString[json.OfferState];
     }
   }else if(json.ReviewType != null){
@@ -191,31 +169,72 @@ function TransformTypeAndStateToString(json){
     if(json.ReviewDate != null){
       json.ReviewDate = json.ReviewDate.toString().substring(0, 15);
     }
-    if(json.ReviewType != null){
+    if(typeof json.ReviewType === 'number'){
       json.ReviewType = TypeToString[json.ReviewType];
     }
-  }else if(json.IdReductionAgent != null){
+  }else if(json.QuantityInL != null){
     json.DataType = "A";
+    json.OfferDateStart = json.OfferDateStart.toString().substring(0, 15);
+    if(json.OfferState ==='number'){
+      json.OfferState = StateToString[json.OfferState];
+    }
+    if((json.OrderFromClient != null) && (!json.OrderFromClient.includes("/Orders/"))){
+      json.OrderFromClient = RAOfferPath + json.IdRA_Offer + '/' + json.OrderFromClient;
+    }
+    if((json.OrderFromERC != null) && (!json.OrderFromERC.includes("/Orders/"))){
+      json.OrderFromERC = RAOfferPath + json.IdRA_Offer + '/' + json.OrderFromERC;
+    }
   }
   return json;
 }
 
-function generateFileNameParts (sFileType, IDPart_Offer, PlantName, PartName, PartLocation, OriginalFileName){
-  var DotIndex = OriginalFileName.lastIndexOf(".");
-  return '' + IDPart_Offer + '_' + PlantName + '_' + PartName + '_' + PartLocation +  '_' + sFileType + OriginalFileName.substring(DotIndex);
+function generateFileName(json, PlantName, OriginalFileName, s,  callback){
+  var FileNameUpdated, OfferFolderPath;
+  if((json.IdRA_Offer != null) && (json.OfferDateStart != null)){
+    OfferFolderPath = __dirname + '/HTML/Orders/RA/' + json.IdRA_Offer + '/';
+    FileNameUpdated = generateFileNameRA(json.IdRA_Offer, PlantName, json.OfferDateStart, OriginalFileName, s) ;    
+  }else if((json.IdPart_Offer != null) && (json.PartName != null) && (json.Location != null)){
+    OfferFolderPath = __dirname + '/HTML/Orders/Parts/' + json.IdPart_Offer + '/';
+    FileNameUpdated = generateFileNameParts(json.IdPart_Offer, PlantName, json.PartName, json.Location, OriginalFileName, s) ;
+  }
+  callback(FileNameUpdated, OfferFolderPath);
 }
 
-function generateFileNameRA(sFileType, IDRA_Offer, PlantName, OfferDateStart, OriginalFileName){
+function generateFileNameRA(IDRA_Offer, PlantName, OfferDateStart, OriginalFileName, sFileType){
   var DotIndex = OriginalFileName.lastIndexOf(".");
   return '' + IDRA_Offer + '_' + PlantName + '_' + OfferDateStart + '_' + sFileType + OriginalFileName.substring(DotIndex);
 }
 
+function generateFileNameParts (IDPart_Offer, PlantName, PartName, PartLocation, OriginalFileName, sFileType){
+  var DotIndex = OriginalFileName.lastIndexOf(".");
+  return '' + IDPart_Offer + '_' + PlantName + '_' + PartName + '_' + PartLocation +  '_' + sFileType + OriginalFileName.substring(DotIndex);
+}
+
 function mkdirSync (dirPath) {
   try {
-    fs.mkdirSync(dirPath)
+    if(!fs.existsSync(dirPath)){
+      fs.mkdirSync(dirPath)
+    }
   } catch (err) {
     if (err.code !== 'EEXIST') throw err
   }
+}
+
+function SaveFile(json, files, PlantName, s, callback){
+  generateFileName(json, PlantName, files[s].name, s, function(FileName, OfferFolderPath){
+    var newpath = OfferFolderPath + FileName;
+    console.log("Creating folder : " + OfferFolderPath);
+    mkdirSync(OfferFolderPath);
+    console.log("Moving file to : " + newpath);
+    fs.rename(files[s].path, newpath, function (err) {
+      if (err) throw err;
+      callback(FileName);
+    });
+  });
+}
+
+function getCurrentDate(){
+  return new Date().toISOString().substring(0,10);
 }
 
 function MergeAndOrderbyDate(history, review){
