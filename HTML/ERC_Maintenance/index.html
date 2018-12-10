@@ -17,7 +17,7 @@
             console.log("sending post to server");
             var json={};
             xmlRequest = new XMLHttpRequest();
-            xmlRequest.open("POST", "/ERC_Service/GetPlants", true);
+            xmlRequest.open("POST", "/ERC_Maintenance/GetPlants", true);
             xmlRequest.setRequestHeader('Content-type', 'application/json');
             xmlRequest.send();
             xmlRequest.onreadystatechange = function() {
@@ -36,12 +36,12 @@
 
 
 
-        var tablePart, IdPlant;
+        var tablePart, IdPlant, tableHistory;
         function selectedPlant(id){
             console.log("sending post to server");
             var json={};
             xmlRequest = new XMLHttpRequest();
-            xmlRequest.open("POST", "/ERC_Service/GetPlantPart", true);
+            xmlRequest.open("POST", "/ERC_Maintenance/GetPlantPart", true);
             xmlRequest.setRequestHeader('Content-type', 'application/json');
             json.IdPlant = id;
             json = JSON.stringify(json);
@@ -57,46 +57,23 @@
             };
 
             xmlRequest2 = new XMLHttpRequest();
-            xmlRequest2.open("POST", "/ERC_Service/GetPlantHistory", true);
+            xmlRequest2.open("POST", "/ERC_Maintenance/GetHistory", true);
             xmlRequest2.setRequestHeader('Content-type', 'application/json');
             xmlRequest2.send(json);
             xmlRequest2.onreadystatechange = function(){
                 if((xmlRequest2.readyState == 4 ) && (xmlRequest2.status == 200)){
                     console.log("Got response : ");
                     console.log(JSON.parse(xmlRequest2.responseText));
-                    jsonArray = JSON.parse(xmlRequest2.responseText);
-                    for(var i=0;i<jsonArray.length;i++)
-                    {
-                        var json = jsonArray[i];
-                        if(json.DataType == "H") {
-                            $("#tableHistory").append("" +
-                                "<tr>" +
-                                "<td>" + json.PartName + "</td>" +
-                                "<td>" + json.Location + "</td>" +
-                                "<td>" + json.OfferType + "</td>" +
-                                "<td>"+json.OfferDateStart+"</td>" +
-                                "<td>"+json.OfferState+"</td>" +
-                                "</tr>");
-                        }
-                        else if(json.DataType == "R")
-                        {
-                            $("#tableHistory").append("" +
-                                "<tr>" +
-                                "<td>" + json.PartName + "</td>" +
-                                "<td>" + json.Location + "</td>" +
-                                "<td>" + json.ReviewType + "</td>" +
-                                "<td>"+json.ReviewDate+"</td>" +
-                                "<td>Review</td>" +
-                                "</tr>");
-                        }
+                    tableHistory = JSON.parse(xmlRequest2.responseText);
+                    AddToTableHistory(tableHistory,"tableHistory","");
                     }
-                }
-            };
-        }
+                };
+        };
 
         function searchPart(part){
             document.getElementById("tablePart").innerHTML = "";
-            AddToTable(tablePart, "tablePart", part)
+            AddToTable(tablePart, "tablePart", part);
+            AddToTableHistory(tableHistory,"tableHistory",part);
         }
 
         function AddToTable(jsonArray, IdTable, SearchedKeyWord){
@@ -106,18 +83,73 @@
                 var json = jsonArray[i];
                 if(json.PartName.includes(SearchedKeyWord) || json.Location.includes(SearchedKeyWord) || json.SupplierName.includes(SearchedKeyWord)){
                     $("#" + IdTable).append(""+
-                        "<tr onclick='clickPart("+i+")'>"+
+                        "<tr>"+
                         "<td>"+json.PartName+"</td>"+
                         "<td>"+json.Location+"</td>"+
-                        "<td>"+json.PartDescription+"</td>"+
-                        "<td>"+json.SupplierName+"</td>"+
+                        "<td><select id='"+ i +"' class=form-control>"+
+                        "<option value=\"0\">Choose...</option>"+
+                        "<option value=\"1\">Replace</option>"+
+                        "<option value=\"3\">Check</option>"+
+                        "<option value=\"4\">Repair</option>"+
+                        "</select></td>"+
                         "</tr>");
+                }
+            }
+        }
+        function AddToTableHistory(jsonArray, IdTable, SearchedKeyWord){
+            console.log("Adding to table : " + IdTable);
+            console.log(jsonArray);
+            for(var i=0;i<jsonArray.length;i++){
+                var json = jsonArray[i];
+                if(json.PartName.includes(SearchedKeyWord) || json.Location.includes(SearchedKeyWord)){
+                    if(json.DataType == "H") {
+                        $("#" + IdTable).append("" +
+                            "<tr>" +
+                            "<td>" + json.PartName + "</td>" +
+                            "<td>" + json.Location + "</td>" +
+                            "<td>" + json.OfferType + "</td>" +
+                            "<td>"+json.OfferDateStart+"</td>" +
+                            "<td>"+json.OfferState+"</td>" +
+                            "</tr>");
+                    }
+                    else if(json.DataType == "R")
+                    {
+                        $("#tableHistory").append("" +
+                            "<tr>" +
+                            "<td>" + json.PartName + "</td>" +
+                            "<td>" + json.Location + "</td>" +
+                            "<td>" + json.ReviewType + "</td>" +
+                            "<td>"+json.ReviewDate+"</td>" +
+                            "<td>Review</td>" +
+                            "</tr>");
+                    }
                 }
             }
         }
 
         function Logout(){
             document.getElementById("Logout").submit();
+        }
+        function collect()
+        {
+            var json = {};
+            for(var i =0;i<tablePart;i++){
+                if($("#" + i).val()!=0)
+                    json[i]= {ReviewType: $("#" + i).val(),IdPartImplemented:tablePart[i].IdPartImplemented};
+            }
+            return json;
+        }
+        function maintenance(){
+            var json = collect();
+            xmlRequest = new XMLHttpRequest();
+            xmlRequest.open("POST", "/ERC_Maintenance/CreateReview", true);
+            xmlRequest.setRequestHeader('Content-type', 'application/json');
+            xmlRequest.send(JSON.stringify(json));
+            xmlRequest.onreadystatechange = function() {
+                if ((xmlRequest.readyState == 4) && (xmlRequest.status == 200)) {
+
+                }
+            };
         }
     </script>
 </head>
@@ -143,6 +175,9 @@
     </nav>
 </header>
 <div class="form-row align-items-center">
+    <span id="check" class="btn btn-success btn-just-icon btn-sm btn-file" rel="tooltip" >
+         <input type="button"><i class="material-icons" >check_circle</i>
+     </span>
     <div id="select" class="col-auto my-1">
         <label class="mr-sm-2" for="inlineFormCustomSelect"></label>
         <select class="custom-select mr-sm-2 form-control" id="inlineFormCustomSelect" onchange="selectedPlant(this.value)">
@@ -165,7 +200,15 @@
     </table >
     <div id="body" class="table-wrapper-scroll-y scrollbar scrollbar-near-moon thin">
         <table  class="table table-striped border-0">
-            <tbody id="tablePart">
+            <tbody >
+            <td >Part Name</td>
+            <td >Part Location</td>
+            <td><select id='ReviewType' class=form-control>
+                <option value="0">Choose...</option>
+                <option value="1">Replace</option>
+                <option value="3">Check</option>
+                <option value="4">Repair</option>
+                </select></td>
             </tbody>
         </table>
     </div>
