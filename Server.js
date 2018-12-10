@@ -300,11 +300,17 @@ app.post('/Plant_Admin/*', function(req, res){
       break;
 
     case "/RemovePart":
+      console.log("Got body : ");
+      console.log(req.body);
       console.log("Deleting partimplemented : ");
-      console.log(req.body.ArrayPartImplementedID);
-      DB.removePartImplemented(req.body.ArrayPartImplementedID, function(err, Result){
-        res.end("Done !");
-      });
+      console.log(req.body.ArrayIdPartImplemented);
+      if(req.body.ArrayIdPartImplemented !== undefined){
+        DB.removePartImplemented(req.body.ArrayIdPartImplemented, function(err, Result){
+          res.end("Done !");
+        });
+      }else{
+        res.end("Not done");
+      }
       break;
   }
 });
@@ -438,11 +444,50 @@ app.post('/ERC_Maintenance/*', function(req, res){
   var url = req.originalUrl.replace('/ERC_Maintenance', '');
   console.log("got post in " + req.originalUrl);
   switch(url){
-    case "/index":
-      DB.CreateReviews(Values, function(err, Result){
+    case "/GetPlants":
+      DB.getPlants(function(err, Result){
+        res.end(JSON.stringify(Result));
+      });
+      break;
+    
+    case "/GetPlantPart":
+      DB.getPlantPartPreviewInfos(req.body.IdPlant, function(err, Result){
+        res.end(JSON.stringify(Result));
+      });
+      break;
+      
+    case "/GetHistory":
+      console.log("Got IdPlant : " + req.body.IdPlant);
+      if(req.body.IdPlant != null){
+        Lib.SendPlantHistory(res, req.body.IdPlant, DB);
+      }else{
+        console.log("No IdPlant given");
+        res.end("No IdPlant given");
+      }
+      break;
+      
+    case "/CreateReview":
+    var json = [];
+    var MyArray = req.body.Data;
+    var IdUser = req.session.user.IdUser;
+    console.log("Creating review : ");
+    for(var i=0; i<MyArray.length; i++){
+      json[i] = [];
+      json[i][0] = MyArray[i].ReviewType;
+      json[i][1] = MyArray[i].IdPartImplemented;
+      json[i][2] = IdUser;
+    }
+    console.log(json);
+    if(json != null){
+      DB.CreateReviews(json, function(err, Result){
+        console.log("Done !");
         res.end("Done !");
       });
       break;
+    }else{
+      console.log("No values given");
+      res.end("No values given")
+    }
   }
 });
 

@@ -164,13 +164,13 @@ function TransformTypeAndStateToString(json){           //Transform type/state/d
     if((json.OrderFromERC != null) && (!json.OrderFromERC.includes("/Orders/"))){
       json.OrderFromERC = PartsOfferPath + json.IdPart_Offer + '/' + json.OrderFromERC;
     }
-    if(typeof json.OfferType === 'number'){
+    if((typeof json.OfferType === 'number') && (json.OfferType > 0 )){
       json.OfferType = TypeToString[json.OfferType];
     }
     if(typeof json.OfferState === 'number'){
       json.OfferState = StateToString[json.OfferState];
     }
-  }else if(json.ReviewType != null){
+  }else if(json.ReviewType != null){                                //If it's a review
     json.DataType = "R";
     if(json.ReviewDate != null){
       json.ReviewDate = json.ReviewDate.toString().substring(0, 15);

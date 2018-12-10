@@ -6,7 +6,8 @@ var con = mysql.createConnection({
     host: "localhost",
     user: "User",
     password: "test",
-    database: "ERC"
+    database: "ERC",
+    multipleStatements:true
 });
 
 con.connect(function(err){
@@ -41,7 +42,7 @@ module.exports= {
                 +   "FROM part "
                 +   "JOIN partimplemented ON part.IdPart=partimplemented.IdPart "
                 +   "JOIN supplier ON part.IdSupplier=supplier.IdSupplier "
-                +   "WHERE partimplemented.IdPlant = ? ;";
+                +   "WHERE partimplemented.IdPlant = ? AND partimplemented.isImplemented = 1;";
         con.query(Query, [IDPlant], function(err,rows){
             if (err) throw err;
             callback(err, rows);
@@ -125,7 +126,7 @@ module.exports= {
                 +   "FROM part_offer "
                 +   "JOIN partimplemented ON part_offer.IdPartImplemented=partimplemented.IdPartImplemented "
                 +   "JOIN part ON partimplemented.IdPart=part.IdPart "
-                +   "WHERE part_offer.OfferState=2 AND partimplemented.IdPlant= ? ;"
+                +   "WHERE part_offer.OfferState=2 AND partimplemented.IdPlant= ? AND partimplemented.isImplemented = 1;"
         con.query(Query, [IDPlant],function(err, rows){
             if (err) throw err;
             callback(err, rows);
@@ -165,7 +166,7 @@ module.exports= {
                 +   "JOIN partimplemented ON part_offer.IdPartImplemented=partimplemented.IdPartImplemented "
                 +   "JOIN part ON part.IdPart=partimplemented.IdPart "
                 +   "JOIN user ON part_offer.IdUser=user.IdUser "
-                +   "WHERE partimplemented.IdPlant = ? "
+                +   "WHERE partimplemented.IdPlant = ? AND partimplemented.isImplemented = 1 "
                 +   "ORDER BY part_offer.OfferDateStart DESC;";
         con.query(Query, [IDPlant],function(err, rows){
             if (err) throw err;
@@ -180,7 +181,7 @@ module.exports= {
                 +   "JOIN partimplemented ON review.IdPartImplemented=partimplemented.IdPartImplemented "
                 +   "JOIN part ON part.IdPart=partimplemented.IdPart "
                 +   "JOIN user ON review.IdUser=user.IdUser "
-                +   "WHERE partimplemented.IdPlant = ? "
+                +   "WHERE partimplemented.IdPlant = ? AND partimplemented.isImplemented = 1 "
                 +   "ORDER BY review.ReviewDate DESC;";
         con.query(Query, [IDPlant],function(err, rows){
             if (err) throw err;
@@ -287,8 +288,8 @@ module.exports= {
 
     //ERC_Maintenance : index CreateReviews
     CreateReviews: function(Values, callback){
-        var Query = "INSERT INTO review (IdPartImplemented, ReviewDate, ReviewType) VALUES( ? , NOW(), ? );";
-        con.query(Query, Values, function(err, rows){
+        var Query = "INSERT INTO review (IdPartImplemented, ReviewType, IdUser) VALUES ? ; UPDATE review SET ReviewDate = NOW() WHERE ReviewDate=0 ; ";
+        con.query(Query, [Values], function(err, rows){
             if (err) throw err;
             callback(err, rows) ;
         });

@@ -132,15 +132,18 @@
         }
         function collect()
         {
-            var json = {};
-            for(var i =0;i<tablePart;i++){
+            var MyArray = [];
+            for(var i =0;i<tablePart.length;i++){
                 if($("#" + i).val()!=0)
-                    json[i]= {ReviewType: $("#" + i).val(),IdPartImplemented:tablePart[i].IdPartImplemented};
+                    MyArray.push({ReviewType: $("#" + i).val(), IdPartImplemented: tablePart[i].IdPartImplemented});
             }
-            return json;
+            console.log("Returning MyArray : ");
+            console.log(MyArray);
+            return MyArray;
         }
         function maintenance(){
-            var json = collect();
+            var json = {};
+            json.Data = collect();
             xmlRequest = new XMLHttpRequest();
             xmlRequest.open("POST", "/ERC_Maintenance/CreateReview", true);
             xmlRequest.setRequestHeader('Content-type', 'application/json');
