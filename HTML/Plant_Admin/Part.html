@@ -15,7 +15,7 @@
         var PlantPart={};
         windows.onload = function(){
             xmlRequest = new XMLHttpRequest();
-            xmlRequest.open("POST", "/Plant_Admin/GetSupplerPart", true);
+            xmlRequest.open("POST", "/Plant_Admin/GetSupplierPart", true);
             xmlRequest.setRequestHeader('Content-type', 'application/json');
             xmlRequest.send();
             xmlRequest.onreadystatechange = function(){
