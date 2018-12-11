@@ -236,14 +236,16 @@
                     console.log("j:"+j+"\n");
                     console.log(SupplerPart[j].IdPart == destinationPlant[i]);
                     body += "<div class=\"row ligne\">"+
-                        "<p class=\"col-sm-6\">"+ SupplerPart[j].PartName +" will be implemented to  <input type=\"text\" placeholder=\"Location\" id='location' class=\"col-sm-6\">. PartDescription : "+SupplerPart[j].PartDescription+" Supplier : "+ SupplerPart[j].SupplierName +" </p>"+
+                        "<p>"+ SupplerPart[j].PartName +" will be implemented to  <input type=\"text\" placeholder=\"Location\" id='location'>. PartDescription : "+SupplerPart[j].PartDescription+" Supplier : "+ SupplerPart[j].SupplierName +" </p>"+
                         "</div>\n";
                 }
             }
         }
         $("#popupLocation").append(body);
         $("#popupLocation").css({top:$(window).height()/2-$("#popupLocation").height()/2,left:$(window).width()/2-$("#popupLocation").width()/2});
+        $("body").css("background-color","dark");
         $("#popupLocation").css("display","block");
+
     }
 </script>
 </html>
