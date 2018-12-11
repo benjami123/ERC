@@ -207,13 +207,13 @@
 </body>
 <script>
     function removePart(){
-        if(destinationPlant.length == 0)
+        if(removedPart.length == 0)
         {
             alert("You need to select minimum one part");
             return;
         }
         xmlRequest = new XMLHttpRequest();
-        var json = {ArrayIdPartImplemented:destinationPlant};
+        var json = {ArrayIdPartImplemented:removedPart};
         xmlRequest.open("POST", "/Plant_Admin/RemovePart", true);
         xmlRequest.setRequestHeader('Content-type', 'application/json');
         xmlRequest.send(JSON.stringify(json));
@@ -223,12 +223,35 @@
             }
         };
     }
-    function createPopup(){
-        var body = "";
-        console.log(destinationPlant.length);
-        for(var i =0;i<destinationPlant.length;i++)
+    function sendAdd(){
+        var json = {};
+        for(var i=0;i<num;i++)
         {
-            for(var j=0;j<SupplerPart.length;j++)
+            json.push({IdPart:$("#Location"+i).val(),Location:destinationPlant[i]});
+        }
+        xmlRequest = new XMLHttpRequest();
+        xmlRequest.open("POST", "/Plant_Admin/AddPart", true);
+        xmlRequest.setRequestHeader('Content-type', 'application/json');
+        xmlRequest.send(JSON.stringify(json));
+        xmlRequest.onreadystatechange = function() {
+            if ((xmlRequest.readyState == 4) && (xmlRequest.status == 200)) {
+                SupplerPart = JSON.parse(xmlRequest.responseText);
+            }
+        };
+
+    }
+    function createPopup(){
+        if(destinationPlant.length == 0)
+        {
+            alert("You need to select minimum one part");
+            return;
+        }
+        var body = "";
+        var num=0;
+        console.log(destinationPlant.length);
+        for(var j =0;j<SupplerPart.length;j++)
+        {
+            for(var i=0;i<destinationPlant.length;i++)
             {
                 console.log("i:"+i+"\n");
                 if(SupplerPart[j].IdPart == destinationPlant[i])
@@ -236,14 +259,16 @@
                     console.log("j:"+j+"\n");
                     console.log(SupplerPart[j].IdPart == destinationPlant[i]);
                     body += "<div class=\"row ligne\">"+
-                        "<p>"+ SupplerPart[j].PartName +" will be implemented to  <input type=\"text\" placeholder=\"Location\" id='location'>. PartDescription : "+SupplerPart[j].PartDescription+" Supplier : "+ SupplerPart[j].SupplierName +" </p>"+
+                        "<p>"+ SupplerPart[j].PartName +" will be implemented to  <input type=\"text\" placeholder=\"Location\" id='location"+num+"'>. PartDescription : "+SupplerPart[j].PartDescription+" Supplier : "+ SupplerPart[j].SupplierName +" </p>"+
                         "</div>\n";
+                    num++;
                 }
-                body += "<br>"+"<span id=\"Add\" class=\"btn btn-primary btn-just-icon btn-sm btn-file\" rel=\"tooltip\" >\n" +
-                    "         <input type=\"button\" onclick=\"createPopup()\"><i class=\"material-icons\" >redo</i>\n" +
-                    "     </span>";
+
             }
         }
+        body += "<br>"+"<span id=\"Add\" class=\"btn btn-primary btn-just-icon btn-sm btn-file\" rel=\"tooltip\" >\n" +
+            "         <input type=\"button\" onclick=\"sendAdd("+num+")\"><i class=\"material-icons\" >redo</i>\n" +
+            "     </span>";
         $("#popupLocation").append(body);
         $("#popupLocation").css({top:$(window).height()/2-$("#popupLocation").height()/2,left:$(window).width()/2-$("#popupLocation").width()/2});
         $("body").css("background","dark");
