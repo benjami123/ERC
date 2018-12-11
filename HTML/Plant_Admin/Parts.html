@@ -15,7 +15,7 @@
         var PlantPart={};
         window.onload = function(){
             xmlRequest = new XMLHttpRequest();
-            xmlRequest.open("POST", "/Plant_Admin/GetSupplierPart", true);
+            xmlRequest.open("POST", "/Plant_Admin/GetPlantPart", true);
             xmlRequest.setRequestHeader('Content-type', 'application/json');
             xmlRequest.send();
             xmlRequest.onreadystatechange = function(){
@@ -36,7 +36,7 @@
                 };
 
             xmlRequest2 = new XMLHttpRequest();
-            xmlRequest2.open("POST", "/Plant_Admin/GetPlantPart", true);
+            xmlRequest2.open("POST", "/Plant_Admin/GetSupplierPart", true);
             xmlRequest2.setRequestHeader('Content-type', 'application/json');
             xmlRequest2.send();
             xmlRequest2.onreadystatechange = function() {
