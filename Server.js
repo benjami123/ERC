@@ -66,7 +66,7 @@ app.get('/Orders/*', function(req, res){
   }else{
     res.end('404');
   }
-})
+});
 
 app.post('/Login',function(req,res){
   var sess = req.session;
@@ -148,7 +148,7 @@ app.post('/Plant_Operator/*', function(req, res){
         console.log("Got fields : ");
         console.log(json);
         json.IdPlant = req.session.user.IdPlant;
-        json.IdUser = req.session.user.IdUser;
+        json.CreatorLogin = req.session.user.Login;
         Lib.ComputeRAQuantityAndPrice(json.IdPlant, DB, function(TotalQuantity, TotalPrice){
           DB.getPlantName(json.IdPlant, function(PlantName){
             Lib.CreateRAOffer(json, files, PlantName, TotalQuantity, TotalPrice, DB, function(){
@@ -172,7 +172,7 @@ app.post('/Plant_Operator/*', function(req, res){
       break;
 
     case "/History":
-      Lib.SendPlantHistory(res, req.session.user.IdPlant, DB);
+      Lib.SendPlantHistory(res, req.session.user.IdPlant, false, DB);
       break;
     
     case "/RAHistory":
@@ -196,7 +196,7 @@ app.post('/Plant_Operator/*', function(req, res){
         break;
 
       case "/CreateOffer":
-        var opt = {"IdPartImplemented" : req.body.IdPartImplemented, "OfferType" : req.body.OfferType, "IdUser" : req.session.user.IdUser};
+        var opt = {"IdPartImplemented" : req.body.IdPartImplemented, "OfferType" : req.body.OfferType, "CreatorLogin" : req.session.user.Login, };
         DB.createPartOffer(opt, function(err, Result){
           // console.log("got result : ");
           // console.log(Result);
@@ -205,7 +205,7 @@ app.post('/Plant_Operator/*', function(req, res){
         break;
       
       case "/CreateReview":
-        var opt = {"IdPartImplemented" : req.body.IdPartImplemented, "ReviewType" : req.body.ReviewType, "ReviewDate" : req.body.ReviewDate};
+        var opt = {"IdPartImplemented" : req.body.IdPartImplemented, "ReviewType" : req.body.ReviewType, "ReviewDate" : req.body.ReviewDate, "CreatorLogin" : req.body.user.Login};
         DB.createPartReview(opt, function(err, Result){
           // console.log("got result : ");
           // console.log(Result);
@@ -294,7 +294,17 @@ app.post('/Plant_Admin/*', function(req, res){
     case "/AddPart":
       console.log("Adding partimplemented : ");
       console.log(req.body.Values);
-      DB.createPartImplemented(req.body.Values, function(err, Result){
+      var array = [];
+      for(var i=0; i< req.body.Values.length; i++){
+        array[i] = [];
+        array[i].push(req.session.user.IdPlant);
+        array[i].push(req.body.Values[i].IdPart);
+        array[i].push(1);
+        array[i].push(req.body.Values[i].Location);
+        console.log(array[i]);
+      }
+      console.log(array);
+      DB.createPartImplemented(array, function(err, Result){
         res.end("Done !");
       });
       break;
@@ -372,7 +382,7 @@ app.post('/ERC_Service/*', function(req, res){
             var StateToString = Lib.getStateToString();
             json.OfferState = StateToString[1];
             Lib.SaveFile(json, files, json.PlantName, "OfferFromERC", function(FileName){
-              var opt={"IdPartImplemented" : json.IdPartImplemented,"OfferType" : json.OfferType, "IdUser" : req.session.IdUser, "Offer" : FileName};
+              var opt={"IdPartImplemented" : json.IdPartImplemented,"OfferType" : json.OfferType, "CreatorLogin" : req.session.Login, "Offer" : FileName};
               DB.createPartOffer(opt, function(err, Result){
                 res.end("Done !");
               })
@@ -414,7 +424,7 @@ app.post('/ERC_Service/*', function(req, res){
       break;
 
     case "/GetPlantHistory":
-      Lib.SendPlantHistory(res, req.body.IdPlant,DB);
+      Lib.SendPlantHistory(res, req.body.IdPlant, false, DB);
       break;
 
     case"/GetPlantPart":
@@ -459,7 +469,7 @@ app.post('/ERC_Maintenance/*', function(req, res){
     case "/GetHistory":
       console.log("Got IdPlant : " + req.body.IdPlant);
       if(req.body.IdPlant != null){
-        Lib.SendPlantHistory(res, req.body.IdPlant, DB);
+        Lib.SendPlantHistory(res, req.body.IdPlant, false, DB);
       }else{
         console.log("No IdPlant given");
         res.end("No IdPlant given");
@@ -469,13 +479,13 @@ app.post('/ERC_Maintenance/*', function(req, res){
     case "/CreateReview":
     var json = [];
     var MyArray = req.body.Data;
-    var IdUser = req.session.user.IdUser;
+    var UserLogin = req.session.user.Login;
     console.log("Creating review : ");
     for(var i=0; i<MyArray.length; i++){
       json[i] = [];
       json[i][0] = MyArray[i].ReviewType;
       json[i][1] = MyArray[i].IdPartImplemented;
-      json[i][2] = IdUser;
+      json[i][2] = UserLogin;
     }
     console.log(json);
     if(json != null){

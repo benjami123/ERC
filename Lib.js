@@ -77,7 +77,7 @@ module.exports={
       json.IdRA_Offer = IdRA_Offer;                                 //Adds it to the json
       json.OfferDateStart = getCurrentDate();                       //get the current date
       SaveFile(json, files, PlantName, "OrderFromClient", function(FileName){ //Save the file 
-        var opt = {"IdPlant" : json.IdPlant, "QuantityInL" : TotalQuantity, "Price" : TotalPrice,"FileOrderFromClientName" : FileName, "OfferState" : 2, "IdUser":json.IdUser}
+        var opt = {"IdPlant" : json.IdPlant, "QuantityInL" : TotalQuantity, "Price" : TotalPrice,"FileOrderFromClientName" : FileName, "OfferState" : 2, "CreatorLogin":json.CreatorLogin}
         DB.createRAOffer(opt, function(err, Result){                //Insert the 
           callback();
         });
@@ -95,14 +95,18 @@ module.exports={
     })
   },
   
-  SendPlantHistory: function(res, IdPlant, DB){   //Gets the part_offer and ra_offer history for the selected plant
+  SendPlantHistory: function(res, IdPlant, needRA, DB){   //Gets the part_offer and ra_offer history for the selected plant
     DB.getPlantHistoryOffer(IdPlant, true, function(err, Result){   //Gets from ra_offer
       DB.getPlantHistoryReview(IdPlant, function(err, Reviews){     //Gets from review
-        DB.getPlantHistoryRA(IdPlant, true, function(err, RAOffer){ //Gets from ra_ofefr
-          var json = MergeAndOrderbyDate(Result, Reviews);          //Merge part_offer and review
-          json = MergeAndOrderbyDate(json, RAOffer);                //Merge result with ra_offer
-          res.end(JSON.stringify(json));          //Send result
-        });
+        var json = MergeAndOrderbyDate(Result, Reviews);          //Merge part_offer and review
+        if(needRA){
+          DB.getPlantHistoryRA(IdPlant, true, function(err, RAOffer){ //Gets from ra_ofefr
+            json = MergeAndOrderbyDate(json, RAOffer);                //Merge result with ra_offer
+            res.end(JSON.stringify(json));          //Send result
+          });
+        }else{
+          res.end(JSON.stringify(json));
+        }
       });
     });
   },

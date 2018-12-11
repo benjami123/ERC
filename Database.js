@@ -69,8 +69,8 @@ module.exports= {
 
     //Plant_Operator : index Create ReductionAgent offer
     createRAOffer: function(opt, callback){
-        var Query = "INSERT INTO ra_offer (IdPlant, OfferDateStart, QuantityInL, Price, UserSeen, OrderFromClient, OfferState, IdUser) VALUES ( ? , NOW(),  ? , ? , 0, ? , ? , ?);";
-        con.query(Query, [opt.IdPlant, opt.QuantityInL, opt.Price, opt.FileOrderFromClientName, opt.OfferState, opt.IdUser], function(err, rows){
+        var Query = "INSERT INTO ra_offer (IdPlant, OfferDateStart, QuantityInL, Price, UserSeen, OrderFromClient, OfferState, CreatorLogin) VALUES ( ? , NOW(),  ? , ? , 0, ? , ? , ?);";
+        con.query(Query, [opt.IdPlant, opt.QuantityInL, opt.Price, opt.FileOrderFromClientName, opt.OfferState, opt.CreatorLogin], function(err, rows){
             if (err) throw err;
             callback(err, rows);
         });
@@ -97,14 +97,14 @@ module.exports= {
     //Plant_Operator : PartDescription CreateOffer
     createPartOffer: function(opt, callback){
         if(opt.Offer != null){
-            var Query = "INSERT INTO part_offer (IdPart_Implemented, OfferDateStart, OfferType, IdUser, OfferState, UserSeen, Offer) VALUES ( ? , NOW() , ?  , ? , 2 , 0 , ? );";
-            con.query(Query, [opt.IdPartImplemented, opt.OfferType, opt.IdUser, opt.Offer], function(err, rows){
+            var Query = "INSERT INTO part_offer (IdPart_Implemented, OfferDateStart, OfferType, CreatorLogin, OfferState, UserSeen, Offer) VALUES ( ? , NOW() , ?  , ? , 2 , 0 , ? );";
+            con.query(Query, [opt.IdPartImplemented, opt.OfferType, opt.CreatorLogin, opt.Offer], function(err, rows){
                 if (err) throw err;
                 callback(err, rows);
             });
         }else{
-            var Query = "INSERT INTO part_offer(IdPartImplemented, OfferDateStart, OfferType, IdUser, OfferState, UserSeen) VALUES( ? , NOW() , ? , ? , 1 , 0);";
-            con.query(Query, [opt.IdPartImplemented, opt.OfferType, opt.IdUser], function(err, rows){
+            var Query = "INSERT INTO part_offer(IdPartImplemented, OfferDateStart, OfferType, CreatorLogin, OfferState, UserSeen) VALUES( ? , NOW() , ? , ? , 1 , 0);";
+            con.query(Query, [opt.IdPartImplemented, opt.OfferType, opt.CreatorLogin], function(err, rows){
                 if (err) throw err;
                 callback(err, rows);
             });
@@ -113,8 +113,8 @@ module.exports= {
 
     //Plant_Operator : PartDescription CreateReview
     createPartReview: function(opt, callback){
-        var Query = "INSERT INTO review(IdPartImplemented, ReviewType, ReviewDate) VALUES( ? , ? , ? );";
-        con.query(Query, [opt.IdPartImplemented, opt.ReviewType, opt.ReviewDate], function(err, rows){
+        var Query = "INSERT INTO review(IdPartImplemented, ReviewType, ReviewDate, CreatorLogin) VALUES( ? , ? , ? , ? );";
+        con.query(Query, [opt.IdPartImplemented, opt.ReviewType, opt.ReviewDate, opt.CreatorLogin], function(err, rows){
             if (err) throw err;
             callback(err, rows) ;
         });
@@ -165,7 +165,7 @@ module.exports= {
                 +   "FROM part_offer "
                 +   "JOIN partimplemented ON part_offer.IdPartImplemented=partimplemented.IdPartImplemented "
                 +   "JOIN part ON part.IdPart=partimplemented.IdPart "
-                +   "JOIN user ON part_offer.IdUser=user.IdUser "
+                +   "JOIN user ON part_offer.CreatorLogin=user.Login "
                 +   "WHERE partimplemented.IdPlant = ? AND partimplemented.isImplemented = 1 "
                 +   "ORDER BY part_offer.OfferDateStart DESC;";
         con.query(Query, [IDPlant],function(err, rows){
@@ -180,7 +180,7 @@ module.exports= {
                 +   "FROM review "
                 +   "JOIN partimplemented ON review.IdPartImplemented=partimplemented.IdPartImplemented "
                 +   "JOIN part ON part.IdPart=partimplemented.IdPart "
-                +   "JOIN user ON review.IdUser=user.IdUser "
+                +   "JOIN user ON review.CreatorLogin=user.Login "
                 +   "WHERE partimplemented.IdPlant = ? AND partimplemented.isImplemented = 1 "
                 +   "ORDER BY review.ReviewDate DESC;";
         con.query(Query, [IDPlant],function(err, rows){
@@ -198,7 +198,7 @@ module.exports= {
         var Query = "SELECT plant.IdPlant, PlantName, user.Login, ra_offer.IdRA_Offer, ra_offer.QuantityInL, ra_offer.OfferDateStart, ra_offer.OfferState" + s 
                 +   "FROM ra_offer "
                 +   "JOIN plant ON ra_offer.IdPlant=plant.IdPlant "
-                +   "JOIN user ON ra_offer.IdUser=user.IdUser "
+                +   "JOIN user ON ra_offer.CreatorLogin=user.Login "
                 +   "WHERE ra_offer.IdPlant = ? "
                 +   "ORDER BY ra_offer.OfferDateStart DESC;";
         con.query(Query, [IDPlant],function(err, rows){
@@ -216,7 +216,7 @@ module.exports= {
                 +   "JOIN partimplemented ON part_offer.IdPartImplemented=partimplemented.IdPartImplemented "
                 +   "JOIN part ON partimplemented.IdPart=part.IdPart "
                 +   "JOIN plant ON partimplemented.IdPlant=plant.IdPlant "
-                +   "JOIN user ON part_offer.IdUser=user.IdUser "
+                +   "JOIN user ON part_offer.CreatorLogin=user.Login "
                 +   "WHERE part_offer.OfferState=1 "
                 +   "ORDER BY part_offer.OfferDateStart DESC;";
         con.query(Query, function(err, rows){
@@ -256,7 +256,7 @@ module.exports= {
                 +   "JOIN partimplemented ON part_offer.IdPartImplemented=partimplemented.IdPartImplemented "
                 +   "JOIN part ON partimplemented.IdPart=part.IdPart "
                 +   "JOIN plant ON partimplemented.IdPlant=plant.IdPlant "
-                +   "JOIN user ON part_offer.IdUser=user.IdUser "
+                +   "JOIN user ON part_offer.CreatorLogin=user.Login "
                 +   "WHERE part_offer.OfferState=3 "
                 +   "ORDER BY part_offer.OfferDateStart DESC;";
         con.query(Query, function(err, rows){
@@ -288,7 +288,7 @@ module.exports= {
 
     //ERC_Maintenance : index CreateReviews
     CreateReviews: function(Values, callback){
-        var Query = "INSERT INTO review (IdPartImplemented, ReviewType, IdUser) VALUES ? ; UPDATE review SET ReviewDate = NOW() WHERE ReviewDate=0 ; ";
+        var Query = "INSERT INTO review (IdPartImplemented, ReviewType, CreatorLogin) VALUES ? ; UPDATE review SET ReviewDate = NOW() WHERE ReviewDate=0 ; ";
         con.query(Query, [Values], function(err, rows){
             if (err) throw err;
             callback(err, rows) ;
@@ -302,7 +302,7 @@ module.exports= {
         var Query = "SELECT ra_offer.IdRA_Offer, ra_offer.OrderFromClient, ra_offer.QuantityInL, ra_offer.Price, ra_offer.OfferDateStart ,plant.PlantName, plant.IdPlant, plant.Address, user.Login "
                 +   "FROM ra_offer "
                 +   "JOIN plant ON ra_offer.IdPlant=plant.IdPlant "
-                +   "JOIN user ON ra_offer.IdUser=user.IdUser "
+                +   "JOIN user ON ra_offer.CreatorLogin=user.Login "
                 +   "WHERE ra_offer.OfferState=2 "
                 +   "ORDER BY ra_offer.OfferDateStart DESC;";
         con.query(Query, function(err, rows){
@@ -393,7 +393,7 @@ module.exports= {
 
     //Plant_Admin : Parts Adding partsImplemented to plant
     createPartImplemented: function(Values, callback){
-        var Query = "INSERT INTO partimplemented (IdPlant, IdPart, isImplemented, Location) VALUES( ? , ? , 1 , ? );";
+        var Query = "INSERT INTO partimplemented (IdPlant, IdPart, isImplemented, Location) VALUES ? ;";
         con.query(Query, [Values], function(err, rows){
             if (err) throw err;
             callback(err, rows) ;

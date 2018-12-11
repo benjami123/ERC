@@ -132,19 +132,10 @@
         }
         function collect()
         {
-<<<<<<< HEAD
             var MyArray = [];
             for(var i =0;i<tablePart.length;i++){
                 if($("#" + i).val()!=0)
                     MyArray.push({ReviewType: $("#" + i).val(), IdPartImplemented: tablePart[i].IdPartImplemented});
-=======
-            var json = {};
-            for(var i =0;i<tablePart;i++){
-                if($("#" + i).val()!=0) {
-                    json[i] = {ReviewType: $("#" + i).val(), IdPartImplemented: tablePart[i].IdPartImplemented};
-                    console.log(json);
-                }
->>>>>>> f3c3f3ea679e41f205dc850d812b692ffb061674
             }
             console.log("Returning MyArray : ");
             console.log(MyArray);
