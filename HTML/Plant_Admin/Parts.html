@@ -239,6 +239,9 @@
                         "<p>"+ SupplerPart[j].PartName +" will be implemented to  <input type=\"text\" placeholder=\"Location\" id='location'>. PartDescription : "+SupplerPart[j].PartDescription+" Supplier : "+ SupplerPart[j].SupplierName +" </p>"+
                         "</div>\n";
                 }
+                body += "<br>"+"<span id=\"Add\" class=\"btn btn-primary btn-just-icon btn-sm btn-file\" rel=\"tooltip\" >\n" +
+                    "         <input type=\"button\" onclick=\"createPopup()\"><i class=\"material-icons\" >redo</i>\n" +
+                    "     </span>";
             }
         }
         $("#popupLocation").append(body);
