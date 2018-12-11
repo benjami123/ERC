@@ -227,7 +227,7 @@
         var values = [];
         for(var i=0;i<num;i++)
         {
-            values.push({IdPart:$("#Location"+i).val(),Location:destinationPlant[i]});
+            values.push({IdPart:destinationPlant[i],Location:$("#Location"+i).val()});
         }
         xmlRequest = new XMLHttpRequest();
         var addPart = {Values:values};
