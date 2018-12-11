@@ -225,13 +225,14 @@
     }
     function createPopup(){
         var body = "";
+        console.log("popup");
         for(var i =0;i<SupplerPart.length;i++)
         {
             for(var j=0;j<destinationPlant.length;j++)
             {
-                if(SupplerPart[i].IdPartImplemented == destinationPlant[j])
+                if(SupplerPart[i].IdPart == destinationPlant[j])
                 {
-                    console.log(PlantPart[i].IdPartImplemented == destinationPlant[j]);
+                    console.log(PlantPart[i].IdPart == destinationPlant[j]);
                     body += "<div class=\"row ligne\">"+
                         "<p class=\"col-sm-2\">"+ SupplerPart[i].PartName +" will be implemented to  <input type=\"text\" placeholder=\"Location\" id='location' class=\"col-sm-2\">. "+ SupplerPart[i].PartDescription +" : PartDescription .... Supplier : "+ SupplerPart[i].SupplierName +" </p>"+
                         "</div>\n";
