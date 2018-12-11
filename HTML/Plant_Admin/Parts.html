@@ -226,15 +226,17 @@
     function createPopup(){
         var body = "";
         console.log("popup");
-        for(var i =0;i<SupplerPart.length;i++)
+        for(var i =0;i<destinationPlant.length;i++)
         {
-            for(var j=0;j<destinationPlant.length;j++)
+            for(var j=0;j<SupplerPart.length;j++)
             {
-                if(SupplerPart[i].IdPart == destinationPlant[j])
+                console.log("i:"+i+"\n");
+                if(SupplerPart[j].IdPart == destinationPlant[i])
                 {
-                    console.log(PlantPart[i].IdPart == destinationPlant[j]);
+                    console.log("j:"+j+"\n");
+                    console.log(SupplerPart[j].IdPart == destinationPlant[i]);
                     body += "<div class=\"row ligne\">"+
-                        "<p class=\"col-sm-2\">"+ SupplerPart[i].PartName +" will be implemented to  <input type=\"text\" placeholder=\"Location\" id='location' class=\"col-sm-2\">. "+ SupplerPart[i].PartDescription +" : PartDescription .... Supplier : "+ SupplerPart[i].SupplierName +" </p>"+
+                        "<p class=\"col-sm-2\">"+ SupplerPart[j].PartName +" will be implemented to  <input type=\"text\" placeholder=\"Location\" id='location' class=\"col-sm-2\">. "+ SupplerPart[j].PartDescription +" : PartDescription .... Supplier : "+ SupplerPart[j].SupplierName +" </p>"+
                         "</div>\n";
                 }
             }
