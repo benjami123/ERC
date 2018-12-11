@@ -67,18 +67,18 @@
         if($("#"+id).css("background-color") == "rgb(249, 249, 249)")
         {
             $("#"+id).css("background-color","orange");
-            if(id.includes("R"))
+            if(id.includes('R'))
             {
                 var idPartImp = id.substring(1);
                 var lenght = destinationPlant.length;
                 destinationPlant[lenght] = idPartImp;
                 console.log("destinationPlant"+destinationPlant);
             }
-            else{
+            else if(id.includes('L')){
                 var idPartImp = id.substring(1);
                 var lenght = removedPart.length;
                 removedPart[lenght] = idPartImp;
-                console.log(removedPart);
+                console.log("removePart "+removedPart);
             }
         }
         else if ($("#"+id).css("background-color") == "rgb(255, 165, 0)")
@@ -90,10 +90,10 @@
                 destinationPlant = arrayRemove(destinationPlant,idPartImp);
                 console.log("destinationPlant"+destinationPlant);
             }
-            else{
+            else if(id.includes('L')){
                 var idPartImp = id.substring(1);
                 removedPart = arrayRemove(removedPart,idPartImp);
-                console.log(removedPart);
+                console.log("removePart "+removedPart);
 
             }
         }else if($("#"+id).css("background-color") == "rgb(255, 166, 0)"){
@@ -104,10 +104,10 @@
                 destinationPlant = arrayRemove(destinationPlant,idPartImp);
                 console.log("destinationPlant"+destinationPlant);
             }
-            else{
+            else if(id.includes('L')){
                 var idPartImp = id.substring(1);
                 removedPart = arrayRemove(removedPart,idPartImp);
-                console.log(removedPart);
+                console.log("removePart "+removedPart);
 
             }
         }
@@ -120,11 +120,11 @@
                 destinationPlant[lenght] = idPartImp;
                 console.log("destinationPlant"+destinationPlant);
             }
-            else{
+            else if(id.includes('L')){
                 var idPartImp = id.substring(1);
                 var lenght = removedPart.length;
                 removedPart[lenght] = idPartImp;
-                console.log(removedPart);
+                console.log("removePart "+removedPart);
             }
         }
 
