@@ -54,7 +54,11 @@
     display: block;
 }
 
-
+#popupLocation
+{
+    position: absolute;
+    border: 3px black solid;
+}
 
 
 
