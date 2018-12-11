@@ -224,15 +224,16 @@
         };
     }
     function sendAdd(num){
-        var json = {};
+        var values = [];
         for(var i=0;i<num;i++)
         {
-            json.push({IdPart:$("#Location"+i).val(),Location:destinationPlant[i]});
+            values.push({IdPart:$("#Location"+i).val(),Location:destinationPlant[i]});
         }
         xmlRequest = new XMLHttpRequest();
+        var addPart = {Values:values};
         xmlRequest.open("POST", "/Plant_Admin/AddPart", true);
         xmlRequest.setRequestHeader('Content-type', 'application/json');
-        xmlRequest.send(JSON.stringify(json));
+        xmlRequest.send(JSON.stringify(addPart));
         xmlRequest.onreadystatechange = function() {
             if ((xmlRequest.readyState == 4) && (xmlRequest.status == 200)) {
                 $("#popupLocation").css("display","none");
