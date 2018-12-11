@@ -81,7 +81,6 @@
             console.log(jsonArray);
             for(var i=0;i<jsonArray.length;i++){
                 var json = jsonArray[i];
-                console.log("test : "+json.PartName.includes(SearchedKeyWord) || json.Location.includes(SearchedKeyWord) || json.SupplierName.includes(SearchedKeyWord));
                 if(json.PartName.includes(SearchedKeyWord) || json.Location.includes(SearchedKeyWord) || json.SupplierName.includes(SearchedKeyWord)){
                     $("#" + IdTable).append(""+
                         "<tr>"+
@@ -102,6 +101,7 @@
             console.log(jsonArray);
             for(var i=0;i<jsonArray.length;i++){
                 var json = jsonArray[i];
+                console.log("test:  "+json.PartName.includes(SearchedKeyWord) || json.Location.includes(SearchedKeyWord));
                 if(json.PartName.includes(SearchedKeyWord) || json.Location.includes(SearchedKeyWord)){
                     if(json.DataType == "H") {
                         $("#" + IdTable).append("" +
