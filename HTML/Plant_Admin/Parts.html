@@ -15,7 +15,7 @@
         var PlantPart={};
         window.onload = function(){
             xmlRequest = new XMLHttpRequest();
-            xmlRequest.open("POST", "/Plant_Admin/GetPlantPart", true);
+            xmlRequest.open("POST", "/Plant_Admin/GetSupplierPart", true);
             xmlRequest.setRequestHeader('Content-type', 'application/json');
             xmlRequest.send();
             xmlRequest.onreadystatechange = function(){
@@ -36,7 +36,7 @@
                 };
 
             xmlRequest2 = new XMLHttpRequest();
-            xmlRequest2.open("POST", "/Plant_Admin/GetSupplierPart", true);
+            xmlRequest2.open("POST", "/Plant_Admin/GetPlantPart", true);
             xmlRequest2.setRequestHeader('Content-type', 'application/json');
             xmlRequest2.send();
             xmlRequest2.onreadystatechange = function() {
@@ -67,14 +67,14 @@
         if($("#"+id).css("background-color") == "rgb(249, 249, 249)")
         {
             $("#"+id).css("background-color","orange");
-            if(id.includes('R'))
+            if(id.includes('L'))
             {
                 var idPartImp = id.substring(1);
                 var lenght = destinationPlant.length;
                 destinationPlant[lenght] = idPartImp;
                 console.log("destinationPlant"+destinationPlant);
             }
-            else if(id.includes('L')){
+            else if(id.includes('R')){
                 var idPartImp = id.substring(1);
                 var lenght = removedPart.length;
                 removedPart[lenght] = idPartImp;
@@ -84,13 +84,13 @@
         else if ($("#"+id).css("background-color") == "rgb(255, 165, 0)")
         {
             $("#"+id).css("background-color","rgb(249, 249, 249)");
-            if(id.includes("R"))
+            if(id.includes("L"))
             {
                 var idPartImp = id.substring(1);
                 destinationPlant = arrayRemove(destinationPlant,idPartImp);
                 console.log("destinationPlant"+destinationPlant);
             }
-            else if(id.includes('L')){
+            else if(id.includes('R')){
                 var idPartImp = id.substring(1);
                 removedPart = arrayRemove(removedPart,idPartImp);
                 console.log("removePart "+removedPart);
@@ -98,13 +98,13 @@
             }
         }else if($("#"+id).css("background-color") == "rgb(255, 166, 0)"){
             $("#"+id).css("background-color","rgb(255, 255, 255)");
-            if(id.includes("R"))
+            if(id.includes("L"))
             {
                 var idPartImp = id.substring(1);
                 destinationPlant = arrayRemove(destinationPlant,idPartImp);
                 console.log("destinationPlant"+destinationPlant);
             }
-            else if(id.includes('L')){
+            else if(id.includes('R')){
                 var idPartImp = id.substring(1);
                 removedPart = arrayRemove(removedPart,idPartImp);
                 console.log("removePart "+removedPart);
@@ -113,14 +113,14 @@
         }
         else{
             $("#"+id).css("background-color", "rgb(255, 166, 0)");
-            if(id.includes("R"))
+            if(id.includes("L"))
             {
                 var idPartImp = id.substring(1);
                 var lenght = destinationPlant.length;
                 destinationPlant[lenght] = idPartImp;
                 console.log("destinationPlant"+destinationPlant);
             }
-            else if(id.includes('L')){
+            else if(id.includes('R')){
                 var idPartImp = id.substring(1);
                 var lenght = removedPart.length;
                 removedPart[lenght] = idPartImp;
