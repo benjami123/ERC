@@ -1,0 +1,16 @@
+#PartTable {
+    float: left;
+    border: gray;
+    border-style: solid;
+    left: 0.5%;
+    bottom : 1%;
+    width: 60%;
+    position: absolute;
+    /*overflow:auto;*/
+    top : 150px;
+}
+#body{
+    overflow:auto;
+    max-height: 92.5%;
+    margin-top: -21px;
+}
