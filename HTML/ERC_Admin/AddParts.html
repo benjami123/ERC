@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <link rel="icon" href="../Picture/Butterfly.png">
-    <link rel="stylesheet" href="AddOperator.css">
+    <link rel="stylesheet" href="AddParts.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
@@ -11,8 +11,58 @@
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>Title</title>
+
+    <script>
+        function sendFile(file){
+            var formeData = new FormData();
+            formeData.append("file", file);
+            var xmlRequest = new XmlHttpRequest();
+            xmlRequest.open("POST", "/ERC_Admin/FilePart", true);
+            xmlRequest.send(formeData);
+            xmlRequest.onreadystatechange = function() {
+                if ((xmlRequest.readyState == 4) && (xmlRequest.status == 200)) {
+                    console.log("Got response : ");
+                    document.getElementById("File").innerHTML = xmlRequest.responseText;
+                }
+            };
+        }
+    </script>
 </head>
 <body>
-
+<header id="navbar">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <div class="navbar-brand">
+                    <p>Identifier</p>
+                </div>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="AddOperator.html">AddOperator</a></li>
+                <li><a href="Parts.html">Parts</a></li>
+                <li class="active"><a href="AddParts.html">Add Parts</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><img width="41%" src="../Picture/ERC_Logo.png"></li>
+                <li onclick="Logout()"><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+                <form method="POST" id="Logout" action="/Logout"></form>
+            </ul>
+        </div>
+    </nav>
+</header>
+<div id="File" class="table-wrapper-scroll-y scrollbar scrollbar-near-moon thin">
+    <p>file1.csv</p>
+    <p>file_part.csv</p>
+</div>
+<div id="button">
+    <span class="btn btn-success btn-just-icon btn-sm btn-file">
+        <i class="material-icons">check</i><input type="file" oninput="sendFile(this.files[0])">
+    </span>
+</div>
+<div id="Done" class="table-wrapper-scroll-y scrollbar scrollbar-near-moon thin">
+    <p>file1.csv</p>
+    <p>file_part.csv</p>
+</div>
 </body>
 </html>
