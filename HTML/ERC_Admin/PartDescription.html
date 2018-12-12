@@ -48,6 +48,7 @@
                 }
             };
             removeModification();
+            $("#IdPart").val(part.IdPart);
         };
 
         function change() {
@@ -88,6 +89,7 @@
 </header>
 <form method="post" action="/ERC_Admin/UpdatePart">
     <div class="form-row">
+        <input type="hidden" name="IdPart" id="IdPart" value="">
         <div class="form-group col-md-6">
             <label for="PartName">PartName</label>
             <input type="text" name="PartName" class="form-control" id="PartName" placeholder="PartName"  required oninput="change()">
