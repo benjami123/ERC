@@ -52,7 +52,7 @@
 
         function change() {
 
-            if ($("#PartName").val() != part.PartName || $("#SupplierName").val() != part.SupplierName || $("#PartDescription").val() != part.PartDescription || $("#SupplierEmail").val() != part.SupplierEmail) {
+            if ($("#PartName").val() != part.PartName || $("#SupplierName").val() != idSelectByDefault || $("#PartDescription").val() != part.PartDescription) {
                 document.getElementById("button").innerHTML = '<button type="submit" class="btn btn-primary">Modification</button>' +
                     '<button type="button" class="btn btn-primary" onclick="removeModification()">Undo modification</button>';
             }
