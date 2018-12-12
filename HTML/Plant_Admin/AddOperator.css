@@ -1,0 +1,12 @@
+#LoginWindow{
+
+    width: 500px;
+    border: 15px solid rgb(0, 102, 255);
+    padding: 25px;
+    margin: 150px;
+    background-color: white;
+}
+
+input{
+    width: 250px;
+}
