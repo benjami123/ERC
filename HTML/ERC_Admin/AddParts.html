@@ -23,8 +23,13 @@
                 if ((xmlRequest.readyState == 4) && (xmlRequest.status == 200)) {
                     console.log("Got response : ");
                     document.getElementById("File").innerHTML = xmlRequest.responseText;
+                    document.getElementById("exe").innerHTML = '<i class="material-icons">play_arrow</i><input type="button" onclick="execute()">';
                 }
             };
+        }
+
+        function execute(){
+
         }
     </script>
 </head>
@@ -60,10 +65,9 @@
     <span class="btn btn-success btn-just-icon btn-sm btn-file">
         <i class="material-icons">check</i><input type="file" oninput="sendFile(this.files[0])">
     </span>
-</div>
-<div id="Done" class="table-wrapper-scroll-y scrollbar scrollbar-near-moon thin">
-    <p>file1.csv</p>
-    <p>file_part.csv</p>
+    <span id="exe" class="btn btn-success btn-just-icon btn-sm btn-file">
+        <i class="material-icons">play_arrow</i><input type="button" disabled onclick="execute()">
+    </span>
 </div>
 </div>
 <div id="bottom">
