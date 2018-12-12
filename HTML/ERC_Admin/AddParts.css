@@ -36,6 +36,17 @@
     display: block;
 }
 
+#console{
+    position: absolute;
+    border: 3px black solid;
+    width: 80%;
+    height: 50%;
+    overflow: auto;
+    position: absolute;
+    left: 10%;
+    top: 300px;
+    background-color: black;
+}
 
 
 
