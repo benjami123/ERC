@@ -14,3 +14,6 @@
     max-height: 92.5%;
     margin-top: -21px;
 }
+th,td{
+    width: 20%;
+}
