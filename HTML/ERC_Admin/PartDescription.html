@@ -12,12 +12,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>PartDescription</title>
     <script>
-        var part1 =  sessionStorage.getItem("SelectedPart");
-        var part  = {};
-        part.PartName = "MyPart";
-        part.SupplierName = "SupplierName";
-        part.PartDescription = "PartDescription";
-        part.SupplierEmail = "SupplierEmail";
+        var part =  sessionStorage.getItem("SelectedPart");
+
         function removeModification(){
             $("#PartName").val(part.PartName);
             $("#SupplierName").val(part.SupplierName);
