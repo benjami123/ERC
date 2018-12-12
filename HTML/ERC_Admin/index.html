@@ -15,7 +15,7 @@
     <style>
         table{
             position: relative;
-            left: 30px;
+            left: 15px;
 
         }
         th,td
@@ -28,8 +28,12 @@
             border: 1px solid black;
         }
 
-        #deleteUser{
+        .deleteUser{
             width: 10%
+        }
+        #body{
+            overflow: auto;
+            max-height: 20%;
         }
     </style>
 
@@ -51,10 +55,11 @@
                     for(var i=0;i<jsonArray.length;i++)
                     {
                         json = jsonArray[i];
-                        $("tbody").append("<tr id=\"" + i + "\">\n"+
+                        $("#tbody").append("<tr id=\"" + i + "\">\n"+
                             "<td>"+ json.IdUser + "</td>\n" +
                             "<td>" + json.Login + "</td>\n" +
                             "<td>" + json.Email + "</td>\n" +
+                            "<td>" + json.Role + "</td>\n" +
                             "<td><button type=\"button\" rel=\"tooltip\" class=\"btn btn-danger btn-just-icon btn-sm\" onclick=\"DeleteUser(jsonArray["+i+"],"+i+")\">" +
                             "<i class=\"material-icons\">close</i>" +
                             "</button></td>" +
@@ -62,8 +67,8 @@
                         );
                     }
                 }
-            }
-        }
+            };
+        };
 
         function DeleteUser(UserInfos, index){
             xmlRequest = new XMLHttpRequest();
@@ -82,8 +87,8 @@
                         $("#"+index).remove();
                     }
                 }
-            }
-        }
+            };
+        };
 
         function Logout(){
             document.getElementById("Logout").submit();
@@ -100,10 +105,9 @@
                 </div>
             </div>
             <ul class="nav navbar-nav">
-
-                <li class="active"><a href="index.html">Operator</a></li>
-                <li><a href="AddOperator.html">Add Operator</a></li>
+                <li class="active"><a href="AddOperator.html">Home</a></li>
                 <li><a href="Parts.html">Parts</a></li>
+                <li><a href="AddParts.html">Add Parts</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><img width="41%" src="../Picture/ERC_Logo.png"></li>
@@ -114,15 +118,20 @@
         </div>
     </nav>
 </header>
-
+<div id="table">
 <table style="width:97%">
+    <thead>
     <tr>
         <th>IdUser</th>
         <th>Login</th>
         <th>Email</th>
-        <th id="deleteUser">Delete User</th>
+        <th>Role</th>
+        <th class="deleteUser">Delete User</th>
     </tr>
+    </thead>
+    <tbody id="tbody">
+    </tbody>
 </table>
-
+</div>
 </body>
 </html>
