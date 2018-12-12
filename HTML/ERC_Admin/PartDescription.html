@@ -12,8 +12,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>PartDescription</title>
     <script>
-        var part =  sessionStorage.getItem("SelectedPart");
-
+        var part =  JSON.parse(sessionStorage.getItem("SelectedPart"));
+        console.log(part);
         function removeModification(){
             $("#PartName").val(part.PartName);
             $("#SupplierName").val(part.SupplierName);
@@ -46,7 +46,7 @@
             <ul class="nav navbar-nav">
                 <li><a href="index.html">Home</a></li>
                 <li ><a href="AddOperator.html">Add Operator</a></li>
-                <li class="active"><a href="Parts.html">Parts</a></li>
+                <li ><a href="Parts.html">Parts</a></li>
                 <li><a href="AddParts.html">Add Parts</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
