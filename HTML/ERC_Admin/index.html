@@ -44,7 +44,7 @@
             console.log("sending post to server");
             var json={};
             var xmlRequest = new XMLHttpRequest();
-            xmlRequest.open("POST", "/Plant_Admin/index", true);
+            xmlRequest.open("POST", "/ERC_Admin/index", true);
             xmlRequest.setRequestHeader('Content-type', 'application/json');
             xmlRequest.send();
             xmlRequest.onreadystatechange = function(){
@@ -72,7 +72,7 @@
 
         function DeleteUser(UserInfos, index){
             xmlRequest = new XMLHttpRequest();
-            xmlRequest.open("POST", "/Plant_Admin/RemoveUser", true);
+            xmlRequest.open("POST", "/ERC_Admin/RemoveUser", true);
             xmlRequest.setRequestHeader('Content-type', 'application/json');
             console.log("Sending POST to server with : ");
             console.log(UserInfos);
