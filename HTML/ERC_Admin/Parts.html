@@ -1,9 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="icon" href="../Picture/Butterfly.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="icon" href="Picture/Butterfly.png">
     <title>Parts</title>
+    <script>
+        var jsonArray = {};
+        window.onload = function(){
+            console.log("sending post to server");
+            var json={};
+            var xmlRequest = new XMLHttpRequest();
+            xmlRequest.open("POST", "/ERC_Admin/GetParts", true);
+            xmlRequest.setRequestHeader('Content-type', 'application/json');
+            xmlRequest.send();
+            xmlRequest.onreadystatechange = function(){
+                if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
+                    console.log("Got response : ");
+                    jsonArray = JSON.parse(xmlRequest.responseText);
+                    console.log(jsonArray);
+                    for(var i=0;i<jsonArray.length;i++)
+                    {
+                        json = jsonArray[i];
+                        $("tablePArt").append("<tr id=\"" + i + "\" onclick='clickPart("+ jsonArray+"["+i+"])'>\n"+
+                            "<td>"+ json.PartName + "</td>\n" +
+                            "<td>" + json.PartDescription + "</td>\n" +
+                            "<td>" + json.SupplierName + "</td>\n" +
+                            "<td>" + json.SupplierName + "</td>\n" +
+                            "</tr>"
+                        );
+                    }
+                }
+            }
+        };
+        function clickPart(jsonArray)
+        {
+            sessionStorage.setItem("SelectedPart", JSON.stringify(jsonArray));
+            window.location.replace("/ERC_Admin/PartDescription.html");
+        }
+    </script>
 </head>
 <body>
 <header id="navbar">
@@ -16,8 +58,8 @@
             </div>
             <ul class="nav navbar-nav">
                 <li><a href="index.html">Home</a></li>
-                <li class="active"><a href="AddOperator.html">AddOperator</a></li>
-                <li><a href="Parts.html">Parts</a></li>
+                <li ><a href="AddOperator.html">Add Operator</a></li>
+                <li class="active"><a href="Parts.html">Parts</a></li>
                 <li><a href="AddParts.html">Add Parts</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -32,9 +74,9 @@
         <table class="table table-striped border-0">
             <thead>
             <th id="PartName">Part Name</th>
-            <th id="PartDescription">Part Location</th>
             <th id="PartLocation">Part Description</th>
             <th id="SupplierName">Supplier Name</th>
+            <th id="PartDescription">Supplier Email</th>
             </thead>
         </table >
         <div id="body" class="table-wrapper-scroll-y scrollbar scrollbar-near-moon thin">

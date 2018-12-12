@@ -1,0 +1,26 @@
+html{
+    background-color:lightblue;
+}
+#ERCTitle{
+
+    color:black;
+    font-family: "Verdana", Arial, sans-serif;
+
+}
+#Logo{
+
+    margin-left:100px;
+
+}
+#LoginWindow{
+
+    width: 300px;
+    border: 15px solid rgb(0, 102, 255);
+    padding: 25px;
+    margin: 150px;
+    background-color: white;
+    font-family: "Verdana", Arial, sans-serif; font-size: 10px;
+}
+#warn{
+    color:red;
+}

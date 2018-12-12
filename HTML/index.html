@@ -1,50 +1,24 @@
+<!--This page is the login page-->
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 		<link rel="icon" href="Picture/Butterfly.png">
-		<title>Login</title>
-        <style>
-		html{
-			background-color:lightblue;
-		}
-		#ERCTitle{
-			
-			color:black;
-			font-family: "Verdana", Arial, sans-serif;
-			
-		}
-		#Logo{
-			
-			margin-left:100px;
-			
-		}
-		#LoginWindow{
-			
-			width: 300px;
-			border: 15px solid rgb(0, 102, 255);
-			padding: 25px;
-			margin: 150px;
-			background-color: white;
-			font-family: "Verdana", Arial, sans-serif; font-size: 10px;
-		}
-		#warn{
-			color:red;
-		}	
-			
-		</style>
+		<link rel="stylesheet" href="index.css">
 		<script>
-		            function Login(login, password){
+			//We use all the time this function with some modifications.
+			//This function sends the data to the server
+			function Login(login, password){
                 var data = {};
                 data.username = login;
                 data.password = password;
                 data = JSON.stringify(data);
                 console.log("sent in login to server : " + data);
-                var xmlRequest = new XMLHttpRequest();
-                xmlRequest.open("POST", "/Login", true);
+                var xmlRequest = new XMLHttpRequest();//We create a post request and we send the data on a topic
+                xmlRequest.open("POST", "/Login", true);//the topic, here, is /Login.
                 xmlRequest.setRequestHeader('Content-type', 'application/json');
                 xmlRequest.send(data);
-                xmlRequest.onreadystatechange = function(){
+                xmlRequest.onreadystatechange = function(){//This function is to receive the answer from the server
                     if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
                         console.log("Got response : ");
                         console.log(xmlRequest.responseText);
