@@ -31,7 +31,7 @@
             xmlRequest.onreadystatechange = function(){
                 if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
                     console.log("Got response : ");
-                    jsonArray = JSON.parse(xmlRequest.responseText);
+                    var jsonArray = JSON.parse(xmlRequest.responseText);
                     console.log(jsonArray);
                     for(var i=0;i<jsonArray.length;i++)
                     {
@@ -95,9 +95,6 @@
         <div class="form-group col-md-6">
             <label class="mr-sm-2" for="SupplierName">Supplier Name</label>
             <select class="custom-select mr-sm-2 form-control" id="SupplierName" required onchange="change()">
-                <option value="4">Service</option>
-                <option value="5">Additives</option>
-                <option value="6">Maintenance</option>
             </select>
         </div>
     </div>
