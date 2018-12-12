@@ -51,8 +51,15 @@ module.exports= {
 
     //Plant_Operator : index Get ReductionAgent Level and tank capacity
     getRAInfos: function(IDPlant, callback){
-        var Query = "SELECT IdReductionAgent, LevelOfRAInL, TotalCapacityInL, TankName FROM reductionagent WHERE IdPlant = ? ;";
-        con.query(Query, [IDPlant],function(err, rows){
+        var s = "";
+        for(var i=0; i< IDPlant.length-1; i++){
+            s += " OR IdPlant = ?"
+        }
+        var Query = "SELECT IdReductionAgent, LevelOfRAInL, TotalCapacityInL, TankName FROM reductionagent WHERE IdPlant = ? " + s + " ;";
+        console.log("Executing query : " + Query);
+        console.log("With values ");
+        console.log(IDPlant);
+        con.query(Query, IDPlant,function(err, rows){
             if (err) throw err;
             callback(err, rows);
         });
@@ -267,7 +274,7 @@ module.exports= {
 
     //ERC_Service : Customers GetPlants
     getPlants: function(callback){
-        var Query = "SELECT IdPlant, PlantName FROM plant;";
+        var Query = "SELECT IdPlant, PlantName, PlantEmail, Address FROM plant;";
         con.query(Query, function(err, rows){
             if (err) throw err;
             callback(err, rows) ;
@@ -285,6 +292,8 @@ module.exports= {
     /*  ERC_Maintenance */
 
     //ERC_Maintenance : index GetPlants -> see ERC_Service getPlants()
+    
+    //ERC_Maintenance : index GetHistory -> see 
 
     //ERC_Maintenance : index CreateReviews
     CreateReviews: function(Values, callback){
@@ -331,8 +340,15 @@ module.exports= {
 
     //ERC_ADditive : Customer GetCustomer's tank value
     getLastRAOrder: function(IDPlant, callback){
-        var Query = "SELECT OfferDateStart FROM ra_offer WHERE IdPlant = ? ORDER BY OfferDateStart DESC LIMIT 1;";
-        con.query(Query, [IDPlant], function(err, rows){
+        var s = "";
+        for(var i=0; i<IDPlant.length - 1; i++){
+            s += "OR IdPlant = ? "
+        }
+        var Query = "SELECT OfferDateStart FROM ra_offer WHERE IdPlant = ? " + s + "ORDER BY OfferDateStart DESC;";
+        console.log("Executing query : " + Query);
+        console.log("With values ");
+        console.log(IDPlant);
+        con.query(Query, IDPlant, function(err, rows){
             if (err) throw err;
             callback(err, rows);
             

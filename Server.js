@@ -483,8 +483,8 @@ app.post('/ERC_Maintenance/*', function(req, res){
     console.log("Creating review : ");
     for(var i=0; i<MyArray.length; i++){
       json[i] = [];
-      json[i][0] = MyArray[i].ReviewType;
-      json[i][1] = MyArray[i].IdPartImplemented;
+      json[i][0] = MyArray[i].IdPartImplemented;
+      json[i][1] = MyArray[i].ReviewType;
       json[i][2] = UserLogin;
     }
     console.log(json);
@@ -518,7 +518,39 @@ app.post('/ERC_Additives/*', function(req, res){
       break;
     
     case "/GetCustomers":
-      
+      // DB.getPlants(function(err, Plants){
+      //   console.log("Got plants : ");
+      //   console.log(Plants);
+      //   var ArrayPlantsID = [];
+      //   for(var i=0; i<Plants.length; i++){
+      //     ArrayPlantsID.push(Plants[i].IdPlant);
+      //     console.log(Plants[i].IdPlant);
+      //   }
+      //   console.log(ArrayPlantsID);
+      //   DB.getRAInfos(ArrayPlantsID, function(err, RALevels){
+      //     console.log("Got RA levels : ");
+      //     console.log(RALevels);
+      //     var arr = [];
+      //     for(var i=0; i<RALevels.lenght; i++){
+      //       arr[i] = [];
+      //     }
+      //     DB.getLastRAOrder(ArrayPlantsID, function(err, LastRAOrderDate){
+      //       console.log("Got LastOrders : ");
+      //       console.log(LastRAOrderDate);
+      //       for(var i=0; i< Plants.length; i++){
+      //         Plants[i].RALevels = RALevels[i];
+      //         Plants[i].TotalLevelInPercent = 29;
+      //         if(LastRAOrderDate[i] != undefined){
+      //           Plants[i].DateLastOrder = LastRAOrderDate[i].OfferDateStart;
+      //         }
+      //         Plants[i] = Lib.doTransformTypeAndStateToString(Plants[i]);
+      //       }
+      //       console.log("Sending : ");
+      //       console.log(Plants);
+      //       res.end(JSON.stringify(Plants));
+      //     });
+      //   });
+      // });
       break;
 
     case"/ConfirmationOrder":

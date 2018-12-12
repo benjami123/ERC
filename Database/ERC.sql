@@ -53,7 +53,7 @@ DROP TABLE IF EXISTS `part_offer`;
 CREATE TABLE `part_offer` (
   `IdPart_Offer` int(255) NOT NULL AUTO_INCREMENT,
   `IdPartImplemented` int(255) NOT NULL,
-  `IdUser` int(255) NOT NULL,
+  `CreatorLogin` varchar(20) COLLATE utf8_bin NOT NULL,
   `OfferDateStart` date NOT NULL,
   `Price` int(255) DEFAULT NULL,
   `OfferType` int(255) NOT NULL,
@@ -64,10 +64,8 @@ CREATE TABLE `part_offer` (
   `OrderFromERC` text COLLATE utf8_bin,
   PRIMARY KEY (`IdPart_Offer`),
   KEY `IdPartImplemented` (`IdPartImplemented`),
-  KEY `IdUser` (`IdUser`),
-  CONSTRAINT `part_offer_ibfk_1` FOREIGN KEY (`IdPartImplemented`) REFERENCES `partimplemented` (`IdPartImplemented`),
-  CONSTRAINT `part_offer_ibfk_2` FOREIGN KEY (`IdUser`) REFERENCES `user` (`IdUser`)
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  CONSTRAINT `part_offer_ibfk_1` FOREIGN KEY (`IdPartImplemented`) REFERENCES `partimplemented` (`IdPartImplemented`)
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -76,7 +74,7 @@ CREATE TABLE `part_offer` (
 
 LOCK TABLES `part_offer` WRITE;
 /*!40000 ALTER TABLE `part_offer` DISABLE KEYS */;
-INSERT INTO `part_offer` VALUES (30,2,1,'2018-11-30',NULL,3,4,0,'30_PlantTest_MyPart2_Somewhere_Offer.pdf','30_PlantTest_MyPart2_Somewhere_OrderFromClient.pdf',NULL),(31,3,1,'2018-11-30',NULL,2,4,0,'31_PlantTest_NotAPart_Nowhere_Offer.pdf','31_PlantTest_NotAPart_Nowhere_OrderFromClient.pdf',NULL),(32,3,1,'2018-11-30',NULL,4,4,0,'32_PlantTest_NotAPart_Nowhere_Offer.pdf','32_PlantTest_NotAPart_Nowhere_OrderFromClient.pdf',NULL),(33,1,1,'2018-11-30',NULL,4,6,0,NULL,NULL,NULL),(34,1,1,'2018-11-30',NULL,3,4,0,'34_PlantTest_MyPart_ABCD1_OrderFromERC.pdf','34_PlantTest_MyPart_ABCD1_OrderFromClient.pdf',NULL),(35,2,1,'2018-11-30',NULL,4,4,0,'35_PlantTest_MyPart2_Somewhere_OrderFromERC.pdf','35_PlantTest_MyPart2_Somewhere_OrderFromClient.pdf',NULL),(36,1,1,'2018-11-30',NULL,2,4,0,'36_PlantTest_MyPart_ABCD1_OrderFromERC.pdf','36_PlantTest_MyPart_ABCD1_OrderFromClient.pdf','36_PlantTest_MyPart_ABCD1_OrderFromERC.pdf'),(37,1,1,'2018-11-30',NULL,2,4,0,'37_PlantTest_MyPart_ABCD1_OrderFromERC.pdf','37_PlantTest_MyPart_ABCD1_OrderFromClient.docx','37_PlantTest_MyPart_ABCD1_OrderFromERC.png'),(38,1,1,'2018-12-04',NULL,3,6,0,NULL,NULL,NULL),(40,1,7,'2018-12-04',NULL,4,6,0,NULL,NULL,NULL),(41,2,7,'2018-12-04',NULL,2,6,0,NULL,NULL,NULL),(42,2,6,'2018-12-05',NULL,2,6,0,NULL,NULL,NULL),(43,3,6,'2018-12-05',NULL,3,6,0,NULL,NULL,NULL),(44,2,6,'2018-12-05',NULL,2,6,0,NULL,NULL,NULL),(45,2,6,'2018-12-05',NULL,2,6,0,NULL,NULL,NULL),(46,2,6,'2018-12-05',NULL,2,6,0,NULL,NULL,NULL),(47,3,6,'2018-12-05',NULL,2,6,0,NULL,NULL,NULL),(48,2,6,'2018-12-05',NULL,2,3,0,NULL,'48_PlantTest_MyPart2_Somewhere_OrderFromERC.pdf',NULL),(49,1,6,'2018-12-05',NULL,2,3,0,NULL,'49_PlantTest_MyPart_ABCD1_OrderFromERC.pdf',NULL),(50,2,6,'2018-12-05',NULL,2,3,0,NULL,'50_PlantTest_MyPart2_Somewhere_OfferFromERC.pdf',NULL),(51,2,6,'2018-12-05',NULL,2,3,0,NULL,'51_PlantTest_MyPart2_Somewhere_OfferFromERC.pdf',NULL),(52,1,6,'2018-12-05',NULL,2,6,0,'52_PlantTest_MyPart_ABCD1_OfferFromERC.pdf',NULL,NULL),(53,2,6,'2018-12-05',NULL,2,6,0,'53_PlantTest_MyPart2_Somewhere_OfferFromERC.pdf',NULL,NULL),(54,2,6,'2018-12-05',NULL,2,2,0,'54_PlantTest_MyPart2_Somewhere_OfferFromERC.pdf',NULL,NULL);
+INSERT INTO `part_offer` VALUES (65,4,'operator','2018-12-12',NULL,4,4,0,'65_PlantTest_MyPart2_cool_location_OfferFromERC.pdf','65_PlantTest_MyPart2_cool_location_OrderFromClient.pdf','65_PlantTest_MyPart2_cool_location_OrderFromERC.pdf');
 /*!40000 ALTER TABLE `part_offer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -100,7 +98,7 @@ CREATE TABLE `partimplemented` (
   KEY `IdPlant_2` (`IdPlant`),
   CONSTRAINT `partimplemented_ibfk_1` FOREIGN KEY (`IdPlant`) REFERENCES `plant` (`IdPlant`),
   CONSTRAINT `partimplemented_ibfk_2` FOREIGN KEY (`IdPart`) REFERENCES `part` (`IdPart`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -109,7 +107,7 @@ CREATE TABLE `partimplemented` (
 
 LOCK TABLES `partimplemented` WRITE;
 /*!40000 ALTER TABLE `partimplemented` DISABLE KEYS */;
-INSERT INTO `partimplemented` VALUES (1,1,1,1,'ABCD1'),(2,1,2,1,'Somewhere'),(3,1,3,1,'Nowhere');
+INSERT INTO `partimplemented` VALUES (1,1,1,1,'ABCD1'),(2,1,2,0,'Somewhere'),(3,1,3,1,'Nowhere'),(4,1,2,1,'cool_location'),(5,1,1,1,'neighborhood'),(6,1,3,1,'a+');
 /*!40000 ALTER TABLE `partimplemented` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -127,7 +125,7 @@ CREATE TABLE `plant` (
   `TypicalDeliveryTime` int(255) NOT NULL,
   `Address` text COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`IdPlant`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -136,7 +134,7 @@ CREATE TABLE `plant` (
 
 LOCK TABLES `plant` WRITE;
 /*!40000 ALTER TABLE `plant` DISABLE KEYS */;
-INSERT INTO `plant` VALUES (1,'PlantTest','PlantTest@ProEmail.de',100,'Somewhere in Deutschland');
+INSERT INTO `plant` VALUES (1,'PlantTest','PlantTest@ProEmail.de',100,'Somewhere in Deutschland'),(2,'PlantTest2','PlantTest@EvenMoreProEmail.dk',87,'Somewhere in Denmark');
 /*!40000 ALTER TABLE `plant` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -149,7 +147,8 @@ DROP TABLE IF EXISTS `ra_offer`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ra_offer` (
   `IdRA_Offer` int(255) NOT NULL AUTO_INCREMENT,
-  `IdReductionAgent` int(255) NOT NULL,
+  `CreatorLogin` varchar(20) COLLATE utf8_bin NOT NULL,
+  `IdPlant` int(255) NOT NULL,
   `OfferDateStart` date DEFAULT NULL,
   `QuantityInL` int(255) NOT NULL,
   `Price` int(255) NOT NULL,
@@ -157,13 +156,10 @@ CREATE TABLE `ra_offer` (
   `OrderFromClient` text COLLATE utf8_bin NOT NULL,
   `OrderFromERC` text COLLATE utf8_bin NOT NULL,
   `OfferState` int(255) DEFAULT NULL,
-  `IdUser` int(255) NOT NULL,
   PRIMARY KEY (`IdRA_Offer`),
-  KEY `IdReductionAgent` (`IdReductionAgent`),
-  KEY `IdUser` (`IdUser`),
-  CONSTRAINT `ra_offer_ibfk_1` FOREIGN KEY (`IdReductionAgent`) REFERENCES `reductionagent` (`IdReductionAgent`),
-  CONSTRAINT `ra_offer_ibfk_2` FOREIGN KEY (`IdUser`) REFERENCES `user` (`IdUser`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  KEY `IdReductionAgent` (`IdPlant`),
+  CONSTRAINT `ra_offer_ibfk_1` FOREIGN KEY (`IdPlant`) REFERENCES `plant` (`IdPlant`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -172,7 +168,7 @@ CREATE TABLE `ra_offer` (
 
 LOCK TABLES `ra_offer` WRITE;
 /*!40000 ALTER TABLE `ra_offer` DISABLE KEYS */;
-INSERT INTO `ra_offer` VALUES (1,1,'2018-11-29',50,750,0,'','',NULL,1),(2,1,'2018-11-29',50,750,0,'','',1,1);
+INSERT INTO `ra_offer` VALUES (14,'operator',1,'2018-12-12',95,1625,0,'14_PlantTest_2018-12-12_OrderFromClient.pdf','14_PlantTest_2018-12-12_OrderFromERC.pdf',4);
 /*!40000 ALTER TABLE `ra_offer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -194,7 +190,7 @@ CREATE TABLE `reductionagent` (
   PRIMARY KEY (`IdReductionAgent`),
   KEY `IdPlant` (`IdPlant`),
   CONSTRAINT `reductionagent_ibfk_1` FOREIGN KEY (`IdPlant`) REFERENCES `plant` (`IdPlant`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -203,7 +199,7 @@ CREATE TABLE `reductionagent` (
 
 LOCK TABLES `reductionagent` WRITE;
 /*!40000 ALTER TABLE `reductionagent` DISABLE KEYS */;
-INSERT INTO `reductionagent` VALUES (1,'1',1,15,45,100,0);
+INSERT INTO `reductionagent` VALUES (1,'1',1,15,45,100,0),(3,'2',1,20,80,120,NULL),(4,'4',2,15,75,95,NULL);
 /*!40000 ALTER TABLE `reductionagent` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -216,16 +212,14 @@ DROP TABLE IF EXISTS `review`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `review` (
   `IdReview` int(255) NOT NULL AUTO_INCREMENT,
+  `CreatorLogin` varchar(20) COLLATE utf8_bin NOT NULL,
   `IdPartImplemented` int(255) NOT NULL,
   `ReviewDate` date NOT NULL,
   `ReviewType` int(255) NOT NULL,
-  `IdUser` int(255) NOT NULL,
   PRIMARY KEY (`IdReview`),
   KEY `IdPartImplemented` (`IdPartImplemented`),
-  KEY `IdUser` (`IdUser`),
-  CONSTRAINT `review_ibfk_1` FOREIGN KEY (`IdPartImplemented`) REFERENCES `partimplemented` (`IdPartImplemented`),
-  CONSTRAINT `review_ibfk_2` FOREIGN KEY (`IdUser`) REFERENCES `user` (`IdUser`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  CONSTRAINT `review_ibfk_1` FOREIGN KEY (`IdPartImplemented`) REFERENCES `partimplemented` (`IdPartImplemented`)
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -234,7 +228,7 @@ CREATE TABLE `review` (
 
 LOCK TABLES `review` WRITE;
 /*!40000 ALTER TABLE `review` DISABLE KEYS */;
-INSERT INTO `review` VALUES (4,2,'2018-01-01',2,1),(5,2,'2018-02-02',2,1),(6,2,'2018-02-09',4,1),(7,2,'2018-11-06',1,1),(8,2,'2018-11-23',1,1),(9,2,'2018-11-23',1,1),(10,2,'2018-11-08',1,1),(11,1,'2018-09-04',3,1),(12,1,'2018-08-04',4,1),(13,1,'2018-12-02',3,1);
+INSERT INTO `review` VALUES (47,'maint',6,'2018-12-12',3);
 /*!40000 ALTER TABLE `review` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -278,11 +272,10 @@ CREATE TABLE `user` (
   `Password` varchar(20) COLLATE utf8_bin DEFAULT NULL,
   `Email` varchar(100) COLLATE utf8_bin DEFAULT NULL,
   `UserRole` int(255) DEFAULT NULL,
-  `isConnected` tinyint(1) NOT NULL,
   PRIMARY KEY (`IdUser`),
   UNIQUE KEY `Login` (`Login`),
   KEY `IdPlant` (`IdPlant`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -291,7 +284,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,1,'Bremondt','1234','bremond.thomas@gmail.com',1,0),(3,NULL,'BDran','1234','Dran@gmail.com',2,0),(5,NULL,'KataA','1234','Kata@gmail.com',3,0),(6,NULL,'PatS','1234','Patricia@gmail.com',4,0),(7,1,'operator','1234','test@gmail.com',3,0),(14,1,'oui','Yuep2','oui@gmail.com',3,0);
+INSERT INTO `user` VALUES (1,1,'Bremondt','1234','bremond.thomas@gmail.com',1),(3,NULL,'BDran','1234','Dran@gmail.com',2),(5,NULL,'KataA','1234','Kata@gmail.com',3),(6,NULL,'PatS','1234','Patricia@gmail.com',4),(7,1,'operator','1234','test@gmail.com',3),(14,1,'oui','Yuep2','oui@gmail.com',3),(15,NULL,'add','1234','add@gmail.com',5),(16,NULL,'maint','1234','maint@gmail.com',6);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -304,4 +297,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-05 11:35:30
+-- Dump completed on 2018-12-12 10:33:37

@@ -4,7 +4,7 @@ var nodemailer = require('nodemailer');
 var PartsOfferPath = "./../Orders/Parts/";
 var RAOfferPath = "./../Orders/RA/";
 
-var RoleArray = [ {UserRole:1, Link:"/Plant_Admin/"}, 
+var RoleArray = [ {UserRole:1, Link:"/Plant_Admin/"},   //Role corrsepondance with the folders, used in CheckRole()
                 {UserRole:2, Link:"/ERC_Admin/"},
                 {UserRole:3, Link:"/Plant_Operator/"},
                 {UserRole:4, Link:"/ERC_Service/"},
@@ -12,7 +12,7 @@ var RoleArray = [ {UserRole:1, Link:"/Plant_Admin/"},
                 {UserRole:6, Link:"/ERC_Maintenance/"}
               ];
 
-var StateToString = [
+var StateToString = [       //Transforms an offer state (0-6) to a string
   "",
   "Waiting for offer from ERC",
   "Waiting for order from Customer",
@@ -22,7 +22,7 @@ var StateToString = [
   "Refused" 
 ];
 
-var TypeToString = [
+var TypeToString = [        //Transforms a type (0-4) to as string
   "",
   "Replace with service",
   "Replace without service",
@@ -30,7 +30,7 @@ var TypeToString = [
   "Repair"
 ];
 
-var transporter = nodemailer.createTransport({
+var transporter = nodemailer.createTransport({  //Mail account of the server
   service: 'gmail',
   auth: {
     user: 'youremail@gmail.com',
@@ -39,7 +39,7 @@ var transporter = nodemailer.createTransport({
 });
 
 module.exports={
-  CheckRole: function(req, res, RoleArray){
+  CheckRole: function(req, res, RoleArray){         //check if the user has the permission to access such files, not working for files in /Offer
     var URL = req.originalUrl;
     URL = URL.replace(RoleArray.Link, '');
     console.log("Request from : " + URL);
@@ -105,6 +105,8 @@ module.exports={
             res.end(JSON.stringify(json));          //Send result
           });
         }else{
+          console.log("Sending history : ");
+          console.log(json);
           res.end(JSON.stringify(json));
         }
       });
@@ -233,13 +235,13 @@ function mkdirSync (dirPath) {    //MakeDirectory
   }
 }
 
-function SaveFile(json, files, PlantName, s, callback){
+function SaveFile(json, files, PlantName, s, callback){     //Generates file name, folder and path and move the given file to the generated path
   generateFileName(json, PlantName, files[s].name, s, function(FileName, OfferFolderPath){
     var newpath = OfferFolderPath + FileName;
     console.log("Creating folder : " + OfferFolderPath);
-    mkdirSync(OfferFolderPath);
+    mkdirSync(OfferFolderPath);                   //Creates the directory, if directory already exits, throw an error
     console.log("Moving file to : " + newpath);
-    fs.rename(files[s].path, newpath, function (err) {
+    fs.rename(files[s].path, newpath, function (err) {  //Move the file to the new path
       if (err) throw err;
       callback(FileName);
     });
