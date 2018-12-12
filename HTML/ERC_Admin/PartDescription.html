@@ -14,16 +14,44 @@
     <script>
         var part =  JSON.parse(sessionStorage.getItem("SelectedPart"));
         console.log(part);
+        var idSelectByDefault;
         function removeModification(){
             $("#PartName").val(part.PartName);
-            $("#SupplierName").val(part.SupplierName);
             $("#PartDescription").val(part.PartDescription);
-            $("#SupplierEmail").val(part.SupplierEmail);
+            $("#SupplierName").val(idSelectByDefault);
             change();
         }
-        window.onload = function (){removeModification();};
+        window.onload = function (){
+            console.log("sending post to server");
+            var json={};
+            var xmlRequest = new XMLHttpRequest();
+            xmlRequest.open("POST", "/ERC_Admin/GetSupplier", true);
+            xmlRequest.setRequestHeader('Content-type', 'application/json');
+            xmlRequest.send();
+            xmlRequest.onreadystatechange = function(){
+                if((xmlRequest.readyState == 4 ) && (xmlRequest.status == 200)){
+                    console.log("Got response : ");
+                    jsonArray = JSON.parse(xmlRequest.responseText);
+                    console.log(jsonArray);
+                    for(var i=0;i<jsonArray.length;i++)
+                    {
+                        if(part.SupplierName == json.SupplierName){
+                            json = jsonArray[i];
+                            idSelectByDefault = json.IdSupplier;
+                            $("#SupplierName").append("" +
+                                "<option value=\""+ json.IdSupplier +"\" selected>"+json.SupplierName+"</option>");
+                        }
+                        json = jsonArray[i];
+                        $("#SupplierName").append("" +
+                            "<option value=\""+ json.IdSupplier +"\">"+json.SupplierName+"</option>");
+                    }
+                }
+            };
+            removeModification();
+        };
 
         function change() {
+
             if ($("#PartName").val() != part.PartName || $("#SupplierName").val() != part.SupplierName || $("#PartDescription").val() != part.PartDescription || $("#SupplierEmail").val() != part.SupplierEmail) {
                 document.getElementById("button").innerHTML = '<button type="submit" class="btn btn-primary">Modification</button>' +
                     '<button type="button" class="btn btn-primary" onclick="removeModification()">Undo modification</button>';
@@ -65,19 +93,17 @@
             <input type="text" class="form-control" id="PartName" placeholder="PartName"  required oninput="change()">
         </div>
         <div class="form-group col-md-6">
-            <label for="SupplierName">SupplierName</label>
-            <input type="text" class="form-control" id="SupplierName" placeholder="SupplierName"  required oninput="change()">
+            <label class="mr-sm-2" for="SupplierName">Supplier Name</label>
+            <select class="custom-select mr-sm-2 form-control" id="SupplierName" required onchange="change()">
+                <option value="4">Service</option>
+                <option value="5">Additives</option>
+                <option value="6">Maintenance</option>
+            </select>
         </div>
     </div>
     <div id="address" class="form-group">
         <label for="PartDescription">Part's description</label>
         <input type="text" class="form-control" id="PartDescription" placeholder="Part's description"  required oninput="change()">
-    </div>
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            <label for="SupplierEmail">Supplier Email</label>
-            <input type="email" class="form-control" id="SupplierEmail" placeholder="SupplierEmail" required oninput="change()">
-        </div>
     </div>
     <br>
     <br><br><br>
