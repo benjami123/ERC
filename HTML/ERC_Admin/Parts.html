@@ -29,16 +29,16 @@
                     for(var i=0;i<jsonArray.length;i++)
                     {
                         json = jsonArray[i];
-                        $("tablePart").append("<tr id=\"" + i + "\" onclick='clickPart("+ jsonArray+"["+i+"])'>\n"+
+                        $("#tablePart").append("<tr id=\"" + i + "\" onclick='clickPart("+ jsonArray+"["+i+"])'>\n"+
                             "<td>"+ json.PartName + "</td>\n" +
                             "<td>" + json.PartDescription + "</td>\n" +
                             "<td>" + json.SupplierName + "</td>\n" +
-                            "<td>" + json.SupplierName + "</td>\n" +
+                            "<td>" + json.SupplierEmail + "</td>\n" +
                             "</tr>"
                         );
                     }
                 }
-            }
+            };
         };
         function clickPart(jsonArray)
         {
