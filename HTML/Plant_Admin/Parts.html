@@ -31,10 +31,45 @@
                         {
                             for(var i = 0;i<SupplerPart.length;i++){
                                 var json = SupplerPart[i];
-                                $("#bodyL").append("" +
+                                if(json.IdPart == null){
+
+                                }
+                                if(json.PartDescription == null)
+                                {
+
+                                }
+                                if(json.PartName == null)
+                                {
+
+                                }
+                                if(json.DefaultLocation == null)
+                                {
+
+                                }
+                                if(json.KKS == null)
+                                {
+
+                                }
+                                if(json.PressureNominal == null)
+                                {
+
+                                }
+                                if(json.DiameterNominal == null)
+                                {
+
+                                }
+                                if(json.SupplierName == null)
+                                {
+
+                                }
+                                ("#bodyL").append("" +
                                     "<tr id=\"L"+json.IdPart+"\" onclick=\"color('L"+json.IdPart+"')\">\n" +
                                     "                <td>"+json.PartName+"</td>\n" +
                                     "                <td>"+json.PartDescription+"</td>\n" +
+                                    "                <td>"+json.DefaultLocation+"</td>\n" +
+                                    "                <td>"+json.KKS+"</td>\n" +
+                                    "                <td>"+json.PressureNominal+"</td>\n" +
+                                    "                <td>"+json.DiameterNominal+"</td>\n" +
                                     "                <td>"+json.SupplierName+"</td>\n" +
                                     "            </tr>");
                             }
@@ -58,6 +93,9 @@
                             "                <td>"+json.PartName+"</td>\n" +
                             "                <td>"+json.PartDescription+"</td>\n" +
                             "                <td>"+json.Location+"</td>\n" +
+                            "                <td>"+json.KKS+"</td>\n" +
+                            "                <td>"+json.PressureNominal+"</td>\n" +
+                            "                <td>"+json.DiameterNominal+"</td>\n" +
                             "                <td>"+json.SupplierName+"</td>\n" +
                             "            </tr>");
                     }
@@ -182,6 +220,7 @@
         <thead>
             <th>PartName</th>
             <th>PartDescription</th>
+            <th>DefaultLocation</th>
             <th>SupportName</th>
         </thead>
     </table>
