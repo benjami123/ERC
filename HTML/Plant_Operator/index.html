@@ -12,6 +12,7 @@
     <script>
         var jsonArray, RA;
         window.onload = function(){
+            name();
             console.log("sending post to server");
             var json={};
             xmlRequest = new XMLHttpRequest();
@@ -103,6 +104,11 @@
                 }
             }
         }
+        function name(){
+            var identifier = JSON.stringify(sessionStorage.getItem("user"));
+            console.log(identifier);
+            document.getElementById("Identifier").innerHTML = identifier.login;
+        }
         var identifier = sessionStorage.getItem("user");
         console.log(identifier);
     </script>
@@ -114,7 +120,7 @@
         <div class="container-fluid">
             <div class="navbar-header">
                 <div class="navbar-brand">
-                    <p>Identifier</p>
+                    <p id="Identifier">Identifier</p>
                 </div>
             </div>
             <ul class="nav navbar-nav">
