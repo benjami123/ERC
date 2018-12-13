@@ -277,6 +277,9 @@
         body += "<br>"+"<span id=\"Add\" class=\"btn btn-primary btn-just-icon btn-sm btn-file\" rel=\"tooltip\" >\n" +
             "         <input type=\"button\" onclick=\"sendAdd("+num+")\"><i class=\"material-icons\" >redo</i>\n" +
             "     </span>";
+        body += "<br>"+"<span id=\"Add\" class=\"btn btn-error btn-just-icon btn-sm btn-file\" rel=\"tooltip\" >\n" +
+            "         <input type=\"button\" onclick=\"$(\"#popupLocation\").css(\"display\",\"none\")\"><i class=\"material-icons\" >redo</i>\n" +
+            "     </span>";
         $("#popupLocation").append(body);
         $("#popupLocation").css({top:$(window).height()/2-$("#popupLocation").height()/2,left:$(window).width()/2-$("#popupLocation").width()/2});
         $("body").css("background","dark");
