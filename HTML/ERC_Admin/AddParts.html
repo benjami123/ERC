@@ -28,7 +28,7 @@
                 console.log(formData);
                 fileNumber++;
                 $("#File").append("<p>"+file.name+"<p>");
-                document.getElementById("check").innerHTML = '<i class="material-icons">play_arrow</i><input type="button" onclick="sendFiles()">';
+                document.getElementById("check").innerHTML = '<i class="material-icons">check</i><input type="button" onclick="sendFiles()">';
         }
 
         function sendFiles(){
@@ -40,7 +40,7 @@
                 xmlRequest.onreadystatechange = function() {
                     if ((xmlRequest.readyState == 4) && (xmlRequest.status == 200)) {
                         console.log("Got response : ");
-                        console.log(xmlRequest.responseText);
+                        console.log(JSON.parse(xmlRequest.responseText));
                         var answer = JSON.parse(xmlRequest.responseText);
                         for(var j = 0;j<answer.length;j++)
                         {
@@ -109,7 +109,7 @@
     <span id="check" class="btn btn-primary btn-just-icon btn-sm btn-file">
         <i class="material-icons">check</i><input type="button" disabled onclick="sendFiles()">
     </span>
-    <span id="exe" class="btn btn-info btn-just-icon btn-sm btn-file" style="display: none">
+    <span id="exe" class="btn btn-info btn-just-icon btn-sm btn-file" style="">
         <i class="material-icons">play_arrow</i><input type="button" onclick="execute()">
     </span>
 </div>
