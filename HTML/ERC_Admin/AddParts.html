@@ -13,24 +13,37 @@
     <title>Title</title>
 
     <script>
-        function sendFile(file){
-            var formeData = new FormData();
-            formeData.append("file", file);
-            var xmlRequest = new XmlHttpRequest();
-            xmlRequest.open("POST", "/ERC_Admin/FilePart", true);
-            xmlRequest.send(formeData);
-            xmlRequest.onreadystatechange = function() {
-                if ((xmlRequest.readyState == 4) && (xmlRequest.status == 200)) {
-                    console.log("Got response : ");
-                    document.getElementById("File").innerHTML = xmlRequest.responseText;
-                    document.getElementById("exe").innerHTML = '<i class="material-icons">play_arrow</i><input type="button" onclick="execute()">';
-                }
-            };
+        var files = [];
+        function createArrayFiles(file){
+                console.log(file);
+                files.push(file);
+                $("#File").append("<p>"+file.name+"<p>");
         }
 
-        function execute(){
+        function sendFiles(){
+                var formeData = new FormData();
+                formeData.append("files", files);
+                var xmlRequest = new XmlHttpRequest();
+                xmlRequest.open("POST", "/ERC_Admin/CheckParts", true);
+                xmlRequest.send(formeData);
+                xmlRequest.onreadystatechange = function() {
+                    if ((xmlRequest.readyState == 4) && (xmlRequest.status == 200)) {
+                        console.log("Got response : ");
+                        var answer = JSON.parse(xmlRequest.responseText);
+                        for(var i =0 ;i<answer.ConsoleMessage.length;i++)
+                        {
+                            var array = answer.ConsoleMessage[i];
+                            if(array.isError)
+                                $("#File").append("<p class='green'>"+array.Message+"</p>");
+                            else
+                                $("#File").append("<p class='red'>"+array.Message+"</p>");
+                        }
 
-        }
+                        if(answer.CanBeExecuted)
+                            document.getElementById("exe").innerHTML = '<i class="material-icons">play_arrow</i><input type="button" onclick="execute()">';
+                    }
+                };
+            }
     </script>
 </head>
 <body>
@@ -58,20 +71,18 @@
 </header>
 <div id="top">
 <div id="File" class="table-wrapper-scroll-y scrollbar scrollbar-near-moon thin">
-    <p>file1.csv</p>
-    <p>file_part.csv</p>
 </div>
 <div id="button">
     <span class="btn btn-success btn-just-icon btn-sm btn-file">
-        <i class="material-icons">check</i><input type="file" oninput="sendFile(this.files[0])">
+        <i class="material-icons">check</i><input type="file" oninput="createArrayFiles(this.files[0])">
     </span>
-    <span id="exe" class="btn btn-success btn-just-icon btn-sm btn-file">
-        <i class="material-icons">play_arrow</i><input type="button" disabled onclick="execute()">
+    <span id="exe" class="btn btn-primary btn-just-icon btn-sm btn-file">
+        <i class="material-icons">playlist_add</i><input type="button" disabled onclick="sendFiles()">
     </span>
 </div>
 </div>
 <div id="bottom">
-    <div id="console">
+    <div id="console" class="table-wrapper-scroll-y scrollbar scrollbar-near-moon thin">
 
     </div>
 </div>
