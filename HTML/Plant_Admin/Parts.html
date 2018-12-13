@@ -98,10 +98,6 @@
                         {
                             json.PartName = "-";
                         }
-                        if(json.DefaultLocation == null)
-                        {
-                            json.DefaultLocation = "-";
-                        }
                         if(json.KKS == null)
                         {
                             json.KKS = "-";
@@ -122,7 +118,6 @@
                             "<tr id=\"R"+json.IdPartImplemented+"\" onclick=\"color('R"+json.IdPartImplemented+"')\">\n" +
                             "                <td>"+json.PartName+"</td>\n" +
                             "                <td>"+json.PartDescription+"</td>\n" +
-                            "                <td>"+json.Location+"</td>\n" +
                             "                <td>"+json.KKS+"</td>\n" +
                             "                <td>"+json.PressureNominal+"</td>\n" +
                             "                <td>"+json.DiameterNominal+"</td>\n" +
@@ -250,7 +245,6 @@
         <thead>
             <th>PartName</th>
             <th>PartDescription</th>
-            <th>DefaultLocation</th>
             <th>KKS</th>
             <th>PN</th>
             <th>DN</th>
@@ -274,7 +268,6 @@
         <thead>
             <th>PartName</th>
             <th>PartDescription</th>
-            <th>PartLocation</th>
             <th>KKS</th>
             <th>PressureNominal</th>
             <th>DiameterNominal</th>

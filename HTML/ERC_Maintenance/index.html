@@ -89,11 +89,13 @@
             console.log(jsonArray);
             for(var i=0;i<jsonArray.length;i++){
                 var json = jsonArray[i];
-                if(json.PartName.includes(SearchedKeyWord) || json.Location.includes(SearchedKeyWord) || json.SupplierName.includes(SearchedKeyWord)){
+                if(json.PartName.includes(SearchedKeyWord) || json.KKS.includes(SearchedKeyWord) || json.SupplierName.includes(SearchedKeyWord)){
                     $("#" + IdTable).append(""+
                         "<tr>"+
                         "<td>"+json.PartName+"</td>"+
-                        "<td>"+json.Location+"</td>"+
+                        "<td>"+json.KKS+"</td>\n" +
+                        "<td>"+json.PressureNominal+"</td>\n" +
+                        "<td>"+json.DiameterNominal+"</td>\n" +
                         "<td><select id='"+ i +"' class=form-control>"+
                         "<option value=\"0\">Choose...</option>"+
                         "<option value=\"1\">Replace</option>"+
@@ -109,13 +111,13 @@
             console.log(jsonArray);
             for(var i=0;i<jsonArray.length;i++){
                 var json = jsonArray[i];
-                console.log("test:  "+json.PartName.includes(SearchedKeyWord) || json.Location.includes(SearchedKeyWord));
-                if(json.PartName.includes(SearchedKeyWord) || json.Location.includes(SearchedKeyWord)){
+                console.log("test:  "+json.PartName.includes(SearchedKeyWord) || json.KKS.includes(SearchedKeyWord));
+                if(json.PartName.includes(SearchedKeyWord) || json.KKS.includes(SearchedKeyWord)){
                     if(json.DataType == "H") {
                         $("#" + IdTable).append("" +
                             "<tr>" +
                             "<td>" + json.PartName + "</td>" +
-                            "<td>" + json.Location + "</td>" +
+                            "<td>" + json.KKS + "</td>" +
                             "<td>" + json.OfferType + "</td>" +
                             "<td>"+json.OfferDateStart+"</td>" +
                             "<td>"+json.OfferState+"</td>" +
@@ -126,7 +128,7 @@
                         $("#tableHistory").append("" +
                             "<tr>" +
                             "<td>" + json.PartName + "</td>" +
-                            "<td>" + json.Location + "</td>" +
+                            "<td>" + json.KKS + "</td>" +
                             "<td>" + json.ReviewType + "</td>" +
                             "<td>"+json.ReviewDate+"</td>" +
                             "<td>Review</td>" +
@@ -206,7 +208,9 @@
     <table class="table table-striped border-0">
         <thead>
         <th id="PartName">Part Name</th>
-        <th id="PartDescription">Part Location</th>
+        <th>KKS</th>
+        <th>PN</th>
+        <th>DN</th>
         <th id="SupplierName">Action</th>
         </thead>
     </table >
@@ -221,7 +225,7 @@
     <table id="history" class="table table-striped border-0">
         <thead>
         <th>Part Name</th>
-        <th>Part Location</th>
+        <th>KKS</th>
         <th>Type</th>
         <th>Date</th>
         <th>Status</th>

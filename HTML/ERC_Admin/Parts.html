@@ -35,11 +35,38 @@
                     for(var i=0;i<jsonArray.length;i++)
                     {
                         json = jsonArray[i];
+
+                        if(json.PartDescription == null)
+                        {
+                            json.PartDescription = "-";
+                        }
+                        if(json.PartName == null)
+                        {
+                            json.PartName = "-";
+                        }
+                        if(json.KKS == null)
+                        {
+                            json.KKS = "-";
+                        }
+                        if(json.PressureNominal == null)
+                        {
+                            json.PressureNominal = "-";
+                        }
+                        if(json.DiameterNominal == null)
+                        {
+                            json.DiameterNominal = "-";
+                        }
+                        if(json.SupplierName == null)
+                        {
+                            json.SupplierName = "-";
+                        }
                         $("#tablePart").append("<tr id=\"" + i + "\" onclick=\"clickPart(jsonArray["+i+"])\">\n"+
                             "<td>"+ json.PartName + "</td>\n" +
                             "<td>" + json.PartDescription + "</td>\n" +
+                            "                <td>"+json.KKS+"</td>\n" +
+                            "                <td>"+json.PressureNominal+"</td>\n" +
+                            "                <td>"+json.DiameterNominal+"</td>\n" +
                             "<td>" + json.SupplierName + "</td>\n" +
-                            "<td>" + json.SupplierEmail + "</td>\n" +
                             "</tr>"
                         );
                     }
@@ -84,6 +111,9 @@
             <thead>
             <th id="PartName">Part Name</th>
             <th id="PartLocation">Part Description</th>
+            <th>KKS</th>
+            <th>PN</th>
+            <th>DN</th>
             <th id="SupplierName">Supplier Name</th>
             <th id="PartDescription">Supplier Email</th>
             </thead>
