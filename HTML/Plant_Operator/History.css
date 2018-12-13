@@ -26,7 +26,9 @@
 .applicant{
     float: right;
 }
-
+th,tr,td{
+    width : 30%
+}
 
 
 .table-wrapper-scroll-y {
