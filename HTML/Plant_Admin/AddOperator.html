@@ -46,8 +46,8 @@
                             document.getElementById("warn").innerHTML = xmlRequest.responseText;
                         }
                     }
-                }
-			}
+                };
+			};
 			
 			function Logout(){
 				document.getElementById("Logout").submit();
@@ -85,7 +85,7 @@
 			<br>
 			<input type="text" name='Email' id='Email' placeholder="e-mail">
 			<br>
-			<button onclick='createUser(document.getElementById("Email").value, document.getElementById("Login").value)'>Login</button>
+			<button onclick='createUser(document.getElementById("Email").value, document.getElementById("Login").value)'>Add</button>
 			<p id="warn"></p>
 		</div></center>
     </body>
