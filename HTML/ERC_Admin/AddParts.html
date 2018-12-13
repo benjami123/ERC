@@ -17,6 +17,7 @@
         function createArrayFiles(file){
                 console.log(file);
                 files.push(file);
+                console.log(files);
                 $("#File").append("<p>"+file.name+"<p>");
             document.getElementById("check").innerHTML = '<i class="material-icons">play_arrow</i><input type="button" onclick="sendFiles()">';
         }
