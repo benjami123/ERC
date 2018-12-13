@@ -105,7 +105,7 @@
             }
         }
         function name(){
-            var identifier = JSON.stringify(sessionStorage.getItem("user"));
+            var identifier = JSON.parse(sessionStorage.getItem("user"));
             console.log(identifier);
             document.getElementById("Identifier").innerHTML = identifier.Login;
         }

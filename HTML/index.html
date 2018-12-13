@@ -32,10 +32,10 @@
 						}
 						
                         if(json.Redirection != null){
-						    sessionStorage.setItem("user",JSON.stringify(json.user));
+						    sessionStorage.setItem("user",json.user);
 						    console.log(json.user);
-                            // console.log("Redirecting to : " + json.Redirection);
-                            // window.location.replace(json.Redirection);
+                            console.log("Redirecting to : " + json.Redirection);
+                            window.location.replace(json.Redirection);
                         }else{
                             document.getElementById("warn").innerHTML = xmlRequest.responseText;
                         }
