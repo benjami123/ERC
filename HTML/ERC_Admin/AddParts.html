@@ -37,10 +37,10 @@
                         for(var i =0 ;i<answer.ConsoleMessages.length;i++)
                         {
                             var array = answer.ConsoleMessages[i];
-                            if(array.isError)
-                                $("#File").append("<p class='green'>"+array.Message+"</p>");
+                            if(!array.isError)
+                                $("#console").append("<p class='green'>"+array.Message+"</p>");
                             else
-                                $("#File").append("<p class='red'>"+array.Message+"</p>");
+                                $("#console").append("<p class='red'>"+array.Message+"</p>");
                         }
 
                         if(answer.CanBeExecuted)
