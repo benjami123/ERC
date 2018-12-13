@@ -59,7 +59,6 @@
                         $("#tablePart").append("" +
                             "<tr onclick='clickPart("+i+")'>" +
                             "<td>"+json.PartName+"</td>" +
-                            "<td>"+json.Location+"</td>" +
                             "<td>"+json.PartDescription+"</td>" +
                             "<td>"+json.KKS+"</td>\n" +
                             "<td>"+json.PressureNominal+"</td>\n" +
@@ -106,13 +105,15 @@
             for(var i=0;i<jsonArray.length;i++){
                 var json = jsonArray[i];
 
-                if(json.PartName.includes(SearchedKeyWord) || json.Location.includes(SearchedKeyWord) || json.SupplierName.includes(SearchedKeyWord)){
+                if(json.PartName.includes(SearchedKeyWord) || json.KKS.includes(SearchedKeyWord) || json.SupplierName.includes(SearchedKeyWord)){
                     $("#" + IdTable).append(""+
-                        "<tr onclick='clickPart("+i+")'>"+
-                        "<td>"+json.PartName+"</td>"+
-                        "<td>"+json.Location+"</td>"+
-                        "<td>"+json.PartDescription+"</td>"+
-                        "<td>"+json.SupplierName+"</td>"+
+                        "<tr onclick='clickPart("+i+")'>" +
+                        "<td>"+json.PartName+"</td>" +
+                        "<td>"+json.PartDescription+"</td>" +
+                        "<td>"+json.KKS+"</td>\n" +
+                        "<td>"+json.PressureNominal+"</td>\n" +
+                        "<td>"+json.DiameterNominal+"</td>\n" +
+                        "<td>"+json.SupplierName+"</td>" +
                         "</tr>");
                 }
             }
@@ -173,7 +174,6 @@
     <thead>
     <tr>
         <th id="PartName">Part Name</th>
-        <th id="PartDescription">Part Location</th>
         <th id="PartLocation">Part Description</th>
         <th>KKS</th>
         <th>PN</th>
