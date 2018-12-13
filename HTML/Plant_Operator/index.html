@@ -231,6 +231,34 @@ function clickPart(IdJson)
     xmlRequest.open("POST", "/Plant_Operator/PartDescription", true);
     xmlRequest.setRequestHeader('Content-type', 'application/json');
     xmlRequest.send(JSON.stringify(jsonArray[IdJson]));
+    if(jsonArray[IdJson].PartDescription == null)
+    {
+        jsonArray[IdJson].PartDescription = "-";
+    }
+    if(jsonArray[IdJson].PartName == null)
+    {
+        jsonArray[IdJson].PartName = "-";
+    }
+    if(jsonArray[IdJson].DefaultLocation == null)
+    {
+        jsonArray[IdJson].DefaultLocation = "-";
+    }
+    if(jsonArray[IdJson].KKS == null)
+    {
+        jsonArray[IdJson].KKS = "-";
+    }
+    if(jsonArray[IdJson]).PressureNominal == null)
+    {
+        jsonArray[IdJson].PressureNominal = "-";
+    }
+    if(jsonArray[IdJson]).DiameterNominal == null)
+    {
+        jsonArray[IdJson].DiameterNominal = "-";
+    }
+    if(jsonArray[IdJson].SupplierName == null)
+    {
+        jsonArray[IdJson].SupplierName = "-";
+    }
     sessionStorage.setItem("SelectedPart", JSON.stringify(jsonArray[IdJson]));
     window.location.replace("/Plant_Operator/PartDescription.html");
 }
