@@ -35,19 +35,22 @@
                         console.log("Got response : ");
                         console.log(xmlRequest.responseText);
                         var answer = JSON.parse(xmlRequest.responseText);
-                        for(var i =0 ;i<answer.ConsoleMessages.length;i++)
+                        for(var j = 0;j<answer.length;j++)
                         {
-                            var array = answer.ConsoleMessages[i];
-                            if(!array.isError)
-                                $("#console").append("<p class='green'>"+array.Message+"</p>");
-                            else
-                                $("#console").append("<p class='red'>"+array.Message+"</p>");
-                        }
+                            for(var i =0 ;i<answer[j].ConsoleMessages.length;i++)
+                            {
+                                var array = answer[j].ConsoleMessages[i];
+                                if(!array.isError)
+                                    $("#console").append("<p class='green'>"+array.Message+"</p>");
+                                else
+                                    $("#console").append("<p class='red'>"+array.Message+"</p>");
+                            }
 
+                        }
                         if(answer.CanBeExecuted)
                             $("#exe").css("display","block");
-
                     }
+
                 };
             }
 
