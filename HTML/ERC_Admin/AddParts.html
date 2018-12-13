@@ -16,14 +16,16 @@
         var formData = new FormData();
         var fileNumber = 0;
         function createArrayFiles(file){
-                formData.append(""+fileNumber+"",file);
+                console.log(file);
+                formData.append('azertyu',file);
+                console.log(formData);
                 fileNumber++;
                 $("#File").append("<p>"+file.name+"<p>");
                 document.getElementById("check").innerHTML = '<i class="material-icons">play_arrow</i><input type="button" onclick="sendFiles()">';
         }
 
         function sendFiles(){
-                formData.add('fileNumber', fileNumber);
+                formData.append('fileNumber', ""+fileNumber+"");
                 console.log(formData);
                 var xmlRequest = new XMLHttpRequest();
                 xmlRequest.open("POST", "/ERC_Admin/CheckParts", true);
