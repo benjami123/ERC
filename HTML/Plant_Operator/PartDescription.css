@@ -40,9 +40,10 @@
     font-size: 90%;
     border: 1px solid gray;
 }
+
 #RecommandedAction{
     position: absolute;
-    top : 400px;
+    top : 500px;
     bottom : 1%;
     left: 0.5%;
 }
