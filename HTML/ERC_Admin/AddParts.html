@@ -73,6 +73,7 @@
                 var xmlRequest = new XMLHttpRequest();
                 xmlRequest.open("POST", "/ERC_Admin/AddParts", true);
                 xmlRequest.send(formData);
+                document.getElementById("File").innerHTML = "";
                 xmlRequest.onreadystatechange = function () {
                     if ((xmlRequest.readyState == 4) && (xmlRequest.status == 200)) {
                         document.getElementById("File").innerHTML = "";

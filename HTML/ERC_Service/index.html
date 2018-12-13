@@ -33,12 +33,42 @@
                         for(var i=0;i<jsonArray.length;i++)
                         {
                                 json = jsonArray[i];
+                            if(json.PartDescription == null)
+                            {
+                                json.PartDescription = "-";
+                            }
+                            if(json.PartName == null)
+                            {
+                                json.PartName = "-";
+                            }
+                            if(json.DefaultLocation == null)
+                            {
+                                json.DefaultLocation = "-";
+                            }
+                            if(json.KKS == null)
+                            {
+                                json.KKS = "-";
+                            }
+                            if(json.PressureNominal == null)
+                            {
+                                json.PressureNominal = "-";
+                            }
+                            if(json.DiameterNominal == null)
+                            {
+                                json.DiameterNominal = "-";
+                            }
+                            if(json.SupplierName == null)
+                            {
+                                json.SupplierName = "-";
+                            }
                             $("tbody").append("<tr id=\""+i+"\">\n" +
                                 "                                        <td class=\"text-center num\">"+(i+1)+"</td>\n" +
                                 "                                        <td>"+json.Login+"</td>\n" +
                                 "                                        <td>"+json.PlantName+"</td>\n" +
                                 "                                        <td>"+json.PartName+"</td>\n" +
-                                "                                        <td>"+json.Location+"</td>\n" +
+                                "            <td>"+json.KKS+"</td>\n" +
+                                "            <td>"+json.PressureNominal+"</td>\n" +
+                                "            <td>"+json.DiameterNominal+"</td>\n" +
                                 "                                        <td>"+json.OfferType+"</td>\n" +
                                 "                                        <td>"+json.OfferDateStart+"</td>\n" +
                                 "                                        <td class=\"td-actions\">\n" +
@@ -90,7 +120,9 @@
                                         <th>UserName</th>
                                         <th>PlantName</th>
                                         <th>Part Name</th>
-                                        <th>Location</th>
+                                        <th>KKS</th>
+                                        <th>PN</th>
+                                        <th>DN</th>
                                         <th>Offer Type</th>
                                         <th>Date</th>
                                         <th>Actions</th>
