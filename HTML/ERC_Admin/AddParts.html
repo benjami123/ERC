@@ -13,22 +13,17 @@
     <title>Title</title>
 
     <script>
-        var files = [];
+        var formData = new FormData();
+        var fileNumber = 0;
         function createArrayFiles(file){
-                console.log(file);
-                files.push(file);
-                console.log(files);
+                formData.append(""+fileNumber+"",file);
+                fileNumber++;
                 $("#File").append("<p>"+file.name+"<p>");
-            document.getElementById("check").innerHTML = '<i class="material-icons">play_arrow</i><input type="button" onclick="sendFiles()">';
+                document.getElementById("check").innerHTML = '<i class="material-icons">play_arrow</i><input type="button" onclick="sendFiles()">';
         }
 
         function sendFiles(){
-                var json = {};
-                json.files = files;
-                var formData = new FormData();
-                console.log("files :");
-                console.log(json);
-                formData.append("files", JSON.stringify(json));
+                formData.add('fileNumber', fileNumber);
                 console.log(formData);
                 var xmlRequest = new XMLHttpRequest();
                 xmlRequest.open("POST", "/ERC_Admin/CheckParts", true);
