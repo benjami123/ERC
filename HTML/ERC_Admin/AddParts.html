@@ -54,7 +54,7 @@
                 formData.append('fileNumber', ""+fileNumber+"");
                 var xmlRequest = new XMLHttpRequest();
                 xmlRequest.open("POST", "/ERC_Admin/AddParts", true);
-                xmlRequest.send(formeData);
+                xmlRequest.send(formData);
                 xmlRequest.onreadystatechange = function () {
                     if ((xmlRequest.readyState == 4) && (xmlRequest.status == 200)) {
                         $("#File").append("<p class='green'>"+xmlRequest.responseText+"</p>");
