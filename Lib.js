@@ -55,7 +55,8 @@ module.exports={
         res.end('404 : This Page doesn\'t exist');
       }
     }else{
-      res.sendStatus(403);
+      // res.sendStatus(403);
+      res.redirect('/index.html');
     }
   },
   

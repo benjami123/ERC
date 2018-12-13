@@ -1,5 +1,6 @@
 //Loading modules
 var DB = require('./Database.js');
+var PartsChecker = require('./AddPartsChecker.js');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var formidable = require('formidable'); 
@@ -7,7 +8,9 @@ const express = require('express');
 const app = express();
 var Lib = require('./Lib.js');
 var fs = require('fs');
-RoleArray = Lib.getRoleArray();
+var RoleArray = Lib.getRoleArray();
+
+var ServerPort = 3000;
 
 app.use( bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
@@ -84,33 +87,34 @@ app.post('/Login',function(req,res){
   DB.getUser(opt, function(err, user){
     if(user != undefined){
       sess.user = user;
+      var json = {user: user};
       switch(user.UserRole){
-        case 1 : var json = {};
+        case 1 : 
           json.Redirection ="/Plant_Admin/index.html"
           res.end(JSON.stringify(json));
           break;
 
-        case 2 : var json = {};
+        case 2 :
           json.Redirection ="/ERC_Admin/index.html"
           res.end(JSON.stringify(json));
           break;
 
-        case 3 : var json = {};
+        case 3 :
           json.Redirection ="/Plant_Operator/index.html"
           res.end(JSON.stringify(json));
           break;
 
-        case 4 : var json = {};
+        case 4 :
           json.Redirection = "/ERC_Service/index.html"
           res.end(JSON.stringify(json));
           break;
 
-        case 5 : var json = {};
+        case 5 :
           json.Redirection = "/ERC_Additives/index.html"
           res.end(JSON.stringify(json));
           break;
 
-        case 6 : var json = {};
+        case 6 :
           json.Redirection = "/ERC_Maintenance/index.html"
           res.end(JSON.stringify(json));
           break;
@@ -559,7 +563,6 @@ app.post('/ERC_Admin/*', function(req, res){
         console.log("Sending users:");
         console.log(Users);
         for(var i=0; i<Users.length; i++){
-          var RoleArray = Lib.getRoleArray();
           var re = new RegExp("/", "g");
           Users[i].UserRole = RoleArray[Users[i].UserRole - 1].Link.replace(re, '');
         }
@@ -617,10 +620,50 @@ app.post('/ERC_Admin/*', function(req, res){
         res.end("PartName or Partdescription wrong");
       }
       break;
+
+    case "/CheckParts":
+      var form = new formidable.IncomingForm();
+      form.parse(req, function(err, fields, files){
+        console.log("Got files : ");
+        console.log(files);
+        var NumberOfFiles = fields.fileNumber;
+        console.log(NumberOfFiles);
+        var ArrayOfMessages = [];
+        var CanBeExecuted = true;
+        PartsChecker.CheckFiles(files, DB, function(WebConsoleMessages, CanFileBeExecuted){
+          if(CanBeExecuted){
+            CanBeExecuted = CanFileBeExecuted;
+          }
+          NumberOfFiles--;
+          ArrayOfMessages.push(WebConsoleMessages);
+          console.log("Added to ArrayOfMessages : ")
+          console.log(ArrayOfMessages);
+          if(NumberOfFiles == 0){
+            console.log("Data sent to user : ")
+            console.log(ArrayOfMessages);
+            res.end(JSON.stringify({ConsoleMessages: ArrayOfMessages, CanBeExecuted: CanBeExecuted}));
+          }
+        });
+      });
+      break;
+
+    
+    case "/AddParts":
+      var form = new formidable.IncomingForm();
+      form.parse(req, function(err, fields, files){
+        console.log("Got files : ");
+        console.log(files);
+        var NumberOfFiles = fields.fileNumber;
+        console.log(NumberOfFiles);
+        PartsChecker.AddParts(files, DB, function(){
+          res.end("Done !");
+        });
+      });
+      break;
   }
 });
 
 
-app.listen(3000, function () {
+app.listen(ServerPort, function () {
   console.log('listening on port 3000!');
 });

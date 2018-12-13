@@ -38,7 +38,7 @@ module.exports= {
 
     //Plant_Operator : index partPreview
     getPlantPartPreviewInfos: function(IDPlant, callback){
-        var Query = "SELECT part.PartName, part.PartDescription, partimplemented.Location, partimplemented.IdPartImplemented, supplier.SupplierName "
+        var Query = "SELECT part.PartName, part.PartDescription, partimplemented.Location, partimplemented.IdPartImplemented, supplier.SupplierName, part.KKS, part.PressureNominal, part.DiameterNominal "
                 +   "FROM part "
                 +   "JOIN partimplemented ON part.IdPart=partimplemented.IdPart "
                 +   "JOIN supplier ON part.IdSupplier=supplier.IdSupplier "
@@ -129,7 +129,7 @@ module.exports= {
     
     //Plant_Operator : Offer GetOffers
     getPlantOffer: function(IDPlant, callback){
-        var Query = "SELECT part_offer.IdPart_Offer, part_offer.OfferType, part_offer.OfferState, part_offer.OfferDateStart, part_offer.Offer, part.PartName, partimplemented.Location "
+        var Query = "SELECT part_offer.IdPart_Offer, part_offer.OfferType, part_offer.OfferState, part_offer.OfferDateStart, part_offer.Offer, part.PartName, part.KKS, part.PressureNominal, part.DiameterNominal, partimplemented.Location "
                 +   "FROM part_offer "
                 +   "JOIN partimplemented ON part_offer.IdPartImplemented=partimplemented.IdPartImplemented "
                 +   "JOIN part ON partimplemented.IdPart=part.IdPart "
@@ -168,7 +168,7 @@ module.exports= {
         if(WithFiles){
             s = "part_offer.Offer, part_offer.OrderFromClient, part_offer.OrderFromERC ";
         }
-        var Query = "SELECT part.PartName, user.Login, partimplemented.Location, partimplemented.IdPlant, part_offer.IdPart_Offer, part_offer.OfferType, part_offer.OfferState, part_offer.OfferDateStart, " + s 
+        var Query = "SELECT part.PartName, part.KKS, part.PressureNominal, part.DiameterNominal, user.Login, partimplemented.Location, partimplemented.IdPlant, part_offer.IdPart_Offer, part_offer.OfferType, part_offer.OfferState, part_offer.OfferDateStart, " + s 
                 +   "FROM part_offer "
                 +   "JOIN partimplemented ON part_offer.IdPartImplemented=partimplemented.IdPartImplemented "
                 +   "JOIN part ON part.IdPart=partimplemented.IdPart "
@@ -183,7 +183,7 @@ module.exports= {
 
     //Plant_Operator : History get Reviews
     getPlantHistoryReview: function(IDPlant, callback){
-        var Query = "SELECT part.PartName, user.Login, partimplemented.Location, partimplemented.IdPlant, review.ReviewType, review.ReviewDate "
+        var Query = "SELECT part.PartName, part.KKS, part.PressureNominal, part.DiameterNominal, user.Login, partimplemented.Location, partimplemented.IdPlant, review.ReviewType, review.ReviewDate "
                 +   "FROM review "
                 +   "JOIN partimplemented ON review.IdPartImplemented=partimplemented.IdPartImplemented "
                 +   "JOIN part ON part.IdPart=partimplemented.IdPart "
@@ -218,7 +218,7 @@ module.exports= {
 
     //ERC_Service : index
     getOffersRequest: function(callback){
-        var Query = "SELECT user.Login, user.UserRole, plant.Address, plant.PlantName, plant.IdPlant, partimplemented.Location, part.PartName, part_offer.IdPart_Offer, part_offer.OfferType, part_offer.OfferDateStart, part_offer.OfferState "
+        var Query = "SELECT user.Login, user.UserRole, plant.Address, plant.PlantName, plant.IdPlant, partimplemented.Location, part.PartName, part.KKS, part.PressureNominal, part.DiameterNominal, part_offer.IdPart_Offer, part_offer.OfferType, part_offer.OfferDateStart, part_offer.OfferState "
                 +   "FROM part_offer "
                 +   "JOIN partimplemented ON part_offer.IdPartImplemented=partimplemented.IdPartImplemented "
                 +   "JOIN part ON partimplemented.IdPart=part.IdPart "
@@ -258,7 +258,7 @@ module.exports= {
     
     //ERC_Service : Orders getOrders
     getOrdersRequest: function(callback){
-        var Query = "SELECT user.Login, user.UserRole, plant.Address, plant.PlantName, plant.IdPlant, partimplemented.Location, part.PartName, part_offer.IdPart_Offer, part_offer.OfferType, part_offer.OfferDateStart, part_offer.OfferState, part_offer.Offer, part_offer.OrderFromClient "
+        var Query = "SELECT user.Login, user.UserRole, plant.Address, plant.PlantName, plant.IdPlant, partimplemented.Location, part.PartName, part.KKS, part.PressureNominal, part.DiameterNominal, part_offer.IdPart_Offer, part_offer.OfferType, part_offer.OfferDateStart, part_offer.OfferState, part_offer.Offer, part_offer.OrderFromClient "
                 +   "FROM part_offer "
                 +   "JOIN partimplemented ON part_offer.IdPartImplemented=partimplemented.IdPartImplemented "
                 +   "JOIN part ON partimplemented.IdPart=part.IdPart "
@@ -405,7 +405,7 @@ module.exports= {
 
     //Plant_Admin Parts GetSupplierParts
     getSupplierPart: function(callback){
-        var Query = "SELECT part.IdPart, part.PartName, part.PartDescription, supplier.SupplierName "
+        var Query = "SELECT part.IdPart, part.PartName, part.PartDescription, part.KKS, part.PressureNominal, part.DiameterNominal, supplier.SupplierName "
                 +   "FROM part "
                 +   "JOIN supplier ON supplier.IdSupplier=part.IdSupplier "
                 +   "ORDER BY supplier.SupplierName;";
@@ -414,7 +414,7 @@ module.exports= {
             callback(err, rows) ;
         });
     },
-
+    
     //Plant_Admin : Parts Adding partsImplemented to plant
     createPartImplemented: function(Values, callback){
         var Query = "INSERT INTO partimplemented (IdPlant, IdPart, isImplemented, Location) VALUES ? ;";
@@ -441,7 +441,7 @@ module.exports= {
 
     //ERC_Admin : Parts getParts
     getParts: function(callback){
-        var Query = "SELECT part.PartName, part.IdPart, part.PartDescription, supplier.SupplierName, supplier.SupplierEmail "
+        var Query = "SELECT part.PartName, part.IdPart, part.PartDescription, part.KKS, part.PressureNominal, part.DiameterNominal, supplier.SupplierName, supplier.SupplierEmail, part.KKS, part.PressureNominal, part.DiameterNominal "
                 +   "FROM part "
                 +   "JOIN supplier ON part.IdSupplier=supplier.IdSupplier;";
         con.query(Query, function(err, rows){
@@ -467,6 +467,17 @@ module.exports= {
             callback(err, rows) ;
         });
     },
+
+    //ERC_Admin : AddParts, adding part to module
+    addParts: function(Values, callback){
+        var Query = "INSERT INTO part (IdSupplier, KKS, PartName, PartDescription, PressureNominal, DiameterNominal) VALUES ? ;";
+        con.query(Query, [Values], function(err, rows){
+            if (err) throw err;
+            callback(err, rows) ;
+        });
+    },
+
+
 
     getPlantName: function(IDPlant, callback){
         var Query = "SELECT PlantName FROM plant WHERE IdPlant = ? ;";
