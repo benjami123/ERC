@@ -51,8 +51,7 @@
             }
 
             function execute() {
-                var formeData = new FormData();
-                formeData.append("files", files);
+                formData.append('fileNumber', ""+fileNumber+"");
                 var xmlRequest = new XMLHttpRequest();
                 xmlRequest.open("POST", "/ERC_Admin/AddParts", true);
                 xmlRequest.send(formeData);
