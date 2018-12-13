@@ -34,9 +34,9 @@
                     if ((xmlRequest.readyState == 4) && (xmlRequest.status == 200)) {
                         console.log("Got response : ");
                         var answer = JSON.parse(xmlRequest.responseText);
-                        for(var i =0 ;i<answer.ConsoleMessage.length;i++)
+                        for(var i =0 ;i<answer.ConsoleMessages.length;i++)
                         {
-                            var array = answer.ConsoleMessage[i];
+                            var array = answer.ConsoleMessages[i];
                             if(array.isError)
                                 $("#File").append("<p class='green'>"+array.Message+"</p>");
                             else
