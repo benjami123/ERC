@@ -24,6 +24,8 @@
 
         function sendFiles(){
                 var formData = new FormData();
+                console.log("files :");
+                console.log(files);
                 formData.append("files", files);
                 console.log(formData);
                 var xmlRequest = new XMLHttpRequest();
