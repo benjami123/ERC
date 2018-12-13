@@ -286,12 +286,13 @@
             "     </span>";
         $("#popupLocation").append(body);
         $("#popupLocation").css({top:$(window).height()/2-$("#popupLocation").height()/2,left:$(window).width()/2-$("#popupLocation").width()/2});
-        $(body).css("background","dark");
+        $("body").css("background-color","dark");
         $("#popupLocation").css("display","block");
 
     }
     function closed(){
         $("#popupLocation").css("display","none");
+        document.getElementById("popupLocation").innerHTML = "" ;
     }
 </script>
 </html>
