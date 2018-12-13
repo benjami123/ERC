@@ -32,35 +32,35 @@
                             for(var i = 0;i<SupplerPart.length;i++){
                                 var json = SupplerPart[i];
                                 if(json.IdPart == null){
-
+                                    json.IdPart = "-";
                                 }
                                 if(json.PartDescription == null)
                                 {
-
+                                    json.PartDescription = "-";
                                 }
                                 if(json.PartName == null)
                                 {
-
+                                    json.PartName = "-";
                                 }
                                 if(json.DefaultLocation == null)
                                 {
-
+                                    json.DefaultLocation = "-";
                                 }
                                 if(json.KKS == null)
                                 {
-
+                                    json.KKS = "-";
                                 }
                                 if(json.PressureNominal == null)
                                 {
-
+                                    json.PressureNominal = "-";
                                 }
                                 if(json.DiameterNominal == null)
                                 {
-
+                                    json.DiameterNominal = "-";
                                 }
                                 if(json.SupplierName == null)
                                 {
-
+                                    json.SupplierName = "-";
                                 }
                                 ("#bodyL").append("" +
                                     "<tr id=\"L"+json.IdPart+"\" onclick=\"color('L"+json.IdPart+"')\">\n" +
@@ -86,8 +86,38 @@
                     PlantPart = JSON.parse(xmlRequest2.responseText);
                     console.log(PlantPart);
                     for(var i = 0;i<PlantPart.length;i++){
-
                         var json = PlantPart[i];
+                        if(json.IdPartImplemented == null){
+                            json.IdPartImplemented = "-";
+                        }
+                        if(json.PartDescription == null)
+                        {
+                            json.PartDescription = "-";
+                        }
+                        if(json.PartName == null)
+                        {
+                            json.PartName = "-";
+                        }
+                        if(json.DefaultLocation == null)
+                        {
+                            json.DefaultLocation = "-";
+                        }
+                        if(json.KKS == null)
+                        {
+                            json.KKS = "-";
+                        }
+                        if(json.PressureNominal == null)
+                        {
+                            json.PressureNominal = "-";
+                        }
+                        if(json.DiameterNominal == null)
+                        {
+                            json.DiameterNominal = "-";
+                        }
+                        if(json.SupplierName == null)
+                        {
+                            json.SupplierName = "-";
+                        }
                         $("#bodyR").append("" +
                             "<tr id=\"R"+json.IdPartImplemented+"\" onclick=\"color('R"+json.IdPartImplemented+"')\">\n" +
                             "                <td>"+json.PartName+"</td>\n" +
@@ -221,6 +251,9 @@
             <th>PartName</th>
             <th>PartDescription</th>
             <th>DefaultLocation</th>
+            <th>KKS</th>
+            <th>PressureNominal</th>
+            <th>DiameterNominal</th>
             <th>SupportName</th>
         </thead>
     </table>
@@ -242,6 +275,9 @@
             <th>PartName</th>
             <th>PartDescription</th>
             <th>PartLocation</th>
+            <th>KKS</th>
+            <th>PressureNominal</th>
+            <th>DiameterNominal</th>
             <th>SupplierName</th>
         </thead>
     </table>
