@@ -56,10 +56,11 @@
                         }
                         console.log("answer.CanBeExecuted :");
                         console.log(answer.CanBeExecuted);
-                        if(answer.CanBeExecuted)
+                        if(answer.CanBeExecuted === false) {
                             console.log("answer.CanBeExecuted :");
                             console.log(answer.CanBeExecuted);
-                            $("#exe").css("display","block");
+                            $("#exe").css("display", "block");
+                        }
                     }
 
                 };
