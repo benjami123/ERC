@@ -55,7 +55,7 @@ module.exports= {
         for(var i=0; i< IDPlant.length-1; i++){
             s += " OR IdPlant = ?"
         }
-        var Query = "SELECT IdReductionAgent, LevelOfRAInL, TotalCapacityInL, TankName FROM reductionagent WHERE IdPlant = ? " + s + " ;";
+        var Query = "SELECT IdReductionAgent, LevelOfRAInL, TotalCapacityInL, TankName, IdPlant FROM reductionagent WHERE IdPlant = ? " + s + " ;";
         console.log("Executing query : " + Query);
         console.log("With values ");
         console.log(IDPlant);
@@ -386,11 +386,19 @@ module.exports= {
 
     //Plant_Admin : index Get users from plant
     getUserWithRole: function(IDPlant, Role, callback){
-        var Query = "SELECT IdUser, Login,  Email FROM user WHERE IdPlant = ? AND UserRole = ? ;";
-        con.query(Query, [IDPlant, Role], function(err, rows){
-            if (err) throw err;
-            callback(err, rows) ;
-        });
+        if(IDPlant != null){
+            var Query = "SELECT IdUser, Login,  Email, UserRole FROM user WHERE IdPlant = ? AND UserRole = ? ;";
+            con.query(Query, [IDPlant, Role], function(err, rows){
+                if (err) throw err;
+                callback(err, rows) ;
+            });
+        }else{
+            var Query = "SELECT IdUser, Login, Email, UserRole FROM user WHERE UserRole = 4 OR UserRole = 5 OR UserRole = 6;";
+            con.query(Query, function(err, rows){
+                if (err) throw err;
+                callback(err, rows) ;
+            });
+        }
     },
 
     //Plant_Admin Parts Get PartImplemented from plant -> see Plant_Operator getPlantPartPreviewInfos()
@@ -425,7 +433,40 @@ module.exports= {
         });
     },
 
+    //ERC_Admin : index getUsers -> see Plant_Admin GetUserWithRole
+    
+    //ERC_ADmin : index RemoveUser -> see Plant_Admin removeUser
+    
+    //ERC_Admin : AddUser -> see Plant_Admin addUser
 
+    //ERC_Admin : Parts getParts
+    getParts: function(callback){
+        var Query = "SELECT part.PartName, part.IdPart, part.PartDescription, supplier.SupplierName, supplier.SupplierEmail "
+                +   "FROM part "
+                +   "JOIN supplier ON part.IdSupplier=supplier.IdSupplier;";
+        con.query(Query, function(err, rows){
+            if (err) throw err;
+            callback(err, rows) ;
+        });
+    },
+
+    //ERC_Admin : PartDescription updatePart
+    updatePart: function(opt, callback){
+        var Query = "UPDATE part SET PartName = ? , PartDescription = ? , IdSupplier = ? WHERE IdPart = ? ;";
+        con.query(Query, [opt.PartName, opt.PartDescription, opt.IdSupplier, opt.IdPart], function(err, rows){
+            if (err) throw err;
+            callback(err, rows);
+        });
+    },
+
+    //ERC_Admin : partDescription getSuppliers
+    getSuppliers: function(callback){
+        var Query = "SELECT SupplierName, IdSupplier, SupplierEmail FROM supplier ;";
+        con.query(Query, function(err, rows){
+            if (err) throw err;
+            callback(err, rows) ;
+        });
+    },
 
     getPlantName: function(IDPlant, callback){
         var Query = "SELECT PlantName FROM plant WHERE IdPlant = ? ;";

@@ -20,9 +20,6 @@ app.use(session({
 }));
 
 
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/HTML/index.html');
-});
 app.get('/Plant_Admin/*', function(req, res){
   Lib.CheckRole(req, res, RoleArray[0]);
 });
@@ -65,6 +62,18 @@ app.get('/Orders/*', function(req, res){
     }
   }else{
     res.end('404');
+  }
+});
+
+app.get('*', function(req, res){
+  var URL = req.url;
+  console.log("Request from : " + URL);
+  if(URL === "/index.css"){
+    console.log("Sending file : " + __dirname + '/HTML' + URL);
+    res.sendFile(__dirname + '/HTML' + URL);
+  }else{
+    console.log("Sending file : " + __dirname + '/HTML/index.html');
+    res.sendFile(__dirname + '/HTML/index.html');
   }
 });
 
@@ -518,39 +527,7 @@ app.post('/ERC_Additives/*', function(req, res){
       break;
     
     case "/GetCustomers":
-      // DB.getPlants(function(err, Plants){
-      //   console.log("Got plants : ");
-      //   console.log(Plants);
-      //   var ArrayPlantsID = [];
-      //   for(var i=0; i<Plants.length; i++){
-      //     ArrayPlantsID.push(Plants[i].IdPlant);
-      //     console.log(Plants[i].IdPlant);
-      //   }
-      //   console.log(ArrayPlantsID);
-      //   DB.getRAInfos(ArrayPlantsID, function(err, RALevels){
-      //     console.log("Got RA levels : ");
-      //     console.log(RALevels);
-      //     var arr = [];
-      //     for(var i=0; i<RALevels.lenght; i++){
-      //       arr[i] = [];
-      //     }
-      //     DB.getLastRAOrder(ArrayPlantsID, function(err, LastRAOrderDate){
-      //       console.log("Got LastOrders : ");
-      //       console.log(LastRAOrderDate);
-      //       for(var i=0; i< Plants.length; i++){
-      //         Plants[i].RALevels = RALevels[i];
-      //         Plants[i].TotalLevelInPercent = 29;
-      //         if(LastRAOrderDate[i] != undefined){
-      //           Plants[i].DateLastOrder = LastRAOrderDate[i].OfferDateStart;
-      //         }
-      //         Plants[i] = Lib.doTransformTypeAndStateToString(Plants[i]);
-      //       }
-      //       console.log("Sending : ");
-      //       console.log(Plants);
-      //       res.end(JSON.stringify(Plants));
-      //     });
-      //   });
-      // });
+      Lib.SendCustomersRALevel(res, DB)
       break;
 
     case"/ConfirmationOrder":
@@ -577,7 +554,69 @@ app.post('/ERC_Admin/*', function(req, res){
   var url = req.originalUrl.replace('/ERC_Admin', '');
   console.log("got post in " + req.originalUrl);
   switch(url){
+    case "/index":
+      DB.getUserWithRole(null, null ,function(err, Users){
+        console.log("Sending users:");
+        console.log(Users);
+        for(var i=0; i<Users.length; i++){
+          var RoleArray = Lib.getRoleArray();
+          var re = new RegExp("/", "g");
+          Users[i].UserRole = RoleArray[Users[i].UserRole - 1].Link.replace(re, '');
+        }
+        res.end(JSON.stringify(Users));
+      });
+      break;
 
+    case "/RemoveUser":
+      DB.removeUser(req.body.IdUser, function(err, Result){
+        res.end("Done !");
+      });
+      break;
+
+    case "/AddUser":
+    var tempPW = Lib.GeneratePassword();
+      if((req.body.Login != null) && (req.body.Email != null) && (req.body.role != null)){
+        var opt = {"Login": req.body.Login, "Email": req.body.Email, "Password" : tempPW, "Role" : req.body.role};
+        DB.createUser(opt, function(err, Result){
+          res.end("Done ! ");
+        });
+      }else{
+        console.log("Got body :");
+        console.log(req.body);
+        res.end("Password/Login not valid");
+      }
+      break;
+    
+    case "/GetParts":
+      DB.getParts(function(err, Parts){
+        console.log("Sending parts :");
+        console.log(Parts);
+        res.end(JSON.stringify(Parts));
+      });
+      break;
+
+    case "/GetSupplier":
+      DB.getSuppliers(function(err, Suppliers){
+        console.log("got suppliers");
+        console.log(Suppliers);
+        res.end(JSON.stringify(Suppliers))
+      });
+      break;
+
+    case "/UpdatePart":
+    console.log("Got req");
+    console.log(req);
+      if((req.body.IdPart != null) && (req.body.PartName != null) && (req.body.IdSupplier != null) && (req.body.PartDescription != null)){
+        var opt = {"IdPart": req.body.IdPart, "PartName": req.body.PartName, "PartDescription" : req.body.PartDescription, "IdSupplier": req.body.IdSupplier}; 
+        DB.updatePart(opt, function(err, Result){
+          res.sendFile(__dirname + "/HTML/ERC_Admin/Parts.html");
+        });
+      }else{
+        console.log("Got body :");
+        console.log(req.body);
+        res.end("PartName or Partdescription wrong");
+      }
+      break;
   }
 });
 

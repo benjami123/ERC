@@ -55,7 +55,7 @@ module.exports={
         res.end('404 : This Page doesn\'t exist');
       }
     }else{
-      res.redirect("/");
+      res.sendStatus(403);
     }
   },
   
@@ -109,6 +109,49 @@ module.exports={
           console.log(json);
           res.end(JSON.stringify(json));
         }
+      });
+    });
+  },
+
+  SendCustomersRALevel: function(res, DB){
+    DB.getPlants(function(err, Plants){
+      var ArrayPlantsID = [];
+      for(var i=0; i<Plants.length; i++){           //Creates an array with only the plants id
+        ArrayPlantsID.push(Plants[i].IdPlant);
+      }
+      DB.getRAInfos(ArrayPlantsID, function(err, RALevels){
+        DB.getLastRAOrder(ArrayPlantsID, function(err, LastRAOrderDate){
+          var TotalCurrentTankQuantity=[], TotalTankCapacity=[];  //TotalQuanitity and TotalCapacity are arrays because there is one for each plant
+          var arr = [];
+          for(var i=0; i<Plants.length; i++){       //Initialize empty objects of the size of the number of plants
+            arr[i] = [];
+            TotalCurrentTankQuantity[i] = 0;        
+            TotalTankCapacity[i] = 0;
+          }
+          RALevels.forEach(RALevel => {             //For every RALevel selected
+            for(var i=0; i<Plants.length; i++){     //Check at which plant it belongs to
+              if(RALevel.IdPlant === ArrayPlantsID[i]){
+                arr[i].push(RALevel);               //Save it
+                TotalCurrentTankQuantity[i] += RALevel.LevelOfRAInL;  //update the TotalQuantity and TotalCapacity computations
+                TotalTankCapacity[i] += RALevel.TotalCapacityInL;
+                break;
+              }
+            }
+          });
+          for(var i=0; i< Plants.length; i++){      //For each plant
+            Plants[i].RALevels = arr[i];            //Set the RALevel object corresponding
+            Plants[i].TotalLevelInPercent = parseInt((TotalCurrentTankQuantity[i] / TotalTankCapacity[i]) * 100);
+            if(LastRAOrderDate[i] != undefined){    
+              Plants[i].DateLastOrder = LastRAOrderDate[i].OfferDateStart;  //Set the LastOffer
+            }else{
+              Plants[i].DateLastOrder = "No order found";
+            }
+            Plants[i] = TransformTypeAndStateToString(Plants[i]); //Change the DateLastOffer to a readable string
+          }
+          console.log("Sending : ");
+          console.log(Plants);
+          res.end(JSON.stringify(Plants));
+        });
       });
     });
   },
@@ -196,6 +239,8 @@ function TransformTypeAndStateToString(json){           //Transform type/state/d
     if((json.OrderFromERC != null) && (!json.OrderFromERC.includes("/RA/"))){
       json.OrderFromERC = RAOfferPath + json.IdRA_Offer + '/' + json.OrderFromERC;
     }
+  }else if(json.DateLastOrder != null){
+    json.DateLastOrder = json.DateLastOrder.toString().substring(0, 15);
   }
   return json;
 }
