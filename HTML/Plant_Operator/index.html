@@ -230,7 +230,7 @@ function clickPart(IdJson)
     xmlRequest = new XMLHttpRequest();
     xmlRequest.open("POST", "/Plant_Operator/PartDescription", true);
     xmlRequest.setRequestHeader('Content-type', 'application/json');
-    xmlRequest.send(jsonArray[IdJson]);
+    xmlRequest.send(JSON.stringify(jsonArray[IdJson]));
     sessionStorage.setItem("SelectedPart", JSON.stringify(jsonArray[IdJson]));
     window.location.replace("/Plant_Operator/PartDescription.html");
 }
