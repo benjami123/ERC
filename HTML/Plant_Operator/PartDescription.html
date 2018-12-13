@@ -120,6 +120,34 @@
 <script>
     function information()
     {
+        if(selectedPart.PartDescription == null)
+        {
+            selectedPart.PartDescription = "-";
+        }
+        if(selectedPart.PartName == null)
+        {
+            selectedPart.PartName = "-";
+        }
+        if(selectedPart.DefaultLocation == null)
+        {
+            selectedPart.DefaultLocation = "-";
+        }
+        if(selectedPart.KKS == null)
+        {
+            selectedPart.KKS = "-";
+        }
+        if(selectedPart.PressureNominal == null)
+        {
+            selectedPart.PressureNominal = "-";
+        }
+        if(selectedPart.DiameterNominal == null)
+        {
+            selectedPart.DiameterNominal = "-";
+        }
+        if(selectedPart.SupplierName == null)
+        {
+            selectedPart.SupplierName = "-";
+        }
         $("#Information").append(
             "<ul class=\"list-group\">" +
             "<li class='list-group-item list-group-item-success'><p>Name : "+ selectedPart.PartName+"</p></li>"+
