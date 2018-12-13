@@ -79,7 +79,7 @@
                             $("#tableHistory").append("" +
                                 "<tr>" +
                                 "<td>" + json.PartName + "</td>" +
-                                "<td>" + json.Location + "</td>" +
+                                "<td>" + json.KKS + "</td>" +
                                 "<td>" + json.OfferType + "</td>" +
                                 "<td>"+json.OfferDateStart+"</td>" +
                                 "<td>"+json.OfferState+"</td>" +
@@ -90,7 +90,7 @@
                             $("#tableHistory").append("" +
                                 "<tr>" +
                                 "<td>" + json.PartName + "</td>" +
-                                "<td>" + json.Location + "</td>" +
+                                "<td>" + json.KKS + "</td>" +
                                 "<td>" + json.ReviewType + "</td>" +
                                 "<td>"+json.ReviewDate+"</td>" +
                                 "<td>Review</td>" +
@@ -111,11 +111,13 @@
             console.log(jsonArray);
             for(var i=0;i<jsonArray.length;i++){
                 var json = jsonArray[i];
-                if(json.PartName.includes(SearchedKeyWord) || json.Location.includes(SearchedKeyWord) || json.SupplierName.includes(SearchedKeyWord)){
+                if(json.PartName.includes(SearchedKeyWord) || json.KKS.includes(SearchedKeyWord) || json.SupplierName.includes(SearchedKeyWord)){
                     $("#" + IdTable).append(""+
                         "<tr onclick='clickPart("+i+")'>"+
                         "<td>"+json.PartName+"</td>"+
-                        "<td>"+json.Location+"</td>"+
+                        "            <td>"+json.KKS+"</td>\n" +
+                        "            <td>"+json.PressureNominal+"</td>\n" +
+                        "            <td>"+json.DiameterNominal+"</td>\n" +
                         "<td>"+json.PartDescription+"</td>"+
                         "<td>"+json.SupplierName+"</td>"+
                         "</tr>");
@@ -168,7 +170,9 @@
     <table class="table table-striped border-0">
         <thead>
             <th id="PartName">Part Name</th>
-            <th id="PartDescription">Part Location</th>
+            <th>KKS</th>
+            <th>PN</th>
+            <th>DN</th>
             <th id="PartLocation">Part Description</th>
             <th id="SupplierName">Supplier Name</th>
         </thead>
@@ -184,7 +188,7 @@
     <table id="history" class="table table-striped border-0">
         <thead>
             <th>Part Name</th>
-            <th>Part Location</th>
+            <th>KKS</th>
             <th>Type</th>
             <th>Date</th>
             <th>Status</th>
@@ -199,6 +203,7 @@
 </div>
 </body>
 <script>
+
     function clickPart(IdJson)
     {
         tablePart[IdJson].IdPlant = IdPlant;
@@ -206,6 +211,34 @@
         xmlRequest.open("POST", "/Plant_Operator/PartDescription", true);
         xmlRequest.setRequestHeader('Content-type', 'application/json');
         xmlRequest.send(tablePart[IdJson]);
+        if(tablePart[IdJson].PartDescription == null)
+        {
+            tablePart[IdJson].PartDescription = "-";
+        }
+        if(tablePart[IdJson].PartName == null)
+        {
+            tablePart[IdJson].PartName = "-";
+        }
+        if(tablePart[IdJson].DefaultLocation == null)
+        {
+            tablePart[IdJson].DefaultLocation = "-";
+        }
+        if(tablePart[IdJson].KKS == null)
+        {
+            tablePart[IdJson].KKS = "-";
+        }
+        if(tablePart[IdJson].PressureNominal == null)
+        {
+            tablePart[IdJson].PressureNominal = "-";
+        }
+        if(tablePart[IdJson].DiameterNominal == null)
+        {
+            tablePart[IdJson].DiameterNominal = "-";
+        }
+        if(tablePart[IdJson].SupplierName == null)
+        {
+            tablePart[IdJson].SupplierName = "-";
+        }
         sessionStorage.setItem("SelectedPart", JSON.stringify(tablePart[IdJson]));
         window.location.replace("/ERC_Service/PartDescription.html");
     }
