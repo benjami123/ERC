@@ -24,7 +24,7 @@
         function sendFiles(){
                 var formeData = new FormData();
                 formeData.append("files", files);
-                var xmlRequest = new xmlHttpRequest();
+                var xmlRequest = new XMLHttpRequest();
                 xmlRequest.open("POST", "/ERC_Admin/CheckParts", true);
                 xmlRequest.send(formeData);
                 xmlRequest.onreadystatechange = function() {
@@ -50,7 +50,7 @@
             function execute() {
                 var formeData = new FormData();
                 formeData.append("files", files);
-                var xmlRequest = new xmlHttpRequest();
+                var xmlRequest = new XMLHttpRequest();
                 xmlRequest.open("POST", "/ERC_Admin/CheckParts", true);
                 xmlRequest.send(formeData);
                 xmlRequest.onreadystatechange = function () {
