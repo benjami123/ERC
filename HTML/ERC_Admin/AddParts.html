@@ -23,10 +23,12 @@
         }
 
         function sendFiles(){
+                var json = {};
+                json.files = files;
                 var formData = new FormData();
                 console.log("files :");
-                console.log(files);
-                formData.append("files", files);
+                console.log(json);
+                formData.append("files", JSON.stringify(json));
                 console.log(formData);
                 var xmlRequest = new XMLHttpRequest();
                 xmlRequest.open("POST", "/ERC_Admin/CheckParts", true);
