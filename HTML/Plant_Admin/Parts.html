@@ -71,6 +71,10 @@
     var destinationPlant = [];
     var removedPart = [];
     function color(id){
+        if($("#popupLocation").css("display") === "block")
+        {
+            return;
+        }
         if($("#"+id).css("background-color") == "rgb(249, 249, 249)")
         {
             $("#"+id).css("background-color","orange");
@@ -282,7 +286,7 @@
             "     </span>";
         $("#popupLocation").append(body);
         $("#popupLocation").css({top:$(window).height()/2-$("#popupLocation").height()/2,left:$(window).width()/2-$("#popupLocation").width()/2});
-        $("body").css("background","dark");
+        $(body).css("background","dark");
         $("#popupLocation").css("display","block");
 
     }
