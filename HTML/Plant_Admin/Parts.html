@@ -14,7 +14,13 @@
     <script>
         var SupplerPart={};
         var PlantPart={};
+        function name(){
+            var identifier = JSON.parse(sessionStorage.getItem("user"));
+            console.log(identifier);
+            document.getElementById("Identifier").innerHTML = identifier.Login;
+        }
         window.onload = function(){
+            name();
             xmlRequest = new XMLHttpRequest();
             xmlRequest.open("POST", "/Plant_Admin/GetSupplierPart", true);
             xmlRequest.setRequestHeader('Content-type', 'application/json');

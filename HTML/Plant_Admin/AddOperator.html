@@ -11,7 +11,13 @@
 
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<script>
-		    function createUser(Email, Login){
+            function name(){
+                var identifier = JSON.parse(sessionStorage.getItem("user"));
+                console.log(identifier);
+                document.getElementById("Identifier").innerHTML = identifier.Login;
+            }
+            window.onload = function(){
+                name();
                 var data = {};
                 data.Login = Login;
                 data.Email = Email;

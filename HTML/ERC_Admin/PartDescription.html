@@ -21,7 +21,13 @@
             $("#SupplierName").val(idSelectByDefault);
             change();
         }
-        window.onload = function (){
+        function name(){
+            var identifier = JSON.parse(sessionStorage.getItem("user"));
+            console.log(identifier);
+            document.getElementById("Identifier").innerHTML = identifier.Login;
+        }
+        window.onload = function(){
+            name();
             console.log("sending post to server");
             var json={};
             var xmlRequest = new XMLHttpRequest();

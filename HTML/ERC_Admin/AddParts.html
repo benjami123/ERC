@@ -13,6 +13,13 @@
     <title>Title</title>
 
     <script>
+        function name(){
+            var identifier = JSON.parse(sessionStorage.getItem("user"));
+            console.log(identifier);
+            document.getElementById("Identifier").innerHTML = identifier.Login;
+        }
+        window.onload = function(){
+            name();};
         var formData = new FormData();
         var fileNumber = 0;
         function createArrayFiles(file){

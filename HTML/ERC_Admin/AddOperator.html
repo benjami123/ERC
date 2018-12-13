@@ -11,6 +11,13 @@
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <title>AddOperator</title>
 		<script>
+            function name(){
+                var identifier = JSON.parse(sessionStorage.getItem("user"));
+                console.log(identifier);
+                document.getElementById("Identifier").innerHTML = identifier.Login;
+            }
+            window.onload = function(){
+                name();};
 		    function createUser(email, login, role){
                 var data = {};
                 if(email == "" || login == "" || role == 0)

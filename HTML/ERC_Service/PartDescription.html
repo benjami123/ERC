@@ -13,7 +13,13 @@
         var selectedPart = JSON.parse(sessionStorage.getItem("SelectedPart"));
         console.log(selectedPart);
 
+        function name(){
+            var identifier = JSON.parse(sessionStorage.getItem("user"));
+            console.log(identifier);
+            document.getElementById("Identifier").innerHTML = identifier.Login;
+        }
         window.onload = function(){
+            name();
             var IdPartImplemented = sessionStorage.getItem("SelectedPart");
             // console.log("sending post to server " + IdPartImplemented);
             xmlRequest = new XMLHttpRequest();

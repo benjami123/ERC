@@ -11,8 +11,14 @@
     <link rel="stylesheet" href="Customer.css">
     <title>Customer</title>
     <script>
+        function name(){
+            var identifier = JSON.parse(sessionStorage.getItem("user"));
+            console.log(identifier);
+            document.getElementById("Identifier").innerHTML = identifier.Login;
+        }
         window.onload = function(){
-            console.log("sending post to server"),
+            name();
+            console.log("sending post to server");
             xmlRequest = new XMLHttpRequest();
             xmlRequest.open("POST", "/ERC_Additives/GetCustomers", true);
             xmlRequest.setRequestHeader('Content-type', 'application/json');

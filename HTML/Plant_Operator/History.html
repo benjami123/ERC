@@ -10,7 +10,13 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <title>History</title>
     <script>
+        function name(){
+            var identifier = JSON.parse(sessionStorage.getItem("user"));
+            console.log(identifier);
+            document.getElementById("Identifier").innerHTML = identifier.Login;
+        }
         window.onload = function(){
+            name();
             console.log("sending post to server");
             var json={};
             xmlRequest = new XMLHttpRequest();
