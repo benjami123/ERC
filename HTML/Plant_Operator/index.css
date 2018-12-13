@@ -27,8 +27,10 @@
     /*border:1px solid #000000;*/
 }
 #search{
+    width: 99%;
     margin-top: 1%;
-    margin-left: 3px
+    margin-left: 3px;
+    margin-right: 3.5px;
 }
 #Button{
     margin-top : 10%;
