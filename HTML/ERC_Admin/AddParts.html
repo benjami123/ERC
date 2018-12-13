@@ -17,7 +17,7 @@
         var fileNumber = 0;
         function createArrayFiles(file){
                 console.log(file);
-                formData.append('azertyu',file);
+                formData.append(''+fileNumber+'',file);
                 console.log(formData);
                 fileNumber++;
                 $("#File").append("<p>"+file.name+"<p>");
