@@ -42,11 +42,11 @@
                         console.log("Got response : ");
                         console.log(JSON.parse(xmlRequest.responseText));
                         var answer = JSON.parse(xmlRequest.responseText);
-                        for(var j = 0;j<answer.length;j++)
+                        for(var j = 0;j<answer.ConsoleMessages.length;j++)
                         {
-                            for(var i =0 ;i<answer[j].ConsoleMessages.length;i++)
+                            for(var i =0 ;i<answer.ConsoleMessages[j].length;i++)
                             {
-                                var array = answer[j].ConsoleMessages[i];
+                                var json = answer.ConsoleMessages[j][i];
                                 if(!array.isError)
                                     $("#console").append("<p class='green'>"+array.Message+"</p>");
                                 else
