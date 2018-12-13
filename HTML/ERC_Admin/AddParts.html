@@ -18,6 +18,7 @@
                 console.log(file);
                 files.push(file);
                 $("#File").append("<p>"+file.name+"<p>");
+            document.getElementById("check").innerHTML = '<i class="material-icons">play_arrow</i><input type="button" onclick="execute()">';
         }
 
         function sendFiles(){
@@ -41,9 +42,25 @@
 
                         if(answer.CanBeExecuted)
                             document.getElementById("exe").innerHTML = '<i class="material-icons">play_arrow</i><input type="button" onclick="execute()">';
+
                     }
                 };
             }
+
+            function execute() {
+                var formeData = new FormData();
+                formeData.append("files", files);
+                var xmlRequest = new XmlHttpRequest();
+                xmlRequest.open("POST", "/ERC_Admin/CheckParts", true);
+                xmlRequest.send(formeData);
+                xmlRequest.onreadystatechange = function () {
+                    if ((xmlRequest.readyState == 4) && (xmlRequest.status == 200)) {
+                        $("#File").append("<p class='green'>"+xmlRequest.responseText+"</p>");
+                    }
+                };
+            }
+
+
     </script>
 </head>
 <body>
@@ -74,10 +91,13 @@
 </div>
 <div id="button">
     <span class="btn btn-success btn-just-icon btn-sm btn-file">
-        <i class="material-icons">check</i><input type="file" oninput="createArrayFiles(this.files[0])">
+        <i class="material-icons">playlist_add</i><input type="file" oninput="createArrayFiles(this.files[0])">
     </span>
-    <span id="exe" class="btn btn-primary btn-just-icon btn-sm btn-file">
-        <i class="material-icons">playlist_add</i><input type="button" disabled onclick="sendFiles()">
+    <span id="check" class="btn btn-primary btn-just-icon btn-sm btn-file">
+        <i class="material-icons">check</i><input type="button" disabled onclick="sendFiles()">
+    </span>
+    <span id="exe" class="btn btn-secondary btn-just-icon btn-sm btn-file">
+
     </span>
 </div>
 </div>
