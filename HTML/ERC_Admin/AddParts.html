@@ -47,10 +47,10 @@
                             for(var i =0 ;i<answer.ConsoleMessages[j].length;i++)
                             {
                                 var json = answer.ConsoleMessages[j][i];
-                                if(!array.isError)
-                                    $("#console").append("<p class='green'>"+array.Message+"</p>");
+                                if(!json.isError)
+                                    $("#console").append("<p class='green'>"+json.Message+"</p>");
                                 else
-                                    $("#console").append("<p class='red'>"+array.Message+"</p>");
+                                    $("#console").append("<p class='red'>"+json.Message+"</p>");
                             }
 
                         }
