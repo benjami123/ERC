@@ -26,11 +26,14 @@ module.exports={
                 arr[j].push(Data[j].DiameterNominal);
             }
             i++;
+            res = removeDuplicatesInsideItself(arr, null);
             console.log("arr : ");
-            console.log(arr);
-            DB.addParts(arr, function(){
-                callback();
-            });
+            console.log(res.PartsArrayWithoutDuplicate);
+            removeDuplicates(res.PartsArrayWithoutDuplicate, DB, function(PartsArray){
+                DB.addParts(PartsArray, function(){
+                    callback();
+                });
+            })
         }
     }
 }
@@ -76,15 +79,21 @@ function OpenFile(f, DB){
     }
     var SheetSize =  SelectedSheet['!ref'].split(':')[1];
     console.log("File of size : " + SheetSize);
-    var PartsData = xlsx.utils.sheet_to_json(SelectedSheet, {range:"Y12-" + SheetSize, header:["KKS1", "KKS2", "KKS3", "n1", "n2", "n3", "n4", "n5","n6", "PartName", "DN", "PN", "PartDescription"]});
+    var PartsData = xlsx.utils.sheet_to_json(SelectedSheet, {range:"Y12-" + SheetSize, header:["KKS1", "KKS2", "KKS3", "n1", "n2", "n3", "n4", "n5","n6", "PartName", "DN", "PN", "n7", "PartDescription"]});
     var Data = [];
+    console.log("File opened");
     for(var i=0; i<PartsData.length; i++){
         if((PartsData[i].PartName != null) && (PartsData[i].PartDescription != null)){
             PartsData[i] = ReplaceDashesWithNull(PartsData[i]);
+
+            var KKSNumber = PartsData[i].KKS1 + PartsData[i].KKS2 + PartsData[i].KKS3; 
+            if(KKSNumber === ""){
+                KKSNumber = null;
+            }
             Data.push({
                 PartName: PartsData[i].PartName, 
                 PartDescription: PartsData[i].PartDescription,
-                KKS: PartsData[i].KKS1 + PartsData[i].KKS2 + PartsData[i].KKS3,
+                KKS: KKSNumber,
                 DN: PartsData[i].DN,
                 PN: PartsData[i].PN
             });
@@ -96,13 +105,15 @@ function OpenFile(f, DB){
 
 function CheckIfPartCanBeInserted(PartsArray, WebConsoleMessages, DB, callback){
     DB.getParts(function(err, Parts){
-        console.log("Parts : ");
-        console.log(PartsArray);
+        res = removeDuplicatesInsideItself(PartsArray, WebConsoleMessages);
+        PartsArray = res.PartsArrayWithoutDuplicate;
+        WebConsoleMessages = res.WebConsoleMessages;
         for(var i=0; i<PartsArray.length; i++){
             var isPartInsertable = true;
             for(var j=0; j<Parts.length; j++){
                 if((PartsArray[i].PartName === Parts[j].PartName) && (PartsArray[i].PartDescription === Parts[j].PartDescription) && (PartsArray[i].PN === Parts[j].PresureNominal) && (PartsArray[i].DN === Parts[j].DiameterNominal) && (PartsArray[i].KKS === Parts[j].KKS)){
                     isPartInsertable = false;
+                    break;
                 }
             }
             if(isPartInsertable){
@@ -115,6 +126,51 @@ function CheckIfPartCanBeInserted(PartsArray, WebConsoleMessages, DB, callback){
     });
 }
 
+function removeDuplicatesInsideItself(PartsArray, WebConsoleMessages){
+    var unique = [];
+    var len = PartsArray.length;
+    for ( var i = 0; i < len; i++ ){
+        console.log(PartsArray[i]);
+        var isInArray = false;
+        for(var j=0; j< unique.length; j++){
+            if((unique[j].KKS === PartsArray[i].KKS) && (unique[j].PartName === PartsArray[i].PartName) && (unique[j].PartDescription === PartsArray[i].PartDescription) && (unique[j].PN === PartsArray[i].PN) && (unique[j].DN === PartsArray[i].DN)){
+                isInArray = true;
+                break;
+            }
+        }
+      if(!isInArray){
+          unique.push(PartsArray[i]);
+      }else{
+        if(WebConsoleMessages != null){
+            WebConsoleMessages = AddMessage(WebConsoleMessages, "Found duplicate in input file : " + JSON.stringify(PartsArray[i]), true)
+        }
+      }
+    }
+    return {PartsArrayWithoutDuplicate: unique, WebConsoleMessages: WebConsoleMessages};
+}
+
+function removeDuplicates(PartsArray, DB, callback){
+    DB.getParts(function(err, Parts){
+        console.log("Parts : ");
+        console.log(PartsArray);
+        returnedValue = removeDuplicatesInsideItself(PartsArray);
+        PartsArray = returnedValue.PartsArrayWithoutDuplicate;
+        var res = [];
+        for(var i=0; i<PartsArray.length; i++){
+            var isPartInsertable = true;
+            for(var j=0; j<Parts.length; j++){
+                if((PartsArray[i].PartName === Parts[j].PartName) && (PartsArray[i].PartDescription === Parts[j].PartDescription) && (PartsArray[i].PN === Parts[j].PresureNominal) && (PartsArray[i].DN === Parts[j].DiameterNominal) && (PartsArray[i].KKS === Parts[j].KKS)){
+                    isPartInsertable = false;
+                    break;
+                }
+            }
+            if(isPartInsertable){
+                res.push(PartsArray[i]);
+            }
+        }
+        callback(res);
+    });
+}
 
 function ReplaceDashesWithNull(json){
     json.KKS1 = ReplaceValueDashesWithNull(json.KKS1);
@@ -129,7 +185,7 @@ function ReplaceDashesWithNull(json){
 
 function ReplaceValueDashesWithNull(value){
     if(value === '-'){
-        return null
+        return ""
     }else{
         return value;
     }
