@@ -71,3 +71,7 @@
     cursor: inherit;
     display: block;
 }
+
+th,td{
+    width : 15%;
+}

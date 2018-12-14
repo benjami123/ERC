@@ -68,3 +68,7 @@
     cursor: inherit;
     display: block;
 }
+
+th,td{
+    width : 30%
+}
