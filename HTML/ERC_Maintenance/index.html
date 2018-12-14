@@ -89,6 +89,33 @@
             console.log(jsonArray);
             for(var i=0;i<jsonArray.length;i++){
                 var json = jsonArray[i];
+                if(json.IdPartImplemented == null){
+                    json.IdPartImplemented = "-";
+                }
+                if(json.PartDescription == null)
+                {
+                    json.PartDescription = "-";
+                }
+                if(json.PartName == null)
+                {
+                    json.PartName = "-";
+                }
+                if(json.KKS == null)
+                {
+                    json.KKS = "-";
+                }
+                if(json.PressureNominal == null)
+                {
+                    json.PressureNominal = "-";
+                }
+                if(json.DiameterNominal == null)
+                {
+                    json.DiameterNominal = "-";
+                }
+                if(json.SupplierName == null)
+                {
+                    json.SupplierName = "-";
+                }
                 if(json.PartName.includes(SearchedKeyWord) || json.KKS.includes(SearchedKeyWord) || json.SupplierName.includes(SearchedKeyWord)){
                     $("#" + IdTable).append(""+
                         "<tr>"+
@@ -111,6 +138,33 @@
             console.log(jsonArray);
             for(var i=0;i<jsonArray.length;i++){
                 var json = jsonArray[i];
+                if(json.IdPartImplemented == null){
+                    json.IdPartImplemented = "-";
+                }
+                if(json.PartDescription == null)
+                {
+                    json.PartDescription = "-";
+                }
+                if(json.PartName == null)
+                {
+                    json.PartName = "-";
+                }
+                if(json.KKS == null)
+                {
+                    json.KKS = "-";
+                }
+                if(json.PressureNominal == null)
+                {
+                    json.PressureNominal = "-";
+                }
+                if(json.DiameterNominal == null)
+                {
+                    json.DiameterNominal = "-";
+                }
+                if(json.SupplierName == null)
+                {
+                    json.SupplierName = "-";
+                }
                 console.log("test:  "+json.PartName.includes(SearchedKeyWord) || json.KKS.includes(SearchedKeyWord));
                 if(json.PartName.includes(SearchedKeyWord) || json.KKS.includes(SearchedKeyWord)){
                     if(json.DataType == "H") {
