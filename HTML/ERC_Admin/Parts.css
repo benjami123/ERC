@@ -9,7 +9,7 @@
     /*overflow:auto;*/
     top : 150px;
 }
-th, td{
+td, th{
     width: 14%;
 }
 #body{
