@@ -113,7 +113,7 @@
                             "<tr id=\"R"+json.IdPartImplemented+"\" onclick=\"color('R"+json.IdPartImplemented+"')\">\n" +
                             "                <td>"+json.PartName+"</td>\n" +
                             "                <td>"+json.PartDescription+"</td>\n" +
-                            "                <td>"+json.KKS+"</td>\n" +
+                            "                <td>"+json.Location+"</td>\n" +
                             "                <td>"+json.PressureNominal+"</td>\n" +
                             "                <td>"+json.DiameterNominal+"</td>\n" +
                             "                <td>"+json.SupplierName+"</td>\n" +
@@ -301,7 +301,7 @@
         var values = [];
         for(var i=0;i<num;i++)
         {
-            values.push({IdPart:destinationPlant[i],KKS:$("#location"+i).val()});
+            values.push({IdPart:destinationPlant[i],Location:$("#location"+i).val()});
         }
         xmlRequest = new XMLHttpRequest();
         var addPart = {Values:values};
