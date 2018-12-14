@@ -293,7 +293,8 @@
         xmlRequest.send(JSON.stringify(json));
         xmlRequest.onreadystatechange = function() {
             if ((xmlRequest.readyState == 4) && (xmlRequest.status == 200)) {
-                SupplerPart = JSON.parse(xmlRequest.responseText);
+                location.reload();
+
             }
         };
     }
@@ -311,6 +312,7 @@
         xmlRequest.onreadystatechange = function() {
             if ((xmlRequest.readyState == 4) && (xmlRequest.status == 200)) {
                 $("#popupLocation").css("display","none");
+                location.reload();
             }
         };
 
