@@ -247,7 +247,8 @@ app.post('/Plant_Operator/*', function(req, res){
       
       case "/CancelOffer":
         DB.changePartOfferStateToRefused(req.body.Data.IdPart_Offer, false, function(err, Results){
-          res.end();
+          console.log("State Offer changed " + req.body.Data.IdPart_Offer);
+          res.end("Done !");
         });
         break;
   }
@@ -636,8 +637,6 @@ app.post('/ERC_Admin/*', function(req, res){
           }
           NumberOfFiles--;
           ArrayOfMessages.push(WebConsoleMessages);
-          console.log("Added to ArrayOfMessages : ")
-          console.log(ArrayOfMessages);
           if(NumberOfFiles == 0){
             console.log("Data sent to user : ")
             console.log(ArrayOfMessages);
@@ -654,7 +653,6 @@ app.post('/ERC_Admin/*', function(req, res){
         console.log("Got files : ");
         console.log(files);
         var NumberOfFiles = fields.fileNumber;
-        console.log(NumberOfFiles);
         PartsChecker.AddParts(files, DB, function(){
           res.end("Done !");
         });
