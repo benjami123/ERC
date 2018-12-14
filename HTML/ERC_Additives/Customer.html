@@ -33,7 +33,6 @@
                         var totalCapacity = 0;
                         for(var j = 0;j<json.RALevels.length;j++)
                         {
-
                             var ra = json.RALevels[j];
                             var percentage = Math.floor((ra.LevelOfRAInL*100)/ra.TotalCapacityInL);
                             tank += "                    <p>"+ra.TankName+" : "+percentage+"%</p>";
