@@ -9,11 +9,11 @@
     /*overflow:auto;*/
     top : 150px;
 }
+th, td{
+    width: 14%;
+}
 #body{
     overflow:auto;
     max-height: 92.5%;
     margin-top: -21px;
-}
-th,td{
-    width: 14%;
 }
