@@ -11,7 +11,7 @@
 }
 #body{
     overflow:auto;
-    max-height: 92.5%;
+    max-height: 87%;
     margin-top: -21px;
 }
 #Right{
@@ -55,10 +55,9 @@
     position : static;
 }
 
-#Right th, #Right td{
+#Right th, #tablePart td{
     width: 18%;
 }
-
 
 
 
