@@ -176,9 +176,8 @@ module.exports={
       text: 'Your account :' + Login + '\nHere is your new Password : ' + Password
     };
     
-    transporter.sendMail(ResetPassword_MailContent, function(error, info){
+    transporter.sendMail(ResetPassword_MailContent, function(err, info){
       if(err) console.log(err);
-      callback();
     }); 
   },
   
@@ -316,7 +315,15 @@ function MergeAndOrderbyDate(history, review){      //Merge and Order by date, u
     }
   }else{                                              //If both aren't empty
     for(var i=0; i<SizeOfMergedArray; i++){
-      if(history[iIndexHistory].OfferDateStart > review[iIndexReview].ReviewDate){  //Compare the dates with the indexes
+	var HistoryDate = history[iIndexHistory].OfferDateStart;
+	if(HistoryDate == null){
+		HistoryDate = history[iIndexHistory].ReviewDate;
+	}
+	var ReviewDate = review[iIndexReview].ReviewDate;
+	if(ReviewDate ==null){
+		ReviewDate = review[iIndexReview].OfferDateStart;
+	}
+      if(HistoryDate > review[iIndexReview].ReviewDate){  //Compare the dates with the indexes
         Merged[i] = TransformTypeAndStateToString(history[iIndexHistory]);  //Load the transfomred json
         iIndexHistory++;                                                    //Update the index
       }else{

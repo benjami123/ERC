@@ -14,26 +14,27 @@ module.exports={
     AddParts: function(files, DB, callback){
         var i=0;
         while(files[i] != null){
-            var arr = [];
             var Data = OpenFile(files[i], DB);
-            for(var j=0; j<Data.length; j++){
-                arr[j] = [];
-                arr[j].push(1);
-                arr[j].push(Data[j].KKS);
-                arr[j].push(Data[j].PartName);
-                arr[j].push(Data[j].PartDescription);
-                arr[j].push(Data[j].PresureNominal);
-                arr[j].push(Data[j].DiameterNominal);
-            }
-            i++;
-            res = removeDuplicatesInsideItself(arr, null);
-            console.log("arr : ");
-            console.log(res.PartsArrayWithoutDuplicate);
-            removeDuplicates(res.PartsArrayWithoutDuplicate, DB, function(PartsArray){
-                DB.addParts(PartsArray, function(){
+            console.log("Data : ");
+            console.log(Data);
+            removeDuplicates(Data, DB, function(PartsArray){
+                var arr = [];
+                for(var j=0; j<PartsArray.length; j++){
+                    arr[j] = [];
+                    arr[j].push(1);
+                    arr[j].push(PartsArray[j].KKS);
+                    arr[j].push(PartsArray[j].PartName);
+                    arr[j].push(PartsArray[j].PartDescription);
+                    arr[j].push(PartsArray[j].PN);
+                    arr[j].push(PartsArray[j].DN);
+                }
+                console.log("Adding parts : ");
+                console.log(arr);
+                DB.addParts(arr, function(){
                     callback();
                 });
             })
+            i++;
         }
     }
 }
@@ -99,7 +100,6 @@ function OpenFile(f, DB){
             });
         }
     }
-    console.log(Data);
     return Data;
 }
 
@@ -130,7 +130,6 @@ function removeDuplicatesInsideItself(PartsArray, WebConsoleMessages){
     var unique = [];
     var len = PartsArray.length;
     for ( var i = 0; i < len; i++ ){
-        console.log(PartsArray[i]);
         var isInArray = false;
         for(var j=0; j< unique.length; j++){
             if((unique[j].KKS === PartsArray[i].KKS) && (unique[j].PartName === PartsArray[i].PartName) && (unique[j].PartDescription === PartsArray[i].PartDescription) && (unique[j].PN === PartsArray[i].PN) && (unique[j].DN === PartsArray[i].DN)){
@@ -151,8 +150,6 @@ function removeDuplicatesInsideItself(PartsArray, WebConsoleMessages){
 
 function removeDuplicates(PartsArray, DB, callback){
     DB.getParts(function(err, Parts){
-        console.log("Parts : ");
-        console.log(PartsArray);
         returnedValue = removeDuplicatesInsideItself(PartsArray);
         PartsArray = returnedValue.PartsArrayWithoutDuplicate;
         var res = [];

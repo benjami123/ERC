@@ -145,6 +145,8 @@ app.post('/Plant_Operator/*', function(req, res){
   // console.log(req.body);
   switch(url){
     case "/index":
+      console.log("user : ");
+      console.log(req.session.user);
       DB.getPlantPartPreviewInfos(req.session.user.IdPlant, function(err, Result){
         // console.log("Got result : ");
         // console.log(Result);
@@ -173,6 +175,8 @@ app.post('/Plant_Operator/*', function(req, res){
       break;
 
     case "/GetRALevel":
+    console.log("user : ");
+    console.log(req.session.user);
       DB.getRAInfos(req.session.user.IdPlant, function(err, Result){
         console.log("Got result : ");
         console.log(Result);
@@ -185,7 +189,7 @@ app.post('/Plant_Operator/*', function(req, res){
       break;
 
     case "/History":
-      Lib.SendPlantHistory(res, req.session.user.IdPlant, false, DB);
+      Lib.SendPlantHistory(res, req.session.user.IdPlant, true, DB);
       break;
     
     case "/RAHistory":
@@ -218,11 +222,11 @@ app.post('/Plant_Operator/*', function(req, res){
         break;
       
       case "/CreateReview":
-        var opt = {"IdPartImplemented" : req.body.IdPartImplemented, "ReviewType" : req.body.ReviewType, "ReviewDate" : req.body.ReviewDate, "CreatorLogin" : req.body.user.Login};
+        var opt = {"IdPartImplemented" : req.body.IdPartImplemented, "ReviewType" : req.body.ReviewType, "ReviewDate" : req.body.ReviewDate, "CreatorLogin" : req.session.user.Login};
         DB.createPartReview(opt, function(err, Result){
           // console.log("got result : ");
           // console.log(Result);
-          res.end("Request sent");
+          res.redirect('/Plant_Operator/PartDescription');
         });
         break;
 
@@ -275,18 +279,22 @@ app.post('/Plant_Admin/*', function(req, res){
       break;
 
     case "/AddUser":
-      var UserPassword = Lib.GeneratePassword();
-      var opt = {"IdPlant" : req.session.user.IdPlant, "Login" : req.body.Login, "Email" : req.body.Email, "Password" : UserPassword, "Role" : 3};
-      DB.createUser(opt, function(err, Results){
-        console.log("Got results : ");
-        console.log(Results);
-        if(Results){
-          Lib.SendEmail(UserLogin, UserEmail, UserPassword);
-          res.end("User Added !");
-        }else{
-          res.end("User already exists !");
-        }
-      });
+	
+      	var UserPassword = Lib.GeneratePassword();
+	var UserLogin = req.body.Login;
+	var UserEmail = req.body.Email;
+      	var opt = {"IdPlant" : req.session.user.IdPlant, "Login" : UserLogin, "Email" : UserEmail, "Password" : UserPassword, "Role" : 3};
+      	DB.createUser(opt, function(err, Results){
+        	console.log("Got results : ");
+        	console.log(Results);
+        	if(Results){
+          	Lib.SendEmail(UserLogin, UserEmail, UserPassword);
+          	res.end("User Added !");
+        	}else{
+         		res.end("User already exists !");
+        	}
+     	 });
+	
       break;
 
     case "/GetPlantPart":
@@ -319,7 +327,7 @@ app.post('/Plant_Admin/*', function(req, res){
       }
       console.log(array);
       DB.createPartImplemented(array, function(err, Result){
-        res.end("Done !");
+        res.redirect("/Plant_Admin/Parts.html");
       });
       break;
 
@@ -330,7 +338,7 @@ app.post('/Plant_Admin/*', function(req, res){
       console.log(req.body.ArrayIdPartImplemented);
       if(req.body.ArrayIdPartImplemented !== undefined){
         DB.removePartImplemented(req.body.ArrayIdPartImplemented, function(err, Result){
-          res.end("Done !");
+          res.redirect("/Plant_Admin/Parts.html");
         });
       }else{
         res.end("Not done");
@@ -505,7 +513,7 @@ app.post('/ERC_Maintenance/*', function(req, res){
     if(json != null){
       DB.CreateReviews(json, function(err, Result){
         console.log("Done !");
-        res.end("Done !");
+        res.redirect('/ERC_Maintenance/index.html');
       });
       break;
     }else{

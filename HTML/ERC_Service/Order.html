@@ -32,6 +32,10 @@
                     for(var i=0;i<jsonArray.length;i++)
                     {
                         json = jsonArray[i];
+                        if(json.KKS == null)
+                        {
+                            json.KKS = "-";
+                        }
                         $("tbody").append("" +
                             "<tr id=\""+i+"\">\n" +
                             "            <td class=\"text-center num\">"+(i+1)+"</td>\"" +
