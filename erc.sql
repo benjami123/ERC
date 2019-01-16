@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 16. Jan 2019 um 16:10
+-- Erstellungszeit: 16. Jan 2019 um 16:20
 -- Server-Version: 10.1.37-MariaDB
 -- PHP-Version: 7.3.0
 
@@ -240,7 +240,7 @@ INSERT INTO `user` (`IdUser`, `IdPlant`, `Login`, `Password`, `Email`, `UserRole
 (18, 1, 'operator', '1234', 'operator@erc.com', 3),
 (19, NULL, 'maintenance', '1234', 'maintenance@erc.de', 6),
 (20, 1, 'PlantAdmin', '1234', 'plantadmin@erc.de', 1),
-(21, NULL, 'ErcAdmim', '1234', 'ercadmin@erc.de', 2),
+(21, NULL, 'ErcAdmin', '1234', 'ercadmin@erc.de', 2),
 (22, NULL, 'ErcService', '1234', 'ercservice@erc.de', 4),
 (23, NULL, 'ErcAdditive', '1234', 'ercadditive@erc.de', 5);
 
